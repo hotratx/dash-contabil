@@ -47,6 +47,7 @@ class CRUDAtivos:
         session.commit()
         return ativo
 
+
 # e = CRUDEmpresas()
 # emp1 = e.add('Coca-Cola', 234234)
 # emp2 = e.add('Pepsi-Cola', 987687)

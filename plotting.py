@@ -5,5 +5,5 @@ import plotly.express as px
 
 
 def plot(data: pd.DataFrame):
-    fig = px.pie(data, values='values', names='tipo')
+    fig = px.pie(data, values="values", names="tipo")
     return fig

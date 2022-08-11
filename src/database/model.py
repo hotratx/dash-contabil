@@ -4,7 +4,9 @@ from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy.orm import sessionmaker, relationship
 
 
-engine = create_engine("sqlite:///test.db", connect_args={'check_same_thread': False}, echo=True)
+engine = create_engine(
+    "sqlite:///test.db", connect_args={"check_same_thread": False}, echo=True
+)
 Session = sessionmaker(bind=engine)
 Base = declarative_base()
 
@@ -24,7 +26,7 @@ class Ativo(Base):
     id = Column(Integer, primary_key=True)
     data = Column(Integer)
     empresa_id = Column(Integer, ForeignKey("empresas.id"))
-    empresa = relationship('Empresa')
+    empresa = relationship("Empresa")
 
     def __repr__(self):
         return f"Ativo(empresa={self.empresa}, data={self.data})"
@@ -41,10 +43,9 @@ class Empresa(Base):
         return f"cnpj: cnpj={self.cnpj}, ativos={self.ativos}"
 
 
-
 Base.metadata.create_all(engine)
 
-user = User(username='Matheus', password='qwer')
+user = User(username="Matheus", password="qwer")
 
 # emp1 = Empresa(name='Coca-Cola', cnpj=212345)
 # emp2 = Empresa(name='Pesi-Cola', cnpj=763874)

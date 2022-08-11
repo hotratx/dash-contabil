@@ -4,7 +4,7 @@ isort:
 
 .PHONY: black
 black:
-	black -l 79 *.py
+	black . -l 79 *.py
 
 .PHONY: typehint
 typehint:
