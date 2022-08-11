@@ -1,18 +1,17 @@
 from dash import html, dcc
 import dash_bootstrap_components as dbc
 
-
+CARD_STYLE = {
+        'width': '300px',
+        'min-height': '300px',
+        'padding-right': '25px',
+        'padding-top': '25px',
+        'padding-left': '25px',
+        'align-self': 'center',
+}
 
 
 def render() -> dbc.Card:
-    CARD_STYLE = {
-            'width': '300px',
-            'min-height': '300px',
-            'padding-right': '25px',
-            'padding-top': '25px',
-            'padding-left': '25px',
-            'align-self': 'center',
-    }
     login = dbc.Card([
         dcc.Location(id='url_login', refresh=True),
         html.Legend("Login", style={'padding-top': '20px'}),

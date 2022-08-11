@@ -29,6 +29,15 @@ def create_layout(app: Dash) -> dbc.Container:
         raise PreventUpdate
 
     @app.callback(
+            Output("url_logout", "pathname"),
+            Input("logout-btn", "n_clicks")
+    )
+    def logout_button_click(n_clicks):
+        """Callback controle de páginas"""
+        if n_clicks > 0:
+            return '/logout'
+
+    @app.callback(
             Output("page-content", "children"),
             Input("base-url", "pathname"),
     )
@@ -46,19 +55,6 @@ def create_layout(app: Dash) -> dbc.Container:
             if current_user.is_authenticated:
                 logout_user()
                 return login.render()
-
-
-    @app.callback(
-            Output("url_logout", "pathname"),
-            Input("logout-btn", "n_clicks")
-    )
-    def button_logout(n_clicks):
-        """Callback controle de páginas"""
-        if n_clicks > 0:
-            return '/logout'
-
-
-
 
     main = dbc.Container(children=[
         dbc.Row([
