@@ -10,19 +10,19 @@ from src.database.crud import CRUDUser
 
 server = Flask(__name__)
 app = Dash(
-    __name__,
-    server=server,
-    title="Example Dash login",
-    update_title="Loading...",
-    external_stylesheets=[dbc.themes.BOOTSTRAP],
-    suppress_callback_exceptions=True,
+        __name__,
+        server=server,
+        title='Example Dash login',
+        update_title='Loading...',
+        external_stylesheets=[dbc.themes.BOOTSTRAP],
+        suppress_callback_exceptions=True
 )
 
-server.config.update(SECRET_KEY="ASDKFJASDOIFJKLJRFASDFASDF")
+server.config.update(SECRET_KEY='ASDKFJASDOIFJKLJRFASDFASDF')
 
 login_manager = LoginManager()
 login_manager.init_app(server)
-login_manager.login_view = "/login"
+login_manager.login_view = '/login'
 
 
 class User(UserMixin):
@@ -32,7 +32,8 @@ class User(UserMixin):
 
 @login_manager.user_loader
 def load_user(username):
-    """Pega o username salvo no cookie"""
+    """Pega o username salvo no cookie
+    """
     u = CRUDUser()
     user_model = u.get(username)
     if not user_model:
