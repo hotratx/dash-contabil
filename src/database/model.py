@@ -4,12 +4,20 @@ from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy.orm import sessionmaker, relationship
 
 
-engine = create_engine("sqlite:///test.db", echo=True)
+engine = create_engine("sqlite:///test.db", connect_args={'check_same_thread': False}, echo=True)
 Session = sessionmaker(bind=engine)
 Base = declarative_base()
 
 
-s = Session()
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True)
+    username = Column(String(30))
+    password = Column(String(30))
+
+    def __repr__(self):
+        return f"username={self.username}"
+
 
 class Ativo(Base):
     __tablename__ = "ativos"
@@ -36,12 +44,14 @@ class Empresa(Base):
 
 Base.metadata.create_all(engine)
 
+user = User(username='Matheus', password='qwer')
 
 # emp1 = Empresa(name='Coca-Cola', cnpj=212345)
 # emp2 = Empresa(name='Pesi-Cola', cnpj=763874)
 
 # ativo1 = Ativo(data=1234, empresa=emp1)
 
-# with Session() as session:
-#     session.add_all([emp1, emp2, ativo1])
-#     session.commit()
+with Session() as session:
+    # session.add_all([emp1, emp2, ativo1])
+    session.add(user)
+    session.commit()

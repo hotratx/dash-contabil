@@ -1,6 +1,7 @@
 from dash import Dash, html, dcc
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
+from flask_login import logout_user, current_user
 from src.components import nation_dropdown
 
 
@@ -26,11 +27,14 @@ def render(app: Dash) -> html.Div:
             'align-self': 'center',
     }
 
+
     home = html.Div(
         className="app-div",
         children=[
+            dcc.Location(id='url_logout', refresh=True),
             html.H1(app.title),
             html.Hr(),
+            dbc.Button("Logout", id="logout-btn", n_clicks=0, color="dark"),
             dcc.Markdown(children=markdown_text)
         ])
     return home

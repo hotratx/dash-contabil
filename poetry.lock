@@ -142,6 +142,18 @@ brotli = "*"
 flask = "*"
 
 [[package]]
+name = "flask-login"
+version = "0.6.2"
+description = "User authentication and session management for Flask."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+Flask = ">=1.0.4"
+Werkzeug = ">=1.0.1"
+
+[[package]]
 name = "greenlet"
 version = "1.1.2"
 description = "Lightweight in-process concurrent programming"
@@ -406,7 +418,7 @@ watchdog = ["watchdog"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "2a671b4d15e717d7520cedc455bbdeeddfe28a884c01b7b8136843d85e71127f"
+content-hash = "27e4726e0b79ea1d941dc8ff5389f2c626b769aea9d8e56812c89794eb71bddd"
 
 [metadata.files]
 bokeh = []
@@ -421,6 +433,7 @@ dash-table = []
 distro = []
 flask = []
 flask-compress = []
+flask-login = []
 greenlet = []
 itsdangerous = []
 jinja2 = []

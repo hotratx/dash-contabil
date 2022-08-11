@@ -4,6 +4,18 @@ html, body {
   overflow: hidden;
 }
 
+
+/* First line CSS */
+.color-line1{
+    background : red;
+}
+  
+/* Second line CSS */
+.color-line2{
+    background: green;
+}
+
+
 .card {
   margin-top: 10px;
 }

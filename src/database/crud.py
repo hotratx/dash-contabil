@@ -1,8 +1,24 @@
 from sqlalchemy import select
-from model import Empresa, Ativo, Session
+from .model import Empresa, Ativo, Session, User
 
 
 session = Session()
+
+
+class CRUDUser:
+    def __init__(self) -> None:
+        self._model = User
+
+    def add(self, username, password):
+        user = self._model(username=username, password=password)
+        session.add(user)
+        session.commit()
+        return user
+
+    def get(self, username):
+        stmt = select(self._model).where(self._model.username == username)
+        user = session.scalars(stmt).first()
+        return user
 
 
 class CRUDEmpresas:
@@ -30,7 +46,6 @@ class CRUDAtivos:
         session.add(ativo)
         session.commit()
         return ativo
-
 
 # e = CRUDEmpresas()
 # emp1 = e.add('Coca-Cola', 234234)
