@@ -1,10 +1,11 @@
 from dash import Dash, html, dcc
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
-from src.pages import home, login
-from flask_login import login_user, UserMixin, logout_user, current_user
-from src.database.crud import CRUDUser
 from dash.exceptions import PreventUpdate
+from flask_login import login_user, UserMixin, logout_user, current_user
+from src.pages import home, login
+from src.database.crud import CRUDUser
+from src.password import get_password_hash, verify_password
 
 
 class User(UserMixin):
@@ -23,13 +24,15 @@ def create_layout(app: Dash) -> dbc.Container:
         """Callback do component Login"""
         if n_clicks > 0:
             u = CRUDUser()
-            user = u.get(username)
-            if user:
-                user = User(user.username)
-                login_user(user)
-                return ("/home", "")
-            else:
-                return ("/login", "Incorrect username or password")
+            user_model = u.get(username)
+            if user_model and password:
+                hash = verify_password(password, user_model.password)
+                user = User(user_model.username)
+                if hash:
+                    login_user(user)
+                    return ("/home", "")
+
+            return ("/login", "Incorrect username or password")
         raise PreventUpdate
 
     @app.callback(

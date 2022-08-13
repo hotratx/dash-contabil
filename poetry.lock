@@ -259,6 +259,20 @@ pytz = ">=2020.1"
 test = ["hypothesis (>=5.5.3)", "pytest (>=6.0)", "pytest-xdist (>=1.31)"]
 
 [[package]]
+name = "passlib"
+version = "1.7.4"
+description = "comprehensive password hashing framework supporting over 30 schemes"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+totp = ["cryptography"]
+build_docs = ["cloud-sptheme (>=1.10.1)", "sphinxcontrib-fulltoc (>=1.2.0)", "sphinx (>=1.6)"]
+bcrypt = ["bcrypt (>=3.1.0)"]
+argon2 = ["argon2-cffi (>=18.2.0)"]
+
+[[package]]
 name = "pathspec"
 version = "0.9.0"
 description = "Utility library for gitignore style pattern matching of file paths."
@@ -475,7 +489,7 @@ watchdog = ["watchdog"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "521b614b8a252706bc11bb402f69dd4be8d79266e2130e29b253cd7440fa53e2"
+content-hash = "7095a46328183ad587238247275cbead5625a061d0b58f544aaf5f2135b28073"
 
 [metadata.files]
 black = []
@@ -500,6 +514,7 @@ mypy-extensions = []
 numpy = []
 packaging = []
 pandas = []
+passlib = []
 pathspec = []
 pillow = []
 platformdirs = []

@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy.orm import sessionmaker, relationship
+from src.password import get_password_hash
 
 
 engine = create_engine(
@@ -15,7 +16,7 @@ class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
     username = Column(String(30))
-    password = Column(String(30))
+    password = Column(String(150))
 
     def __repr__(self):
         return f"username={self.username}"
@@ -45,7 +46,8 @@ class Empresa(Base):
 
 Base.metadata.create_all(engine)
 
-user = User(username="Matheus", password="qwer")
+password = get_password_hash("qwer")
+user = User(username="Matheus", password=password)
 
 # emp1 = Empresa(name='Coca-Cola', cnpj=212345)
 # emp2 = Empresa(name='Pesi-Cola', cnpj=763874)
