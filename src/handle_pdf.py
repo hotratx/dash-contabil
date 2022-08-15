@@ -7,52 +7,55 @@ from locale import atof, setlocale, LC_NUMERIC
 setlocale(LC_NUMERIC, "")
 
 
-class Strategy:
-    def run(self, dfs: List):
-        self._strategy_1(dfs)
+# class Strategy:
+#     def run(self, dfs: List):
+#         self._strategy_1(dfs)
 
-    def _strategy_1(self, dfs: List):
-        LISTA_ITEMS = {
-            "ativo": "*** Ativo ***",
-            "ocp": "Obrigações de Curto Prazo",
-            "pnc": "Passivo não Circulante",
-            "pl": "Patrimônio Líquido",
-        }
-        resp = {
-            item: response
-            for item, value in LISTA_ITEMS.items()
-            if (response := sheare_in_pdf(value, dfs))
-        }
-        dict = {"values": [], "tipo": []}
-        for name, value in resp.items():
-            dict["values"].append(value)
-            dict["tipo"].append(name)
-        df = pd.DataFrame.from_dict(dict)
+#     def _strategy_1(self, dfs: List):
+#         LISTA_ITEMS = {
+#             "ativo": "*** Ativo ***",
+#             "ocp": "Obrigações de Curto Prazo",
+#             "pnc": "Passivo não Circulante",
+#             "pl": "Patrimônio Líquido",
+#         }
+#         resp = {
+#             item: response
+#             for item, value in LISTA_ITEMS.items()
+#             if (response := sheare_in_pdf(value, dfs))
+#         }
+#         dict = {"values": [], "tipo": []}
+#         for name, value in resp.items():
+#             dict["values"].append(value)
+#             dict["tipo"].append(name)
+#         df = pd.DataFrame.from_dict(dict)
 
 
-class ReadPdf:
-    def __init__(self) -> None:
-        self.str = Strategy()
-        self.folder_path = "/home/hotratx/ttttest"
+class HandlePdf:
+    def __init__(self, db):
+        self._db = db
 
-    def search_pdf(self):
-        p1 = Path(self.folder_path)
-        pdfs = self._search_files_pdf(p1)
+    def run(self):
+        self.p = Path(__file__).parent.parent / 'pdfs'
+        print(f'path: {self.p.absolute()}')
 
-    def _handle_pdf(self, pdfs: List[Path]):
-        for pdf in pdfs:
-            dfs = tabula.read_pdf(pdf, pages="all")
-            self.str.run(dfs)
+        pdfs = [p1 for p1 in self.p.iterdir() if p1.suffix == ".pdf"]
 
-    def _search_files_pdf(self, path: Path) -> List[Path]:
-        """Filtra os arquivos da pasta path, retornarndo apenas arquivos .pdf
-            e que possuem o padrão do pattern regex.
+        for path_pdf in pdfs:
+            print(f'path_pdf: {path_pdf}')
+            self._foo(path_pdf)
 
-        Args:
-            path: Path da pasta com arquivos para ser analisado.
+    def _foo(self, path_pdf):
+        reader = PdfReader(path_pdf)
+        page = reader.pages[0]
+        text = page.extract_text()
+        print('FOOO')
+        match text.split(':')[0]:
+            case 'Demonstração do Resultado do Exercício Pág.':
+                self._str_dre(path_pdf)
 
-        Return:
-            pdfs: List[Path] com os Path de cada pdf
-        """
-        pdfs = [p for p in path.iterdir() if p.suffix == ".pdf"]
-        return pdfs
+    def _str_dre(self, path_pdf):
+        print(f'ENTROU NO STR_DRE: {path_pdf}')
+        df = tabula.read_pdf(path_pdf, pages="all")
+        print('tudo certo')
+
+
