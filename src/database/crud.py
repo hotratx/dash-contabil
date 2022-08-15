@@ -1,5 +1,5 @@
 from sqlalchemy import select
-from .model import Empresa, Ativo, Session, User
+from .model import Empresa, Session, User
 
 
 session = Session()
@@ -37,15 +37,15 @@ class CRUDEmpresas:
         return emp
 
 
-class CRUDAtivos:
-    def __init__(self) -> None:
-        self._model = Ativo
+# class CRUDAtivos:
+#     def __init__(self) -> None:
+#         self._model = Ativo
 
-    def add(self, data, empresa):
-        ativo = self._model(data=data, empresa=empresa)
-        session.add(ativo)
-        session.commit()
-        return ativo
+#     def add(self, data, empresa):
+#         ativo = self._model(data=data, empresa=empresa)
+#         session.add(ativo)
+#         session.commit()
+#         return ativo
 
 
 # e = CRUDEmpresas()

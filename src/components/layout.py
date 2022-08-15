@@ -1,3 +1,4 @@
+import base64
 from dash import Dash, html, dcc
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
@@ -6,6 +7,9 @@ from flask_login import login_user, UserMixin, logout_user, current_user
 from src.pages import home, login
 from src.database.crud import CRUDUser
 from src.password import get_password_hash, verify_password
+from src.handle_pdf import HandlePdf
+
+handle_pdf = HandlePdf('db')
 
 
 class User(UserMixin):
@@ -14,6 +18,40 @@ class User(UserMixin):
 
 
 def create_layout(app: Dash) -> dbc.Container:
+
+
+    @app.callback(
+        Output('dummy', 'children'),
+        [Input("handle-pdf", "n_clicks")],
+    )
+    def analise_pdf(n_clicks):
+        """Callback controle de páginas"""
+        if n_clicks > 0:
+            handle_pdf.run()
+            print('HANDLE PDF -----')
+        raise PreventUpdate
+
+
+    @app.callback(Output('output-data-upload', 'children'),
+              Output('output-result-1', 'children'),
+              [Input('upload-data', 'contents')],
+              State('upload-data', 'filename'),
+                  State('upload-data', 'last_modified'))
+    def update_output(list_of_contents, list_of_names, list_of_dates):
+        print(f'list_of_names: {list_of_names}, list_of_dates: {list_of_dates}')
+        if list_of_names is not None:
+            resp = []
+            for c, n, d in zip(list_of_contents, list_of_names, list_of_dates):
+                content = parse_contents(c, n, d)
+                if content:
+                    resp.append(html.P(n))
+            response = html.Span(resp)
+            if resp:
+                return response, 'Foi feito o upload dos arquivos:'
+            return '', 'O upload é feito apenas para arquivos .pdf'
+        raise PreventUpdate
+
+
     @app.callback(
         Output("url_login", "pathname"),
         Output("output-state", "children"),
@@ -86,3 +124,21 @@ def create_layout(app: Dash) -> dbc.Container:
     )
 
     return main
+
+
+
+def parse_contents(contents, filename, date):
+    print(f'entrou no parse_contents filename: {filename}\ntipo: {type(contents)}')
+    # content_type, content_string = contents.split(',')
+
+    try:
+        if 'pdf' in filename:
+            data = contents.encode("utf8").split(b";base64,")[1]
+            with open(f'pdfs/{filename}', "wb") as fp:
+                fp.write(base64.decodebytes(data))
+            return True
+    except Exception as e:
+        print(e)
+        return html.Div([
+            'There was an error processing this file.'
+        ])

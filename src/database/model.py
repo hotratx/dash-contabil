@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy.orm import sessionmaker, relationship
@@ -13,7 +13,7 @@ Base = declarative_base()
 
 
 class User(Base):
-    __tablename__ = "users"
+    __tablename__ = "user"
     id = Column(Integer, primary_key=True)
     username = Column(String(30))
     password = Column(String(150))
@@ -22,26 +22,51 @@ class User(Base):
         return f"username={self.username}"
 
 
-class Ativo(Base):
-    __tablename__ = "ativos"
-    id = Column(Integer, primary_key=True)
-    data = Column(Integer)
-    empresa_id = Column(Integer, ForeignKey("empresas.id"))
-    empresa = relationship("Empresa")
-
-    def __repr__(self):
-        return f"Ativo(empresa={self.empresa}, data={self.data})"
-
-
 class Empresa(Base):
-    __tablename__ = "empresas"
+    __tablename__ = "empresa"
     id = Column(Integer, primary_key=True)
     name = Column(String(30))
     cnpj = Column(String(30))
-    ativos = relationship(Ativo, backref="empresas")
+    dres = relationship("Dre", back_populates="empresa")
 
     def __repr__(self):
-        return f"cnpj: cnpj={self.cnpj}, ativos={self.ativos}"
+        return f"cnpj: cnpj={self.cnpj}, rbo={self.rbo}"
+
+
+class Dre(Base):
+    __tablename__ = "dre"
+    id = Column(Integer, primary_key=True)
+    rbo = Column(Float, nullable=True)
+    fpms = Column(Float, nullable=True)
+    # vm = Column(Float, precision=2, nullable=True)
+    # dr = Column(Float, precision=2, nullable=True)
+    # ifs = Column(Float, precision=2, nullable=True)
+    # icms = Column(Float, precision=2, nullable=True)
+    # cofins = Column(Float, precision=2, nullable=True)
+    # pis = Column(Float, precision=2, nullable=True)
+    # od = Column(Float, precision=2, nullable=True)
+    # vcddi = Column(Float, precision=2, nullable=True)
+    # rl = Column(Float, precision=2, nullable=True)
+    # cmspv = Column(Float, precision=2, nullable=True)
+    # cmr = Column(Float, precision=2, nullable=True)
+    # lb = Column(Float, precision=2, nullable=True)
+    # do = Column(Float, precision=2, nullable=True)
+    # da = Column(Float, precision=2, nullable=True)
+    # dt = Column(Float, precision=2, nullable=True)
+    # rfo = Column(Float, precision=2, nullable=True)
+    # rfs = Column(Float, precision=2, nullable=True)
+    # df = Column(Float, precision=2, nullable=True)
+    # rapc = Column(Float, precision=2, nullable=True)
+    # raircs = Column(Float, precision=2, nullable=True)
+    # cssl = Column(Float, precision=2, nullable=True)
+    # ir = Column(Float, precision=2, nullable=True)
+    # rle = Column(Float, precision=2, nullable=True)
+    empresa_id = Column(Integer, ForeignKey("empresa.id"))
+    empresa = relationship("Empresa", back_populates="dres")
+
+
+    def __repr__(self):
+        return f"Dre(id={self.empresa_id}, data={self.rbo})"
 
 
 Base.metadata.create_all(engine)
