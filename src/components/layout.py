@@ -2,17 +2,10 @@ from dash import Dash, html, dcc
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 from dash.exceptions import PreventUpdate
-from flask_login import login_user, UserMixin, logout_user, current_user
+from flask_login import logout_user, current_user
 from src.pages.home import Home
 from src.pages.login import Login
 from src.database.crud import CRUDUser
-from src.password import get_password_hash, verify_password
-
-
-
-class User(UserMixin):
-    def __init__(self, username):
-        self.id = username
 
 
 def create_layout(app: Dash) -> dbc.Container:

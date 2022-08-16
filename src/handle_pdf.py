@@ -35,27 +35,25 @@ class HandlePdf:
         self._db = db
 
     def run(self):
-        self.p = Path(__file__).parent.parent / 'pdfs'
-        print(f'path: {self.p.absolute()}')
+        self.p = Path(__file__).parent.parent / "pdfs"
+        print(f"path: {self.p.absolute()}")
 
         pdfs = [p1 for p1 in self.p.iterdir() if p1.suffix == ".pdf"]
 
         for path_pdf in pdfs:
-            print(f'path_pdf: {path_pdf}')
+            print(f"path_pdf: {path_pdf}")
             self._foo(path_pdf)
 
     def _foo(self, path_pdf):
         reader = PdfReader(path_pdf)
         page = reader.pages[0]
         text = page.extract_text()
-        print('FOOO')
-        match text.split(':')[0]:
-            case 'Demonstração do Resultado do Exercício Pág.':
+        print("FOOO")
+        match text.split(":")[0]:
+            case "Demonstração do Resultado do Exercício Pág.":
                 self._str_dre(path_pdf)
 
     def _str_dre(self, path_pdf):
-        print(f'ENTROU NO STR_DRE: {path_pdf}')
+        print(f"ENTROU NO STR_DRE: {path_pdf}")
         df = tabula.read_pdf(path_pdf, pages="all")
-        print('tudo certo')
-
-
+        print("tudo certo")

@@ -5,9 +5,7 @@ from sqlalchemy.orm import sessionmaker, relationship
 from src.password import get_password_hash
 
 
-engine = create_engine(
-    "sqlite:///test.db", connect_args={"check_same_thread": False}, echo=True
-)
+engine = create_engine("sqlite:///test.db", connect_args={"check_same_thread": False}, echo=True)
 Session = sessionmaker(bind=engine)
 Base = declarative_base()
 
@@ -63,7 +61,6 @@ class Dre(Base):
     # rle = Column(Float, precision=2, nullable=True)
     empresa_id = Column(Integer, ForeignKey("empresa.id"))
     empresa = relationship("Empresa", back_populates="dres")
-
 
     def __repr__(self):
         return f"Dre(id={self.empresa_id}, data={self.rbo})"

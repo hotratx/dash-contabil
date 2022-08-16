@@ -49,7 +49,6 @@ class Login:
                 return ("/login", "Incorrect username or password")
             raise PreventUpdate
 
-
     def render(self):
         login = dbc.Card(
             [
