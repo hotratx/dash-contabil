@@ -1,12 +1,14 @@
-import base64
 from dash import Dash, html, dcc
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
+from flask_login import current_user
 import dash_bootstrap_components as dbc
 from src.handle_pdf import HandlePdf
+from src.components.upload import Upload
+from src.components import ids
 
 
-markdown_text = """
+markdown_text = f"""
 ### Dash and Markdown
 
 Dash apps can be written in Markdown.
@@ -20,49 +22,16 @@ Check out their [60 Second Markdown Tutorial](http://commonmark.org/help/)
 handle_pdf = HandlePdf("db")
 
 
-def parse_contents(contents, filename, date):
-    print(f"entrou no parse_contents filename: {filename}\ntipo: {type(contents)}")
-    try:
-        if "pdf" in filename:
-            data = contents.encode("utf8").split(b";base64,")[1]
-            with open(f"pdfs/{filename}", "wb") as fp:
-                fp.write(base64.decodebytes(data))
-            return True
-    except Exception as e:
-        print(e)
-        return html.Div(["There was an error processing this file."])
-
-
 class Home:
     def __init__(self, app: Dash):
         self._app = app
+        self._upload = Upload(app)
         self._run()
 
     def _run(self):
         @self._app.callback(
-            Output("output-data-upload", "children"),
-            Output("output-result-1", "children"),
-            [Input("upload-data", "contents")],
-            State("upload-data", "filename"),
-            State("upload-data", "last_modified"),
-        )
-        def update_output(list_of_contents, list_of_names, list_of_dates):
-            print(f"list_of_names: {list_of_names}, list_of_dates: {list_of_dates}")
-            if list_of_names is not None:
-                resp = []
-                for c, n, d in zip(list_of_contents, list_of_names, list_of_dates):
-                    content = parse_contents(c, n, d)
-                    if content:
-                        resp.append(html.P(n))
-                response = html.Span(resp)
-                if resp:
-                    return response, "Foi feito o upload dos arquivos:"
-                return "", "O upload é feito apenas para arquivos .pdf"
-            raise PreventUpdate
-
-        @self._app.callback(
-            Output("dummy", "children"),
-            [Input("handle-pdf", "n_clicks")],
+            Output(ids.DUMMY, "children"),
+            [Input(ids.HANDLE_PDF, "n_clicks")],
         )
         def analise_pdf(n_clicks):
             """Callback controle de páginas"""
@@ -71,7 +40,7 @@ class Home:
                 print("HANDLE PDF -----")
             raise PreventUpdate
 
-        @self._app.callback(Output("url_logout", "pathname"), Input("logout-btn", "n_clicks"))
+        @self._app.callback(Output(ids.URL_LOGOUT, "pathname"), Input(ids.LOGOUT_BTN, "n_clicks"))
         def logout_button_click(n_clicks):
             """Callback controle de páginas"""
             print("saindo SAINDO")
@@ -82,31 +51,16 @@ class Home:
         home = html.Div(
             className="app-div",
             children=[
-                dcc.Location(id="url_logout", refresh=True),
+                dcc.Location(id=ids.URL_LOGOUT, refresh=True),
                 html.H1(self._app.title),
                 html.Hr(),
-                dbc.Button("Logout", id="logout-btn", n_clicks=0, color="dark"),
+                dbc.Button("Logout", id=ids.LOGOUT_BTN, n_clicks=0, color="dark"),
                 dcc.Markdown(children=markdown_text),
-                dcc.Upload(
-                    id="upload-data",
-                    children=html.Div(["Drag and Drop or ", html.A("Select Files")]),
-                    style={
-                        "width": "30%",
-                        "height": "60px",
-                        "lineHeight": "60px",
-                        "borderWidth": "1px",
-                        "borderStyle": "dashed",
-                        "borderRadius": "5px",
-                        "textAlign": "center",
-                        "margin": "10px",
-                    },
-                    # Allow multiple files to be uploaded
-                    multiple=True,
-                ),
-                html.P(id="output-result-1"),
-                html.Div(id="output-data-upload"),
-                dbc.Button("Analisar pdf", id="handle-pdf", n_clicks=0, color="dark"),
-                html.P(id="dummy"),
+                self._upload.render(),
+                html.P(f'Hello {current_user.get_id()}', id=ids.OUTPUT_RESULT),
+                html.Div(id=ids.OUTPUT_DATA_UPLOAD),
+                dbc.Button("Analisar pdf", id=ids.HANDLE_PDF, n_clicks=0, color="dark"),
+                html.P(id=ids.DUMMY),
             ],
         )
         return home

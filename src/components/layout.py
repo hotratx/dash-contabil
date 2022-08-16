@@ -6,23 +6,16 @@ from flask_login import logout_user, current_user
 from src.pages.home import Home
 from src.pages.login import Login
 from src.database.crud import CRUDUser
+from src.components import ids
 
 
 def create_layout(app: Dash) -> dbc.Container:
     login = Login(app)
     home = Home(app)
 
-    # @app.callback(
-    #     Output("url_logout", "pathname"), Input("logout-btn", "n_clicks")
-    # )
-    # def logout_button_click(n_clicks):
-    #     """Callback controle de páginas"""
-    #     if n_clicks > 0:
-    #         return "/logout"
-
     @app.callback(
-        Output("page-content", "children"),
-        Input("base-url", "pathname"),
+        Output(ids.PAGE_CONTENT, "children"),
+        Input(ids.BASE_URL, "pathname"),
     )
     def render_page_content(pathname):
         """Callback controle de páginas"""
@@ -45,9 +38,9 @@ def create_layout(app: Dash) -> dbc.Container:
                 [
                     dbc.Col(
                         [
-                            dcc.Location(id="base-url", refresh=False),
+                            dcc.Location(id=ids.BASE_URL, refresh=False),
                             html.Div(
-                                id="page-content",
+                                id=ids.PAGE_CONTENT,
                                 style={
                                     "height": "100vh",
                                     "display": "flex",

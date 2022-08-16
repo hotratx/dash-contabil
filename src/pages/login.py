@@ -5,6 +5,7 @@ from src.database.crud import CRUDUser
 from src.password import verify_password
 from flask_login import login_user, UserMixin
 from dash.exceptions import PreventUpdate
+from src.components import ids
 
 
 CARD_STYLE = {
@@ -29,10 +30,10 @@ class Login:
 
     def _run(self):
         @self._app.callback(
-            Output("url_login", "pathname"),
-            Output("output-state", "children"),
-            [Input("login-btn", "n_clicks")],
-            [State("user-login", "value"), State("pwd-login", "value")],
+            Output(ids.URL_LOGIN, "pathname"),
+            Output(ids.OUTPUT_STATE, "children"),
+            [Input(ids.LOGIN_BTN, "n_clicks")],
+            [State(ids.USER_LOGIN, "value"), State(ids.PWD_LOGIN, "value")],
         )
         def login_button_click(n_clicks, username, password):
             """Callback do component Login"""
@@ -52,16 +53,16 @@ class Login:
     def render(self):
         login = dbc.Card(
             [
-                dcc.Location(id="url_login", refresh=True),
+                dcc.Location(id=ids.URL_LOGIN, refresh=True),
                 html.Legend("Login", style={"padding-top": "20px"}),
                 dbc.Input(
-                    id="user-login",
+                    id=ids.USER_LOGIN,
                     placeholder="Username",
                     type="text",
                     style={"margin-top": "10px"},
                 ),
                 dbc.Input(
-                    id="pwd-login",
+                    id=ids.PWD_LOGIN,
                     placeholder="Password",
                     type="password",
                     style={"margin-top": "10px"},
@@ -69,11 +70,11 @@ class Login:
                 dbc.Button(
                     "Login",
                     n_clicks=0,
-                    id="login-btn",
+                    id=ids.LOGIN_BTN,
                     style={"margin-top": "10px"},
                 ),
                 html.Span(
-                    id="output-state",
+                    id=ids.OUTPUT_STATE,
                     style={"text-align": "center", "margin-top": "10px"},
                 ),
                 html.Br(),
