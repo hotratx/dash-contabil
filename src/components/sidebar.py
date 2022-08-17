@@ -3,11 +3,17 @@ from dash.exceptions import PreventUpdate
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 from . import ids
+from src.pages.home import Home
+
+
+# PLOTLY_LOGO = "https://images.plot.ly/logo/new-branding/plotly-logomark.png"
+PLOTLY_LOGO = "https://cdn-icons-png.flaticon.com/128/786/786395.png"
 
 
 class Sidebar:
     def __init__(self, app: Dash):
         self._app = app
+        self._home = Home(app)
         self._run()
 
     def _run(self):
@@ -55,40 +61,70 @@ class Sidebar:
             if pathname in ["/", "/page-1"]:
                 return html.P("This is the content of page 1!")
             elif pathname == "/page-2":
-                return html.P("This is the content of page 2. Yay!")
+                # return html.P("This is the content of page 2. Yay!")
+                return self._home.render()
             elif pathname == "/page-3":
                 return html.P("Oh cool, this is page 3!")
+            return html.P("Oh cool, this is page 3!")
             # If the user tries to reach a different page, return a 404 message
-            return dbc.Jumbotron(
-                [
-                    html.H1("404: Not found", className="text-danger"),
-                    html.Hr(),
-                    html.P(f"The pathname {pathname} was not recognised..."),
-                ]
-            )
+            # return dbc.Jumbotron(
+            #     [
+            #         html.H1("404: Not found", className="text-danger"),
+            #         html.Hr(),
+            #         html.P(f"The pathname {pathname} was not recognised..."),
+            #     ]
+            # )
 
     def render(self):
-        navbar = dbc.NavbarSimple(
-            children=[
-                dbc.Button("Sidebar", outline=True, color="secondary", className="mr-1", id="btn_sidebar"),
-                dbc.NavItem(dbc.NavLink("Page 1", href="#")),
-                dbc.DropdownMenu(
-                    children=[
-                        dbc.DropdownMenuItem("More pages", header=True),
-                        dbc.DropdownMenuItem("Page 2", href="#"),
-                        dbc.DropdownMenuItem("Page 3", href="#"),
-                    ],
-                    nav=True,
-                    in_navbar=True,
-                    label="More",
-                ),
-            ],
-            brand="Brand",
-            brand_href="#",
+        navbar = dbc.Navbar(
+            dbc.Container(
+                [
+                    html.A(
+                        # Use row and col to control vertical alignment of logo / brand
+                        dbc.Row(
+                            [
+                                # dbc.Button("Sidebar", outline=True, color="secondary", className="mr-1", id="btn_sidebar"),
+                                dbc.Col(html.Img(id="btn_sidebar", src=PLOTLY_LOGO, height="30px")),
+                                dbc.Col(dbc.NavbarBrand("Navbar", className="ms-2")),
+                            ],
+                            align="left",
+                            className="g-0",
+                        ),
+                        # href="https://plotly.com",
+                        style={"textDecoration": "none"},
+                    ),
+                    dbc.NavbarToggler(id="navbar-toggler", n_clicks=0),
+                    dbc.Collapse(
+                        id="navbar-collapse",
+                        is_open=False,
+                        navbar=True,
+                    ),
+                ]
+            ),
             color="dark",
             dark=True,
-            fluid=True,
         )
+        # navbar = dbc.NavbarSimple(
+        #     children=[
+        #         dbc.Button("Sidebar", outline=True, color="secondary", className="mr-1", id="btn_sidebar"),
+        #         dbc.NavItem(dbc.NavLink("Page 1", href="#")),
+        #         dbc.DropdownMenu(
+        #             children=[
+        #                 dbc.DropdownMenuItem("More pages", header=True),
+        #                 dbc.DropdownMenuItem("Page 2", href="#"),
+        #                 dbc.DropdownMenuItem("Page 3", href="#"),
+        #             ],
+        #             nav=True,
+        #             in_navbar=True,
+        #             label="More",
+        #         ),
+        #     ],
+        #     brand="Brand",
+        #     brand_href="#",
+        #     color="dark",
+        #     dark=True,
+        #     fluid=True,
+        # )
 
         sidebar = html.Div(
             [
@@ -115,7 +151,17 @@ class Sidebar:
             id="page-content-sidebar",
             style=CONTENT_STYLE)
 
-        return navbar, sidebar, content
+
+        layout = html.Div(
+            [
+                dcc.Store(id='side_click'),
+                dcc.Location(id="url"),
+                navbar,
+                sidebar,
+                content,
+            ],
+        )
+        return layout
 
 
 
@@ -171,23 +217,3 @@ CONTENT_STYLE1 = {
     "padding": "2rem 1rem",
     "background-color": "#f8f9fa",
 }
-
-# content = html.Div(
-
-#     id="page-content",
-#     style=CONTENT_STYLE)
-
-# app.layout = html.Div(
-#     [
-#         dcc.Store(id='side_click'),
-#         dcc.Location(id="url"),
-#         navbar,
-#         sidebar,
-#         content,
-#     ],
-# )
-
-
-# this callback uses the current pathname to set the active state of the
-# corresponding nav link to true, allowing users to tell see page they are on
-
