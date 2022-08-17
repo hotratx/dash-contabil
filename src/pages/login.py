@@ -1,7 +1,7 @@
 from dash import Dash, html, dcc
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
-from src.database.crud import CRUDUser
+from src.database import Crud
 from src.password import verify_password
 from flask_login import login_user, UserMixin
 from dash.exceptions import PreventUpdate
@@ -27,6 +27,7 @@ class Login:
     def __init__(self, app: Dash):
         self._app = app
         self._run()
+        self.crud = Crud()
 
     def _run(self):
         @self._app.callback(
@@ -38,12 +39,12 @@ class Login:
         def login_button_click(n_clicks, username, password):
             """Callback do component Login"""
             if n_clicks > 0:
-                u = CRUDUser()
-                user_model = u.get(username)
+                user_model = self.crud.get_user(username)
+                print(f'LOGIN RESULTA USER: {user_model}')
                 if user_model and password:
                     hash = verify_password(password, user_model.password)
-                    user = User(user_model.username)
                     if hash:
+                        user = User(user_model.username)
                         login_user(user)
                         return ("/home", "")
 
@@ -51,7 +52,7 @@ class Login:
             raise PreventUpdate
 
     def render(self):
-        login = dbc.Card(
+        card = dbc.Card(
             [
                 dcc.Location(id=ids.URL_LOGIN, refresh=True),
                 html.Legend("Login", style={"padding-top": "20px"}),
@@ -81,4 +82,26 @@ class Login:
             ],
             style=CARD_STYLE,
         )
+
+        login = dbc.Container(
+            children=[
+                dbc.Row(
+                    [
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    card,
+                                    style={
+                                        "height": "100vh",
+                                        "display": "flex",
+                                        "justify-content": "center",
+                                    },
+                                ),
+                            ]
+                        )
+                    ]
+                ),
+            ], fluid=True
+        )
+
         return login

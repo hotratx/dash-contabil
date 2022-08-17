@@ -1,40 +1,64 @@
-from sqlalchemy import select
-from .model import Empresa, Session, User
+from sqlalchemy import select, or_
+from .model import Session, User, Escritorio
+# from src.password import get_password_hash
+from passlib.context import CryptContext
+
+pwd_context = CryptContext(schemes=["bcrypt"])
 
 
-session = Session()
+class Crud:
+    def __init__(self):
+        self.session = Session()
 
+    def add_user(self, escritorios: list, user_new: str, password: str) -> User:
+        stmt = select(Escritorio).filter(or_(Escritorio.name == v for v in escritorios))
+        escs = self.session.scalars(stmt).all()
 
-class CRUDUser:
-    def __init__(self) -> None:
-        self._model = User
+        hash = get_password_hash(password)
 
-    def add(self, username, password):
-        user = self._model(username=username, password=password)
-        session.add(user)
-        session.commit()
+        user = User(username=user_new, password=hash)
+        for e in escs:
+            user.escritorios.append(e)
+        self.session.add(user)
+        self.session.commit()
         return user
 
-    def get(self, username):
-        stmt = select(self._model).where(self._model.username == username)
-        user = session.scalars(stmt).first()
+    def get_user(self, username: str) -> User:
+        stmt = select(User).where(User.username == username)
+        user = self.session.scalars(stmt).one_or_none()
+        print(f'RESULTADO DO GET USER: {user}')
         return user
 
+    def add_escritorio(self, name: str, username: str) -> Escritorio:
+        user_model = self.get_user(username)
+        e = Escritorio(name=name)
+        e.users.append(user_model)
+        self.session.add(e)
+        self.session.commit()
+        return e
 
-class CRUDEmpresas:
-    def __init__(self) -> None:
-        self._model = Empresa
+    def get_escritorios(self, username: str) -> list[Escritorio]:
+        stmt = select(Escritorio).join(Escritorio.users).where(User.username == username)
+        esc = self.session.scalars(stmt).one_or_none()
+        print(f'RESULTADO DO GET ESCRITORIO: {esc}')
+        return esc
 
-    def add(self, name, cnpj):
-        emp = self._model(name=name, cnpj=cnpj)
-        session.add(emp)
-        session.commit()
-        return emp
 
-    def get_by_cnpj(self, cnpj):
-        stmt = select(self._model).where(self._model.cnpj == cnpj)
-        emp = session.scalars(stmt).all()
-        return emp
+
+# class CRUDEmpresas:
+#     def __init__(self) -> None:
+#         self._model = Empresa
+
+#     def add(self, name, cnpj):
+#         emp = self._model(name=name, cnpj=cnpj)
+#         session.add(emp)
+#         session.commit()
+#         return emp
+
+#     def get_by_cnpj(self, cnpj):
+#         stmt = select(self._model).where(self._model.cnpj == cnpj)
+#         emp = session.scalars(stmt).all()
+#         return emp
 
 
 # class CRUDAtivos:
@@ -47,6 +71,21 @@ class CRUDEmpresas:
 #         session.commit()
 #         return ativo
 
+
+def get_password_hash(texto):
+    return pwd_context.hash(texto)
+
+
+try:
+    c = Crud()
+    u = c.add_user('Amim', 'qwer')
+    print('ADD USER SUCESSO')
+    e = c.add_escritorio('EscritorioA', 'Amim')
+    print(f'ADD ESCRITORIO COM SUCESSO: {e}')
+
+    print(f'CRIADO O USUARIO: {u}')
+except Exception as erro:
+    print(f'tentou criar user de novo: {erro}')
 
 # e = CRUDEmpresas()
 # emp1 = e.add('Coca-Cola', 234234)

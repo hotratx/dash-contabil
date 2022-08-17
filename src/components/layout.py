@@ -5,11 +5,10 @@ from dash.exceptions import PreventUpdate
 from flask_login import logout_user, current_user
 from src.pages.home import Home
 from src.pages.login import Login
-from src.database.crud import CRUDUser
 from src.components import ids
 
 
-def create_layout(app: Dash) -> dbc.Container:
+def create_layout(app: Dash) -> html.Div:
     login = Login(app)
     home = Home(app)
 
@@ -31,27 +30,9 @@ def create_layout(app: Dash) -> dbc.Container:
             if current_user.is_authenticated:
                 logout_user()
                 return login.render()
+    main = html.Div(
 
-    main = dbc.Container(
-        children=[
-            dbc.Row(
-                [
-                    dbc.Col(
-                        [
-                            dcc.Location(id=ids.BASE_URL, refresh=False),
-                            html.Div(
-                                id=ids.PAGE_CONTENT,
-                                style={
-                                    "height": "100vh",
-                                    "display": "flex",
-                                    "justify-content": "center",
-                                },
-                            ),
-                        ]
-                    )
-                ]
-            ),
-        ],
-        fluid=True,
+        dcc.Location(id=ids.BASE_URL, refresh=False),
+        id=ids.PAGE_CONTENT,
     )
     return main

@@ -1,4 +1,34 @@
 [[package]]
+name = "appnope"
+version = "0.1.3"
+description = "Disable App Nap on macOS >= 10.9"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "asttokens"
+version = "2.0.8"
+description = "Annotate AST trees with source code positions"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+six = "*"
+
+[package.extras]
+test = ["astroid (<=2.5.3)", "pytest"]
+
+[[package]]
+name = "backcall"
+version = "0.2.0"
+description = "Specifications for callback functions passed in to an API"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "black"
 version = "22.6.0"
 description = "The uncompromising code formatter."
@@ -125,12 +155,28 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "decorator"
+version = "5.1.1"
+description = "Decorators for Humans"
+category = "dev"
+optional = false
+python-versions = ">=3.5"
+
+[[package]]
 name = "distro"
 version = "1.7.0"
 description = "Distro - an OS platform information API"
 category = "main"
 optional = false
 python-versions = ">=3.6"
+
+[[package]]
+name = "executing"
+version = "0.10.0"
+description = "Get the currently executing AST node of a frame, and other information"
+category = "dev"
+optional = false
+python-versions = "*"
 
 [[package]]
 name = "flask"
@@ -200,12 +246,62 @@ setproctitle = ["setproctitle"]
 tornado = ["tornado (>=0.2)"]
 
 [[package]]
+name = "ipython"
+version = "8.4.0"
+description = "IPython: Productive Interactive Computing"
+category = "dev"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+appnope = {version = "*", markers = "sys_platform == \"darwin\""}
+backcall = "*"
+colorama = {version = "*", markers = "sys_platform == \"win32\""}
+decorator = "*"
+jedi = ">=0.16"
+matplotlib-inline = "*"
+pexpect = {version = ">4.3", markers = "sys_platform != \"win32\""}
+pickleshare = "*"
+prompt-toolkit = ">=2.0.0,<3.0.0 || >3.0.0,<3.0.1 || >3.0.1,<3.1.0"
+pygments = ">=2.4.0"
+stack-data = "*"
+traitlets = ">=5"
+
+[package.extras]
+all = ["black", "Sphinx (>=1.3)", "ipykernel", "nbconvert", "nbformat", "ipywidgets", "notebook", "ipyparallel", "qtconsole", "pytest (<7.1)", "pytest-asyncio", "testpath", "curio", "matplotlib (!=3.2.0)", "numpy (>=1.19)", "pandas", "trio"]
+black = ["black"]
+doc = ["Sphinx (>=1.3)"]
+kernel = ["ipykernel"]
+nbconvert = ["nbconvert"]
+nbformat = ["nbformat"]
+notebook = ["ipywidgets", "notebook"]
+parallel = ["ipyparallel"]
+qtconsole = ["qtconsole"]
+test = ["pytest (<7.1)", "pytest-asyncio", "testpath"]
+test_extra = ["pytest (<7.1)", "pytest-asyncio", "testpath", "curio", "matplotlib (!=3.2.0)", "nbformat", "numpy (>=1.19)", "pandas", "trio"]
+
+[[package]]
 name = "itsdangerous"
 version = "2.1.2"
 description = "Safely pass data to untrusted environments and back."
 category = "main"
 optional = false
 python-versions = ">=3.7"
+
+[[package]]
+name = "jedi"
+version = "0.18.1"
+description = "An autocompletion tool for Python that can be used for text editors."
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+parso = ">=0.8.0,<0.9.0"
+
+[package.extras]
+qa = ["flake8 (==3.8.3)", "mypy (==0.782)"]
+testing = ["Django (<3.1)", "colorama", "docopt", "pytest (<7.0.0)"]
 
 [[package]]
 name = "jinja2"
@@ -228,6 +324,17 @@ description = "Safely add untrusted strings to HTML/XML markup."
 category = "main"
 optional = false
 python-versions = ">=3.7"
+
+[[package]]
+name = "matplotlib-inline"
+version = "0.1.5"
+description = "Inline Matplotlib backend for Jupyter"
+category = "dev"
+optional = false
+python-versions = ">=3.5"
+
+[package.dependencies]
+traitlets = "*"
 
 [[package]]
 name = "mypy-extensions"
@@ -273,6 +380,18 @@ pytz = ">=2020.1"
 test = ["hypothesis (>=5.5.3)", "pytest (>=6.0)", "pytest-xdist (>=1.31)"]
 
 [[package]]
+name = "parso"
+version = "0.8.3"
+description = "A Python Parser"
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+qa = ["flake8 (==3.8.3)", "mypy (==0.782)"]
+testing = ["docopt", "pytest (<6.0.0)"]
+
+[[package]]
 name = "passlib"
 version = "1.7.4"
 description = "comprehensive password hashing framework supporting over 30 schemes"
@@ -293,6 +412,25 @@ description = "Utility library for gitignore style pattern matching of file path
 category = "main"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
+
+[[package]]
+name = "pexpect"
+version = "4.8.0"
+description = "Pexpect allows easy control of interactive console applications."
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+ptyprocess = ">=0.5"
+
+[[package]]
+name = "pickleshare"
+version = "0.7.5"
+description = "Tiny 'shelve'-like database with concurrency support"
+category = "dev"
+optional = false
+python-versions = "*"
 
 [[package]]
 name = "pillow"
@@ -330,6 +468,36 @@ python-versions = ">=3.6"
 tenacity = ">=6.2.0"
 
 [[package]]
+name = "prompt-toolkit"
+version = "3.0.30"
+description = "Library for building powerful interactive command lines in Python"
+category = "dev"
+optional = false
+python-versions = ">=3.6.2"
+
+[package.dependencies]
+wcwidth = "*"
+
+[[package]]
+name = "ptyprocess"
+version = "0.7.0"
+description = "Run a subprocess in a pseudo terminal"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "pure-eval"
+version = "0.2.2"
+description = "Safely evaluate AST nodes without side effects"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.extras]
+tests = ["pytest"]
+
+[[package]]
 name = "pydantic"
 version = "1.9.1"
 description = "Data validation and settings management using python type hints"
@@ -343,6 +511,17 @@ typing-extensions = ">=3.7.4.3"
 [package.extras]
 dotenv = ["python-dotenv (>=0.10.4)"]
 email = ["email-validator (>=1.0.3)"]
+
+[[package]]
+name = "pygments"
+version = "2.13.0"
+description = "Pygments is a syntax highlighting package written in Python."
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+plugins = ["importlib-metadata"]
 
 [[package]]
 name = "pyparsing"
@@ -434,6 +613,22 @@ pymysql = ["pymysql (<1)", "pymysql"]
 sqlcipher = ["sqlcipher3-binary"]
 
 [[package]]
+name = "stack-data"
+version = "0.4.0"
+description = "Extract data from python stack frames and tracebacks for informative displays"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+asttokens = "*"
+executing = "*"
+pure-eval = "*"
+
+[package.extras]
+tests = ["cython", "littleutils", "pygments", "typeguard", "pytest"]
+
+[[package]]
 name = "tabula-py"
 version = "2.4.0"
 description = "Simple wrapper for tabula-java, read tables from PDF into DataFrame"
@@ -479,12 +674,31 @@ optional = false
 python-versions = ">= 3.7"
 
 [[package]]
+name = "traitlets"
+version = "5.3.0"
+description = ""
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.extras]
+test = ["pre-commit", "pytest"]
+
+[[package]]
 name = "typing-extensions"
 version = "4.3.0"
 description = "Backported and Experimental Type Hints for Python 3.7+"
 category = "main"
 optional = false
 python-versions = ">=3.7"
+
+[[package]]
+name = "wcwidth"
+version = "0.2.5"
+description = "Measures the displayed width of unicode strings in a terminal"
+category = "dev"
+optional = false
+python-versions = "*"
 
 [[package]]
 name = "werkzeug"
@@ -503,9 +717,12 @@ watchdog = ["watchdog"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "1be48a3d66ada7acb4106e838beee6e235d247e76c3d4afbdb601772e0d2d61f"
+content-hash = "ae915cad5761869eb3648758da18b09f3362f4e02a5b858e2d53e31cb7cfc6f0"
 
 [metadata.files]
+appnope = []
+asttokens = []
+backcall = []
 black = []
 bokeh = []
 brotli = []
@@ -516,25 +733,37 @@ dash-bootstrap-components = []
 dash-core-components = []
 dash-html-components = []
 dash-table = []
+decorator = []
 distro = []
+executing = []
 flask = []
 flask-compress = []
 flask-login = []
 greenlet = []
 gunicorn = []
+ipython = []
 itsdangerous = []
+jedi = []
 jinja2 = []
 markupsafe = []
+matplotlib-inline = []
 mypy-extensions = []
 numpy = []
 packaging = []
 pandas = []
+parso = []
 passlib = []
 pathspec = []
+pexpect = []
+pickleshare = []
 pillow = []
 platformdirs = []
 plotly = []
+prompt-toolkit = []
+ptyprocess = []
+pure-eval = []
 pydantic = []
+pygments = []
 pyparsing = []
 pypdf2 = []
 python-dateutil = []
@@ -542,9 +771,12 @@ pytz = []
 pyyaml = []
 six = []
 sqlalchemy = []
+stack-data = []
 tabula-py = []
 tenacity = []
 tomli = []
 tornado = []
+traitlets = []
 typing-extensions = []
+wcwidth = []
 werkzeug = []
