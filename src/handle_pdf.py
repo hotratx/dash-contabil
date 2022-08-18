@@ -34,9 +34,9 @@ class HandlePdf:
     def __init__(self, db):
         self._db = db
 
-    def run(self):
+    def run(self, escritorio: str):
         self.p = Path(__file__).parent.parent / "pdfs"
-        print(f"path: {self.p.absolute()}")
+        print(f"ESCRITORIO: {escritorio}\npath: {self.p.absolute()}")
 
         pdfs = [p1 for p1 in self.p.iterdir() if p1.suffix == ".pdf"]
 

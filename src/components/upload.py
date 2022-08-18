@@ -38,7 +38,7 @@ class Upload:
             id=ids.UPLOAD_DATA,
             children=html.Div(["Drag and Drop or ", html.A("Select Files")]),
             style={
-                "width": "30%",
+                "width": "100%",
                 "height": "60px",
                 "lineHeight": "60px",
                 "borderWidth": "1px",

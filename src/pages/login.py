@@ -23,7 +23,7 @@ class User(UserMixin):
         self.id = username
 
 
-class Login:
+class PageLogin:
     def __init__(self, app: Dash):
         self._app = app
         self._run()

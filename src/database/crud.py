@@ -39,7 +39,7 @@ class Crud:
 
     def get_escritorios(self, username: str) -> list[Escritorio]:
         stmt = select(Escritorio).join(Escritorio.users).where(User.username == username)
-        esc = self.session.scalars(stmt).one_or_none()
+        esc = self.session.scalars(stmt).all()
         print(f'RESULTADO DO GET ESCRITORIO: {esc}')
         return esc
 
