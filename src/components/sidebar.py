@@ -135,9 +135,9 @@ class Sidebar:
                 ),
                 dbc.Nav(
                     [
-                        dbc.NavLink("Page 1", href="/page-1", id="page-1-link"),
-                        dbc.NavLink("Page 2", href="/page-2", id="page-2-link"),
-                        dbc.NavLink("Page 3", href="/page-3", id="page-3-link"),
+                        dbc.NavLink("Status", href="/page-1", id="page-1-link"),
+                        dbc.NavLink("Add Dados", href="/page-2", id="page-2-link"),
+                        dbc.NavLink("Add Usuários", href="/page-3", id="page-3-link"),
                     ],
                     vertical=True,
                     pills=True,

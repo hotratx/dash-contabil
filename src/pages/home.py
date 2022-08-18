@@ -46,18 +46,18 @@ class Home:
                 print("HANDLE PDF -----")
             raise PreventUpdate
 
-        @self._app.callback(Output(ids.URL_LOGOUT, "pathname"), Input(ids.LOGOUT_BTN, "n_clicks"))
-        def logout_button_click(n_clicks):
-            """Callback controle de páginas"""
-            print("saindo SAINDO")
-            if n_clicks > 0:
-                return "/logout"
+        # @self._app.callback(Output(ids.URL_LOGOUT, "pathname"), Input(ids.LOGOUT_BTN, "n_clicks"))
+        # def logout_button_click(n_clicks):
+        #     """Callback controle de páginas"""
+        #     print("saindo SAINDO")
+        #     if n_clicks > 0:
+        #         return "/logout"
 
     def render(self) -> html.Div:
         home = html.Div(
             className="app-div",
             children=[
-                dcc.Location(id=ids.URL_LOGOUT, refresh=True),
+                # dcc.Location(id=ids.URL_LOGOUT, refresh=True),
                 html.H1(self._app.title),
                 html.Hr(),
                 dbc.Button("Logout", id=ids.LOGOUT_BTN, n_clicks=0, color="dark"),

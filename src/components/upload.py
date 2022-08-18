@@ -33,8 +33,9 @@ class Upload:
             raise PreventUpdate
 
     def render(self) -> dcc.Upload:
+        html.P('Hello ', id=ids.OUTPUT_RESULT),
         return dcc.Upload(
-            id="upload-data",
+            id=ids.UPLOAD_DATA,
             children=html.Div(["Drag and Drop or ", html.A("Select Files")]),
             style={
                 "width": "30%",
