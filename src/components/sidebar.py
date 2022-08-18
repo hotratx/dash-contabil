@@ -84,8 +84,8 @@ class Sidebar:
                         dbc.Row(
                             [
                                 # dbc.Button("Sidebar", outline=True, color="secondary", className="mr-1", id="btn_sidebar"),
-                                dbc.Col(html.Img(id="btn_sidebar", src=PLOTLY_LOGO, height="30px")),
-                                dbc.Col(dbc.NavbarBrand("Navbar", className="ms-2")),
+                                dbc.Col(html.Img(id="btn_sidebar", src=PLOTLY_LOGO, height="30px", style={'margin-left': '-55px'})),
+                                dbc.Col(dbc.NavbarBrand("Contabil", style={'margin-left': '-15px'})),
                             ],
                             align="left",
                             className="g-0",
@@ -174,7 +174,7 @@ class Sidebar:
 # the style arguments for the sidebar. We use position:fixed and a fixed width
 SIDEBAR_STYLE = {
     "position": "fixed",
-    "top": 62.5,
+    "top": 70,
     "left": 0,
     "bottom": 0,
     "width": "16rem",
@@ -188,7 +188,7 @@ SIDEBAR_STYLE = {
 
 SIDEBAR_HIDEN = {
     "position": "fixed",
-    "top": 62.5,
+    "top": 70,
     "left": "-16rem",
     "bottom": 0,
     "width": "16rem",

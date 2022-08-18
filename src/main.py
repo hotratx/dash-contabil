@@ -14,7 +14,7 @@ app = Dash(
     server=server,
     title="Example Dash login",
     update_title="Loading...",
-    external_stylesheets=[dbc.themes.BOOTSTRAP],
+    external_stylesheets=[dbc.themes.PULSE],
     suppress_callback_exceptions=True,
 )
 
