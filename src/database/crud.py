@@ -11,8 +11,10 @@ class Crud:
         self.session = Session()
 
     def add_user(self, escritorios: list, user_new: str, password: str) -> User:
+        print(f'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX: {escritorios}\nUSER_NEW: {user_new}\nPASSWORD: {password}')
         stmt = select(Escritorio).filter(or_(Escritorio.name == v for v in escritorios))
         escs = self.session.scalars(stmt).all()
+        print(f'BANCO DE DADOS ESCS: {escs}')
 
         hash = get_password_hash(password)
 
@@ -21,6 +23,7 @@ class Crud:
             user.escritorios.append(e)
         self.session.add(user)
         self.session.commit()
+        print(f'ADD NEW USE COM SUCESSO: {user}')
         return user
 
     def get_user(self, username: str) -> User:

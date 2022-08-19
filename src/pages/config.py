@@ -33,10 +33,21 @@ class PageConfig:
     def _escritorios(self):
         escs = self._crud.get_escritorios(current_user.get_id())
         self._revert_value_to_label = {}
+        i = 0
         for e in escs:
-            self._revert_value_to_label[0] = e.name
+            self._revert_value_to_label[i] = e.name
+            i += 1
 
         return [{'label': es.name, 'value': 'asdf'} for es in escs]
+
+    def _all_users(self, position=0):
+        escs = self._crud.get_escritorios(current_user.get_id())
+        users = escs[position].users
+        resp = ''
+        for e in escs:
+            for u in e.users:
+                resp += f'{u.username} - {e.name} | '
+        return resp
 
     def _run(self):
         @self._app.callback(
@@ -55,21 +66,85 @@ class PageConfig:
             raise PreventUpdate
 
         @self._app.callback(
-            Output(ids.ALERT_NEW_USER, "is_open"),
+            Output(ids.ALERT_NEW_USER_SUCESS, "is_open"),
+            Output(ids.ALERT_NEW_USER_ERROR, "is_open"),
             [Input(ids.SUBMIT_NEW_USER, "n_clicks")],
-            [State(ids.NEW_USERNAME, "value"), State(ids.NEW_PASSWORD, "value"), State(ids.ALERT_NEW_USER, 'is_open')],
+            [State(ids.NEW_USERNAME, "value"), State(ids.NEW_PASSWORD, "value"), State(ids.SELECT_ESCRITORIO, 'value'), State(ids.ALERT_NEW_USER_SUCESS, 'is_open')],
         )
-        def add_new_user(n_clicks, username, password, is_open):
+        def add_new_user(n_clicks, username, password, escritorio, is_open):
             """Callback controle de páginas"""
-            print(f'USERNAME: {username} - PASSWORD: {password}')
+            print(f'NAMENAMENAMENAMENAME --- USERNAME: {username} - PASSWORD: {password} - ESCRITORIO: {self._revert_value_to_label[escritorio[0]]}')
             if n_clicks > 0:
                 print('PASSOU DO n_clicks')
-                return not is_open
-            return is_open
+                if username and password:
+                    print('VAI PRO BANCO DE DADOS')
+                    resp = self._crud.add_user([self._revert_value_to_label[escritorio[0]]], username, password)
+                    print(f'RESPONSE DO CRUD: {resp}')
+                    return not is_open, is_open
+                else:
+                    return is_open, not is_open
+            return is_open, is_open
+
     def render(self) -> html.Div:
+
+        username_input = dbc.Row(
+            [
+                dbc.Label("Username", html_for="example-text-row", width=2),
+                dbc.Col(
+                    dbc.Input(
+                        type="text", id=ids.NEW_USERNAME, placeholder="Enter username"
+                    ),
+                    width=10,
+                ),
+            ],
+            className="mb-3",
+        )
+
+        password_input = dbc.Row(
+            [
+                dbc.Label("Password", html_for="example-password-row", width=2),
+                dbc.Col(
+                    dbc.Input(
+                        type="password",
+                        id=ids.NEW_PASSWORD,
+                        placeholder="Enter password",
+                    ),
+                    width=10,
+                ),
+            ],
+            className="mb-3",
+        )
+
+        escritorio_input = dbc.Row(
+            [
+                dbc.Label("Escritório", html_for="example-password-row", width=2),
+                dbc.Col(
+                    dbc.Select(
+                        id=ids.SELECT_ESCRITORIO,
+                        options=self._escritorios(),
+                        value=[0]
+                    ),
+                )
+            ],
+            className="mb-3",
+        )
+
+        table_header = [
+            html.Thead(html.Tr([html.Th("First Name"), html.Th("Last Name")]))
+        ]
+
+        row1 = html.Tr([html.Td("Arthur"), html.Td("Dent")])
+        row2 = html.Tr([html.Td("Ford"), html.Td("Prefect")])
+        row3 = html.Tr([html.Td("Zaphod"), html.Td("Beeblebrox")])
+        row4 = html.Tr([html.Td("Trillian"), html.Td("Asdf")])
+                                
+
+        table_body = [html.Tbody([row1, row2, row3, row4])]
+
+        table = dbc.Table(table_header + table_body, bordered=True, style={'margin-top': '20px'})
+
+
         tab1_content = dbc.Card(
-
-
             dbc.Row(
                 [
                     dbc.Col(html.Div(
@@ -110,50 +185,49 @@ class PageConfig:
                 dbc.Col(
                     dbc.CardBody(
                         [
+                            dbc.Form([username_input, password_input, escritorio_input]),
+                            dbc.Row(
+                                dbc.Col([
+                                    dbc.Button("Submit", id=ids.SUBMIT_NEW_USER, n_clicks=0, style={'margin-top': '20px', "justify-content": "center"}),
+                                    dbc.Alert("Usuário adicionado!!", id=ids.ALERT_NEW_USER_SUCESS, dismissable=True, is_open=False, style={'margin-top': '20px'}),
+                                    dbc.Alert("Preencha os campos com dados válidos!", id=ids.ALERT_NEW_USER_ERROR, color="danger", dismissable=True, is_open=False, style={'margin-top': '20px'})
+                                ]),
+                            ),
+                            html.P(self._all_users()),
+                            table,
+                        ],
+                    ),
+                ),
+                # dbc.Col(html.Div("One of three columns")),
+            ]
+        ),
+
+            className="mt-3"
+        )
+
+        tab3_content = dbc.Card(
+        dbc.Row(
+            [
+                dbc.Col(
+                    dbc.CardBody(
+                        [
                             dbc.Row(
                                 [
-                                    dbc.Label("Username", html_for="example-email-row", width=2),
-                                    dbc.Col(
-                                        dbc.Input(
-                                            type="username", id=ids.NEW_USERNAME, placeholder="Enter email"
-                                        ),
-                                        width=10,
-                                    ),
+                                    dbc.Label("Name", html_for="example-email-row", width=2),
+                                    # dbc.Col(
+                                    #     dbc.Input(
+                                    #         type="username", id=ids.NEW_USERNAME, placeholder="Enter nome_do_escritório"
+                                    #     ),
+                                    #     width=10,
+                                    # ),
                                 ],
                                 className="mb-3",
                             ),
 
                             dbc.Row(
-                                [
-                                    dbc.Label("Password", html_for="example-password-row", width=2),
-                                    dbc.Col(
-                                        dbc.Input(
-                                            type="password",
-                                            id=ids.NEW_PASSWORD,
-                                            placeholder="Enter password",
-                                        ),
-                                        width=10,
-                                    ),
-                                ],
-                                className="mb-3",
-                            ),
-                            dbc.Row(
-                                [
-                                    dbc.Label("Escritório", html_for="example-password-row", width=2),
-                                    dbc.Col(
-                                        dbc.Select(
-                                            id=ids.SELECT_ESCRITORIO,
-                                            options=self._escritorios(),
-                                            value=[0]
-                                        ),
-                                    )
-                                ],
-                                className="mb-3",
-                            ),
-                            dbc.Row(
                                 dbc.Col([
-                                    dbc.Button("Submit", id=ids.SUBMIT_NEW_USER, n_clicks=0, style={'margin-top': '20px', "justify-content": "center"}),
-                                    dbc.Alert("Usuário adicionado!!", id=ids.ALERT_NEW_USER, dismissable=True, is_open=False, style={'margin-top': '20px'})
+                                    dbc.Button("Submit", id='asdf', n_clicks=0, style={'margin-top': '20px', "justify-content": "center"}),
+                                    dbc.Alert("Usuário adicionado!!", id='asaa', dismissable=True, is_open=False, style={'margin-top': '20px'})
                                 ]),
                             )
                         ],
@@ -165,7 +239,6 @@ class PageConfig:
 
             className="mt-3"
         )
-
         tabs = html.Div(
             id="tabs",
             className="tabs",
@@ -191,18 +264,19 @@ class PageConfig:
                             className="custom-tab",
                             selected_className="custom-tab--selected",
                         ),
+                        dcc.Tab(
+                            tab3_content,
+                            id="add-escritorios",
+                            label="Adicionar Escritorio",
+                            value="tab3",
+                            className="custom-tab",
+                            selected_className="custom-tab--selected",
+                        ),
                     ],
                 )
             ],
         )
 
-
-        # tabs = dbc.Tabs(
-        #     [
-        #         dbc.Tab(tab1_content, label="Novos Dados", tab_style={"margin-left": "35%"}, active_tab_style={"background-color": "#FB79B3"}, active_label_style={"color": "#FB79B3"}),
-        #         dbc.Tab(tab2_content, label="Novos Usuários"),
-        #         ], style={'background-color': '#f8f9fa'}
-        # )
 
         home = html.Div(
             className="app-div",
