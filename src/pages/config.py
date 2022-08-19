@@ -5,7 +5,8 @@ from flask_login import current_user
 import dash_bootstrap_components as dbc
 from src.handle_pdf import HandlePdf
 from src.components.upload import Upload
-from src.components import ids, nation_dropdown
+from src.components.esc_dropdown import SelectEscritorios
+from src.components import ids
 from src.database import Crud
 
 
@@ -28,6 +29,7 @@ class PageConfig:
         self._app = app
         self._upload = Upload(app)
         self._crud = Crud()
+        self._select_esc = SelectEscritorios(app)
         self._run()
 
     def _escritorios(self):
@@ -65,17 +67,6 @@ class PageConfig:
         return resp
 
     def _run(self):
-
-        @self._app.callback(
-            Output(ids.SELECT_ESCRITORIO, "value"),
-            Input(ids.SELECT_ALL_NATIONS_BUTTON, "n_clicks"),
-        )
-        def select_all_nations(n_clicks):
-            if n_clicks:
-                print(f'DENTRO DO SELECT {self._all_escritorios_list()}')
-                return self._all_escritorios_list()
-
-
         @self._app.callback(
             Output(ids.SPINNER, "children"),
             Input(ids.HANDLE_PDF_TBN, "n_clicks"),
@@ -83,11 +74,12 @@ class PageConfig:
         )
         def analise_pdf(n_clicks, value):
             """Callback controle de páginas"""
-            value = self._revert_value_to_label[value[0]]
+            print(f'VALUE DO SELECT_ESCRITORIO: {value}')
+            # value = self._revert_value_to_label[value[0]]
             print(f'VALUE FINAL: {value} - n_clicks: {n_clicks}')
             if n_clicks > 0:
                 print('PASSOU DO n_clicks')
-                handle_pdf.run(value)
+                # handle_pdf.run(value)
                 return "Foi feito o upload dos seguintes arquivos:"
             raise PreventUpdate
 
@@ -162,16 +154,12 @@ class PageConfig:
             className="mb-3",
         )
 
-        # escritorio_input = nation_dropdown.render(self._app, self._all_escritorios_list()),
         escritorio_input = dbc.Row(
             [
                 dbc.Label("Escritório", html_for="example-password-row", width=2),
                 dbc.Col(
-                    dbc.Select(
-                        id=ids.SELECT_ESCRITORIO,
-                        options=self._escritorios(),
-                        value=[0]
-                    ),
+                    # escritorios_dropdown.render(self._app, self._all_escritorios_list()),
+                    self._select_esc.render(self._all_escritorios_list())
                 )
             ],
             className="mb-3",
@@ -261,7 +249,7 @@ class PageConfig:
                             dbc.Row(
                                 [
                                     dbc.Label("Name", html_for="example-email-row", width=2),
-                                    # nation_dropdown.render(self._app, self._all_escritorios_list()),
+                                    # escritorios_dropdown.render(self._app, self._all_escritorios_list()),
 
                                     dbc.Col(
                                         dbc.Input(
