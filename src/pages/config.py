@@ -5,7 +5,7 @@ from flask_login import current_user
 import dash_bootstrap_components as dbc
 from src.handle_pdf import HandlePdf
 from src.components.upload import Upload
-from src.components import ids
+from src.components import ids, nation_dropdown
 from src.database import Crud
 
 
@@ -38,7 +38,22 @@ class PageConfig:
             self._revert_value_to_label[i] = e.name
             i += 1
 
-        return [{'label': es.name, 'value': 'asdf'} for es in escs]
+        return [{'label': es.name, 'value': value} for es, value in zip(escs, range(len(escs)))]
+
+    def _all_escritorios_list(self):
+        escs = self._crud.get_escritorios(current_user.get_id())
+        resp = []
+        for e in escs:
+            resp.append(e.name)
+        return resp
+
+    def _all_escritorios(self):
+        escs = self._crud.get_escritorios(current_user.get_id())
+        resp = ''
+        for e in escs:
+            resp += f'{e.name}, '
+        self._all_escs = resp
+        return resp
 
     def _all_users(self, position=0):
         escs = self._crud.get_escritorios(current_user.get_id())
@@ -50,6 +65,17 @@ class PageConfig:
         return resp
 
     def _run(self):
+
+        @self._app.callback(
+            Output(ids.SELECT_ESCRITORIO, "value"),
+            Input(ids.SELECT_ALL_NATIONS_BUTTON, "n_clicks"),
+        )
+        def select_all_nations(n_clicks):
+            if n_clicks:
+                print(f'DENTRO DO SELECT {self._all_escritorios_list()}')
+                return self._all_escritorios_list()
+
+
         @self._app.callback(
             Output(ids.SPINNER, "children"),
             Input(ids.HANDLE_PDF_TBN, "n_clicks"),
@@ -73,13 +99,34 @@ class PageConfig:
         )
         def add_new_user(n_clicks, username, password, escritorio, is_open):
             """Callback controle de páginas"""
-            print(f'NAMENAMENAMENAMENAME --- USERNAME: {username} - PASSWORD: {password} - ESCRITORIO: {self._revert_value_to_label[escritorio[0]]}')
+            print(f'NAMENAMENAMENAMENAME --- USERNAME: {username} - PASSWORD: {password} - ESCRITORIO: {escritorio}')
+            # print(f'{self._revert_value_to_label[int(escritorio[0])]}')
             if n_clicks > 0:
                 print('PASSOU DO n_clicks')
                 if username and password:
                     print('VAI PRO BANCO DE DADOS')
-                    resp = self._crud.add_user([self._revert_value_to_label[escritorio[0]]], username, password)
-                    print(f'RESPONSE DO CRUD: {resp}')
+                    # resp = self._crud.add_user([self._revert_value_to_label[int(escritorio[0])]], username, password)
+                    # print(f'RESPONSE DO CRUD: {resp}')
+                    return not is_open, is_open
+                else:
+                    return is_open, not is_open
+            return is_open, is_open
+
+        @self._app.callback(
+            Output(ids.ALERT_NEW_ESCRITORIO_SUCESS, "is_open"),
+            Output(ids.ALERT_NEW_ESCRITORIO_ERROR, "is_open"),
+            [Input(ids.SUBMIT_NEW_ESCRITORIO, "n_clicks")],
+            State(ids.NEW_ESCRITORIO, "value"),
+            State(ids.ALERT_NEW_ESCRITORIO_SUCESS, "is_open")
+        )
+        def add_new_escritorio(n_clicks, value, is_open):
+            """Callback controle de páginas"""
+            if n_clicks > 0:
+                if value:
+                    # print(f'VVVVVVVVVVVVVAI ADD NEW ESCRITÓRIO: {value}')
+                    e = self._crud.add_escritorio(value, current_user.get_id())
+                    print(f'SUCESSO ADD NOVO ESCRIORIO: {e}')
+                    self._all_escritorios()
                     return not is_open, is_open
                 else:
                     return is_open, not is_open
@@ -115,6 +162,7 @@ class PageConfig:
             className="mb-3",
         )
 
+        # escritorio_input = nation_dropdown.render(self._app, self._all_escritorios_list()),
         escritorio_input = dbc.Row(
             [
                 dbc.Label("Escritório", html_for="example-password-row", width=2),
@@ -143,14 +191,12 @@ class PageConfig:
 
         table = dbc.Table(table_header + table_body, bordered=True, style={'margin-top': '20px'})
 
-
         tab1_content = dbc.Card(
             dbc.Row(
                 [
                     dbc.Col(html.Div(
                         dbc.CardBody(
                             [
-                                html.P(f'Escritorios: {self._escritorios()}', id=ids.OUTPUT_RESULT),
                                 html.P("Arraste ou selecione os pdf par fazer o upload.", className="card-text"),
                                 self._upload.render(),
                                 html.Div(id=ids.OUTPUT_DATA_UPLOAD),
@@ -167,6 +213,7 @@ class PageConfig:
                                     id=ids.SELECT_ESCRITORIO,
                                     options=self._escritorios(),
                                     value=self._escritorios()[0]
+
                                 ),
                                 dbc.Button("Extrair dados", id=ids.HANDLE_PDF_TBN, n_clicks=0, style={'margin-top': '20px'}),
                                 dbc.Spinner(html.Div(id=ids.SPINNER, style={'margin-top': '20px'}), color="primary", spinner_style={"width": "2rem", "height": "2rem", "margin-top": "-53px"}),
@@ -193,7 +240,7 @@ class PageConfig:
                                     dbc.Alert("Preencha os campos com dados válidos!", id=ids.ALERT_NEW_USER_ERROR, color="danger", dismissable=True, is_open=False, style={'margin-top': '20px'})
                                 ]),
                             ),
-                            html.P(self._all_users()),
+                            html.P(self._all_users(), style={'margin-top': '20px'}),
                             table,
                         ],
                     ),
@@ -214,22 +261,26 @@ class PageConfig:
                             dbc.Row(
                                 [
                                     dbc.Label("Name", html_for="example-email-row", width=2),
-                                    # dbc.Col(
-                                    #     dbc.Input(
-                                    #         type="username", id=ids.NEW_USERNAME, placeholder="Enter nome_do_escritório"
-                                    #     ),
-                                    #     width=10,
-                                    # ),
+                                    # nation_dropdown.render(self._app, self._all_escritorios_list()),
+
+                                    dbc.Col(
+                                        dbc.Input(
+                                            type="text", id=ids.NEW_ESCRITORIO, placeholder="Enter nome do escritório"
+                                        ),
+                                        width=10,
+                                    ),
                                 ],
                                 className="mb-3",
                             ),
 
                             dbc.Row(
                                 dbc.Col([
-                                    dbc.Button("Submit", id='asdf', n_clicks=0, style={'margin-top': '20px', "justify-content": "center"}),
-                                    dbc.Alert("Usuário adicionado!!", id='asaa', dismissable=True, is_open=False, style={'margin-top': '20px'})
+                                    dbc.Button("Submit", id=ids.SUBMIT_NEW_ESCRITORIO, n_clicks=0, style={'margin-top': '20px', "justify-content": "center"}),
+                                    dbc.Alert("Escritório adicionado!", id=ids.ALERT_NEW_ESCRITORIO_SUCESS, dismissable=True, is_open=False, style={'margin-top': '20px'}),
+                                    dbc.Alert("Preencha os campos com dados válidos!", id=ids.ALERT_NEW_ESCRITORIO_ERROR, color="danger", dismissable=True, is_open=False, style={'margin-top': '20px'})
                                 ]),
-                            )
+                            ),
+                            html.P(self._all_escritorios(), style={'margin-top': '20px'}),
                         ],
                     ),
                 ),

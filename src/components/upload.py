@@ -13,7 +13,6 @@ class Upload:
     def _run(self):
         @self._app.callback(
             Output(ids.OUTPUT_DATA_UPLOAD, "children"),
-            Output(ids.OUTPUT_RESULT, "children"),
             [Input(ids.UPLOAD_DATA, "contents")],
             State(ids.UPLOAD_DATA, "filename"),
             State(ids.UPLOAD_DATA, "last_modified"),
@@ -33,7 +32,6 @@ class Upload:
             raise PreventUpdate
 
     def render(self) -> dcc.Upload:
-        html.P('Hello ', id=ids.OUTPUT_RESULT),
         return dcc.Upload(
             id=ids.UPLOAD_DATA,
             children=html.Div(["Drag and Drop or ", html.A("Select Files")]),

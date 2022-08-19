@@ -118,16 +118,16 @@ class Sidebar:
         )
         sidebar = html.Div(
             [
-                html.H4("Sidebar", className="display-4"),
+                html.P("Sidebar", className="display-6"),
                 html.Hr(),
-                html.P(
-                    "A simple sidebar layout with navigation links", className="lead"
-                ),
+                # html.P(
+                #     "A simple sidebar layout with navigation links", className="lead"
+                # ),
                 dbc.Nav(
                     [
                         dbc.NavLink("Análise", href="/", id="page-1-link"),
                         dbc.NavLink("Config", href="/page-2", id="page-2-link"),
-                        dbc.NavLink("Add Usuários", href="/page-3", id="page-3-link"),
+                        dbc.NavLink("Outros", href="/page-3", id="page-3-link"),
                     ],
                     vertical=True,
                     pills=True,
