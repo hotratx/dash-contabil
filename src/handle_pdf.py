@@ -3,6 +3,7 @@ import tabula
 from PyPDF2 import PdfReader
 from pathlib import Path
 from locale import atof, setlocale, LC_NUMERIC
+from src.database import Crud
 
 setlocale(LC_NUMERIC, "")
 
@@ -31,10 +32,12 @@ setlocale(LC_NUMERIC, "")
 
 
 class HandlePdf:
-    def __init__(self, db):
+    def __init__(self, db: Crud):
         self._db = db
 
     def run(self, escritorio: str):
+        print('ENTROU NO HANDLEPDF esc: {escritorio}')
+        self._esc = escritorio
         self.p = Path(__file__).parent.parent / "pdfs"
         print(f"ESCRITORIO: {escritorio}\npath: {self.p.absolute()}")
 
@@ -56,4 +59,56 @@ class HandlePdf:
     def _str_dre(self, path_pdf):
         print(f"ENTROU NO STR_DRE: {path_pdf}")
         df = tabula.read_pdf(path_pdf, pages="all")
-        print("tudo certo")
+        resp = str_dre(df)
+        self._db.add_dre(resp, self._esc)
+        print(f'resp do str_dre: {resp}')
+
+
+def str_dre(df):
+    abrev = {
+                "rbo": "Receita Bruta Operacional",
+                "fpms": "Faturamento Prod. Merc. e Serviços",
+                "vm": "Venda de Mercadorias",
+                "dr": "Deduções da Receita",
+                "ifs": "Impostos Faturados",
+                "icms": "ICMS",
+                "cofins": "COFINS",
+                "pis": "PIS",
+                "od": "Outras Deduções",
+                "vcddi": "Vendas Canc., Devol. e Descontos Inc...",
+                "rl": "Receita Líquida",
+                "cmspv": "Custo Mercad./Serv./Produtos Vendidos",
+                "cmr": "Custo das Mercadorias Revendidas",
+                "lb": "Lucro Bruto",
+                "do": "Despesas Operacionais",
+                "da": "Despesas Administrativas",
+                "dt": "Despesas Tributárias",
+                "rfo": "Resultado Financeiro",
+                "rfs": "Receitas Financeiras",
+                "df": "Despesas Financeiras",
+                "rapc": "Res. Antes das Participações e Contrib.",
+                "raircs": "Res. Antes Imp.Renda e Contrib. Social",
+                "cssl": "Contribuição Social Sobre o Lucro",
+                "ir": "Imposto de Renda",
+                "rle": "Resultado Líquido do Exercicio"
+            }
+
+    def line(tipo: str):
+        mask = df[[df.columns[1]]].apply(
+            lambda x: x.str.contains(
+                tipo,
+                regex=True
+            )
+        ).any(axis=1)
+        return mask
+    resp = {}
+    for abr, name in abrev.items():
+        try:
+            x = df[line(name)].iloc[-1][-1]
+            if '(' in x:
+                resp[abr] = atof(x[1:-1])
+            else:
+                resp[abr] = atof(x)             
+        except:
+            print(abr, name)
+    return resp

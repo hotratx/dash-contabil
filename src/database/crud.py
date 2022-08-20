@@ -1,5 +1,5 @@
 from sqlalchemy import select, or_
-from .model import Session, User, Escritorio
+from .model import Session, User, Escritorio, Dre
 # from src.password import get_password_hash
 from passlib.context import CryptContext
 
@@ -11,25 +11,20 @@ class Crud:
         self.session = Session()
 
     def add_user(self, escritorios: list, user_new: str, password: str) -> User:
-        print(f'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX: {escritorios}\nUSER_NEW: {user_new}\nPASSWORD: {password}')
         stmt = select(Escritorio).filter(or_(Escritorio.name == v for v in escritorios))
         escs = self.session.scalars(stmt).all()
-        print(f'BANCO DE DADOS ESCS: {escs}')
 
         hash = get_password_hash(password)
-
         user = User(username=user_new, password=hash)
         for e in escs:
             user.escritorios.append(e)
         self.session.add(user)
         self.session.commit()
-        print(f'ADD NEW USE COM SUCESSO: {user}')
         return user
 
     def get_user(self, username: str) -> User:
         stmt = select(User).where(User.username == username)
         user = self.session.scalars(stmt).one_or_none()
-        print(f'RESULTADO DO GET USER: {user}')
         return user
 
     def add_escritorio(self, name: str, username: str) -> Escritorio:
@@ -43,9 +38,16 @@ class Crud:
     def get_escritorios(self, username: str) -> list[Escritorio]:
         stmt = select(Escritorio).join(Escritorio.users).where(User.username == username)
         esc = self.session.scalars(stmt).all()
-        print(f'RESULTADO DO GET ESCRITORIO: {esc}')
         return esc
 
+    def add_dre(self, data: dict, escritorio: str) -> Escritorio | None:
+        stmt = select(Escritorio).where(Escritorio.name == escritorio).one_or_none()
+        emp = self.session.scalars(stmt).all()
+        if emp:
+            dre = Dre(**data, empresa=emp)
+            self.session.add(dre)
+            self.session.commit()
+            return dre
 
 
 # class CRUDEmpresas:

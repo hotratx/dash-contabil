@@ -1,4 +1,6 @@
 from dash import Dash, html, dcc
+import dash_table as dt
+import pandas as pd
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 from flask_login import current_user
@@ -21,14 +23,16 @@ Check out their [60 Second Markdown Tutorial](http://commonmark.org/help/)
 <if this is your first introduction to Markdown!>
 """
 
-handle_pdf = HandlePdf("db")
+df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/solar.csv')
 
+df = df
 
 class PageConfig:
     def __init__(self, app: Dash):
         self._app = app
         self._upload = Upload(app)
         self._crud = Crud()
+        self._handle_pdf = HandlePdf(self._crud)
         self._select_esc = SelectEscritorios(app)
         self._run()
 
@@ -57,7 +61,15 @@ class PageConfig:
         self._all_escs = resp
         return resp
 
-    def _all_users(self, position=0):
+    def _all_users(self) -> list:
+        escs = self._crud.get_escritorios(current_user.get_id())
+        all_users = []
+        for esc in escs:
+            for user in esc.users:
+                all_users.append([user.username, esc.name])
+        return all_users
+
+    def _all_users1(self, position=0):
         escs = self._crud.get_escritorios(current_user.get_id())
         users = escs[position].users
         resp = ''
@@ -72,14 +84,14 @@ class PageConfig:
             Input(ids.HANDLE_PDF_TBN, "n_clicks"),
             State(ids.SELECT_ESCRITORIO, "value"),
         )
-        def analise_pdf(n_clicks, value):
+        def analise_pdf(n_clicks, escritorio):
             """Callback controle de páginas"""
-            print(f'VALUE DO SELECT_ESCRITORIO: {value}')
+            print(f'ANALISE PDF escritorio: {escritorio}')
             # value = self._revert_value_to_label[value[0]]
-            print(f'VALUE FINAL: {value} - n_clicks: {n_clicks}')
             if n_clicks > 0:
-                print('PASSOU DO n_clicks')
-                # handle_pdf.run(value)
+                # print('vai chamar o handepdf')
+                # self._handle_pdf.run(escritorio)
+                print('passou do handle pdf')
                 return "Foi feito o upload dos seguintes arquivos:"
             raise PreventUpdate
 
@@ -165,19 +177,24 @@ class PageConfig:
             className="mb-3",
         )
 
+        # inicio dash_table
+        table2 = dt.DataTable(df.to_dict('records'), [{"name": i, "id": i} for i in df.columns])
+
+
+
+        # inicio table
         table_header = [
-            html.Thead(html.Tr([html.Th("First Name"), html.Th("Last Name")]))
+            html.Thead(html.Tr([html.Th("Usuário"), html.Th("Escritório")]))
         ]
 
-        row1 = html.Tr([html.Td("Arthur"), html.Td("Dent")])
-        row2 = html.Tr([html.Td("Ford"), html.Td("Prefect")])
-        row3 = html.Tr([html.Td("Zaphod"), html.Td("Beeblebrox")])
-        row4 = html.Tr([html.Td("Trillian"), html.Td("Asdf")])
-                                
+        data = []
+        for x in self._all_users():
+            data.append(html.Tr([html.Td(x[0]), html.Td(x[1])]))
+        table_body = [html.Tbody(data)]
+        print(f'ALLLLLLL TABLESSS: {data}')
 
-        table_body = [html.Tbody([row1, row2, row3, row4])]
-
-        table = dbc.Table(table_header + table_body, bordered=True, style={'margin-top': '20px'})
+        table = dbc.Table(table_header + table_body, bordered=True, style={'margin-top': '20px',  'display': 'inline-block', 'width': '100%'})
+        # fim table
 
         tab1_content = dbc.Card(
             dbc.Row(
@@ -228,7 +245,7 @@ class PageConfig:
                                     dbc.Alert("Preencha os campos com dados válidos!", id=ids.ALERT_NEW_USER_ERROR, color="danger", dismissable=True, is_open=False, style={'margin-top': '20px'})
                                 ]),
                             ),
-                            html.P(self._all_users(), style={'margin-top': '20px'}),
+                            # html.P(self._all_users1(), style={'margin-top': '20px'}),
                             table,
                         ],
                     ),

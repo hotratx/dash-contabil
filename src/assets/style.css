@@ -1,29 +1,10 @@
 html, body {
   margin: 0;
   height: 100%;
-  overflow: hidden;
 }
 
 img:hover {
   color: #0FA0CE;
-}
-
-
-#tabs {
-  width: 100%;
-}
-
-.custom-tab {
-  background-color: #836FFF;
-
-}
-.custom-tabs {
-  background-color: #1E2130;
-  text-transform: uppercase;
-  font-weight: 600;
-  font-size: 14px;
-  height: fit-content;
-  cursor: pointer;
 }
 
 /* First line CSS */
