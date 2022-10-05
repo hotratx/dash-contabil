@@ -10,7 +10,7 @@ class SelectEscritorios:
 
     def _run(self):
         @self._app.callback(
-            Output(ids.SELECT_ESCRITORIO, "value"),
+            Output(ids.SELECT_ESCRITORIO_ADD_USER, "value"),
             Input(ids.SELECT_ALL_NATIONS_BUTTON, "n_clicks"),
         )
         def select_all_nations(n_clicks):
@@ -26,7 +26,7 @@ class SelectEscritorios:
             children=[
                 # html.H6("Nation"),
                 dcc.Dropdown(
-                    id=ids.SELECT_ESCRITORIO,
+                    id=ids.SELECT_ESCRITORIO_ADD_USER,
                     options=[{"label": nation, "value": nation} for nation in esc],
                     value=esc[0],
                     multi=True,

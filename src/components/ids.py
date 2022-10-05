@@ -1,6 +1,3 @@
-# nation dropdown
-SELECT_ALL_NATIONS_BUTTON = "select-all-nations-button"
-
 # home
 HANDLE_PDF_TBN = "handle-pdf-tbn"
 URL_LOGOUT = "url_logout"
@@ -36,3 +33,7 @@ NEW_ESCRITORIO = "new-escritorio"
 ALERT_NEW_ESCRITORIO_SUCESS = "alert-new-escritorio-sucess"
 ALERT_NEW_ESCRITORIO_ERROR = "alert-new-escritorio-error"
 SUBMIT_NEW_ESCRITORIO = "submit-new-escritorio"
+
+# esc_dropdown
+SELECT_ESCRITORIO_ADD_USER = "select-escritorio-add-user"
+SELECT_ALL_NATIONS_BUTTON = "select-all-nations-button"

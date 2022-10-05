@@ -36,18 +36,6 @@ class EscritorioUser(Base):
     escritorio_id = Column(Integer, ForeignKey('escritorios.id'))
 
 
-class Empresa(Base):
-    __tablename__ = "empresas"
-    id = Column(Integer, primary_key=True)
-    name = Column(String(30))
-    cnpj = Column(String(30))
-    escritorio_id = Column(Integer, ForeignKey("escritorios.id"))
-    escritorio = relationship("Escritorio", back_populates="empresas")
-    dres = relationship("Dre", back_populates="empresa")
-
-    def __repr__(self):
-        return f"cnpj: cnpj={self.cnpj}, rbo={self.rbo}"
-
 
 class Dre(Base):
     __tablename__ = "dre"
@@ -77,11 +65,24 @@ class Dre(Base):
     cssl = Column(Float, nullable=True)
     ir = Column(Float, nullable=True)
     rle = Column(Float, nullable=True)
-    empresa_id = Column(Integer, ForeignKey("empresas.id"))
-    empresa = relationship("Empresa", back_populates="dres")
+    empresa_id = Column(Integer, ForeignKey("empresa.id"))
+    empresa_rel = relationship("Empresa", back_populates="dre_rel")
 
     def __repr__(self):
-        return f"Dre(id={self.empresa_id}, data={self.rbo})"
+        return f"Dre(id=data={self.rbo})"
+
+class Empresa(Base):
+    __tablename__ = "empresa"
+    id = Column(Integer, primary_key=True)
+    name = Column(String(30))
+    cnpj = Column(String(30))
+    escritorio_id = Column(Integer, ForeignKey("escritorios.id"))
+    escritorio = relationship("Escritorio", back_populates="empresas")
+    dre_rel = relationship(Dre, back_populates="empresa_rel")
+
+    def __repr__(self):
+        return f"cnpj: cnpj={self.cnpj}"
+
 
 
 Base.metadata.create_all(engine)

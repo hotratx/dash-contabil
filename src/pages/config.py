@@ -1,3 +1,4 @@
+import time
 from dash import Dash, html, dcc
 import dash_table as dt
 import pandas as pd
@@ -34,11 +35,11 @@ class PageConfig:
         self._crud = Crud()
         self._handle_pdf = HandlePdf(self._crud)
         self._select_esc = SelectEscritorios(app)
+        self._revert_value_to_label = {}
         self._run()
 
     def _escritorios(self):
         escs = self._crud.get_escritorios(current_user.get_id())
-        self._revert_value_to_label = {}
         i = 0
         for e in escs:
             self._revert_value_to_label[i] = e.name
@@ -86,20 +87,27 @@ class PageConfig:
         )
         def analise_pdf(n_clicks, escritorio):
             """Callback controle de páginas"""
-            print(f'ANALISE PDF escritorio: {escritorio}')
-            # value = self._revert_value_to_label[value[0]]
-            if n_clicks > 0:
-                # print('vai chamar o handepdf')
-                # self._handle_pdf.run(escritorio)
-                print('passou do handle pdf')
-                return "Foi feito o upload dos seguintes arquivos:"
+            print(f'ANALISE PDF escritorio: {type(escritorio)}\nvalue escritorio: {escritorio}')
+            if isinstance(escritorio, str):
+                print(f'TYPE _revert_value_to_label: {type(self._revert_value_to_label)}')
+                print(f'VALUE _revert_value_to_label: {self._revert_value_to_label}')
+                name = self._revert_value_to_label.get(int(escritorio))
+                print(f'NAME: {name}')
+                if n_clicks > 0:
+                    print('vai chamar o handepdf')
+                    resp = self._handle_pdf.run(name)
+                    response = []
+                    for x in resp:
+                        response.append(html.P(x))
+                    response = response
+                    return f"Foi feito o upload dos seguintes arquivos:\n{response}"
             raise PreventUpdate
 
         @self._app.callback(
             Output(ids.ALERT_NEW_USER_SUCESS, "is_open"),
             Output(ids.ALERT_NEW_USER_ERROR, "is_open"),
             [Input(ids.SUBMIT_NEW_USER, "n_clicks")],
-            [State(ids.NEW_USERNAME, "value"), State(ids.NEW_PASSWORD, "value"), State(ids.SELECT_ESCRITORIO, 'value'), State(ids.ALERT_NEW_USER_SUCESS, 'is_open')],
+            [State(ids.NEW_USERNAME, "value"), State(ids.NEW_PASSWORD, "value"), State(ids.SELECT_ESCRITORIO_ADD_USER, 'value'), State(ids.ALERT_NEW_USER_SUCESS, 'is_open')],
         )
         def add_new_user(n_clicks, username, password, escritorio, is_open):
             """Callback controle de páginas"""
@@ -217,7 +225,7 @@ class PageConfig:
                                 dbc.Select(
                                     id=ids.SELECT_ESCRITORIO,
                                     options=self._escritorios(),
-                                    value=self._escritorios()[0]
+                                    # value=self._escritorios()[0]
 
                                 ),
                                 dbc.Button("Extrair dados", id=ids.HANDLE_PDF_TBN, n_clicks=0, style={'margin-top': '20px'}),
