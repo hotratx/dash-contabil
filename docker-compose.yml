@@ -3,7 +3,6 @@ version: '3.8'
 services:
   dash:
     build: .
-    restart: "always"
     command: python src/main.py
     ports:
       - "8080:8080"

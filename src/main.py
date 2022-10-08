@@ -7,8 +7,8 @@ from src.database import Crud
 
 # external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-
 server = Flask(__name__)
+
 app = Dash(
     __name__,
     server=server,

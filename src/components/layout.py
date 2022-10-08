@@ -41,7 +41,6 @@ def create_layout(app: Dash) -> html.Div:
             )
 
     main = html.Div(
-
         dcc.Location(id=ids.BASE_URL, refresh=False),
         id=ids.PAGE_CONTENT,
     )
