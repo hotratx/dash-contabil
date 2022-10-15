@@ -7,7 +7,10 @@ from . import ids
 
 
 # PLOTLY_LOGO = "https://images.plot.ly/logo/new-branding/plotly-logomark.png"
-PLOTLY_LOGO = "https://cdn-icons-png.flaticon.com/128/786/786395.png"
+# PLOTLY_LOGO = "https://cdn-icons-png.flaticon.com/128/786/786395.png"
+
+PLOTLY_LOGO = "https://logodix.com/logo/1146042.jpg"
+
 
 
 class Sidebar:
@@ -95,8 +98,8 @@ class Sidebar:
                         dbc.Row(
                             [
                                 # dbc.Button("Sidebar", outline=True, color="secondary", className="mr-1", id="btn_sidebar"),
-                                dbc.Col(html.Img(id="btn_sidebar", src=PLOTLY_LOGO, height="30px", style={'margin-left': '-55px'})),
-                                dbc.Col(dbc.NavbarBrand("Contábil", style={'margin-left': '-15px'})),
+                                dbc.Col(html.Img(id="btn_sidebar", src=PLOTLY_LOGO, height="30px", style={'margin-left': '-90px'})),
+                                dbc.Col(dbc.NavbarBrand("Contábil", style={'margin-left': '-25px'})),
                             ],
                             align="left",
                             className="g-0",
