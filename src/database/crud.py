@@ -1,6 +1,7 @@
 from sqlmodel import Session, select
 from .database import engine
-from .models import User, Escritorio, Empresa
+from .models import User, Escritorio, Empresa, Dadosdre
+from .schemas import IDadosdre
 from src.password import get_password_hash
 from passlib.context import CryptContext
 
@@ -47,23 +48,40 @@ class Crud:
             with Session(engine) as session:
                 stmt = select(Empresa).where(Empresa.cnpj == cnpj)
                 emp = session.exec(stmt).one()
-                return emp.datas
+                return emp.dados
         except Exception:
             return []
 
-    # def create_empresa(self, name: str, cnpj: str):
-    #     with Session(engine) as session:
-    #         stmt = select(User).where(User.username == username)
-    #         user = session.exec(stmt).one()
-    #         return user.escritorios
+    def create_empresa(self, name: str, cnpj: str, escritorio: str):
+        emp = Empresa(name=name, cnpj=cnpj)
+        with Session(engine) as session:
+            stmt = select(Escritorio).where(Escritorio.name == escritorio)
+            esc = session.exec(stmt).one()
+            emp.escritorio = esc
+            session.add(emp)
+            session.commit()
+            session.refresh(emp)
+            return emp
+
+    def create_dre(self, dado: IDadosdre, emp: Empresa):
+        db_dado = Dadosdre.from_orm(dado)
+        db_dado.empresa = emp
+        with Session(engine) as session:
+            session.add(db_dado)
+            session.commit()
+            session.refresh(db_dado)
+            return db_dado
 
 
-with Session(engine) as session:
-    esc = Escritorio(name="Jacutinga")
-    password = get_password_hash("qwer")
-    user = User(username='Amim', password=password)
-    user.escritorios.append(esc)
-    session.add(user)
-    session.commit()
-    session.refresh(user)
-    print(f'O USER CRIADO NO INICIO: {user}')
+try:
+    with Session(engine) as session:
+        esc = Escritorio(name="Jacutinga")
+        password = get_password_hash("qwer")
+        user = User(username='Amim', password=password)
+        user.escritorios.append(esc)
+        session.add(user)
+        session.commit()
+        session.refresh(user)
+        print(f'O USER CRIADO NO INICIO: {user}')
+except Exception as e:
+    print(f'ERRRO AO CRIAR USER INICIAL: {e}')

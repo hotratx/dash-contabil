@@ -15,7 +15,7 @@ class UserEscritorioLink(SQLModel, table=True):
 
 class User(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    username: str = Field(index=True)
+    username: str = Field(index=True, unique=True)
     password: str
     escritorios: List["Escritorio"] = Relationship(back_populates="users", link_model=UserEscritorioLink)
 
@@ -33,10 +33,10 @@ class Empresa(SQLModel, table=True):
     cnpj: str
     escritorio_id: Optional[int] = Field(default=None, foreign_key="escritorio.id")
     escritorio: Optional["Escritorio"] = Relationship(back_populates="empresas")
-    datas: List["Datadre"] = Relationship(back_populates="empresa")
+    dados: List["Dadosdre"] = Relationship(back_populates="empresa")
 
 
-class Datadre(SQLModel):
+class Dadosdre(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     tri: datetime = Field(default=None)
     rec_bruta_ope: Optional[float] = Field(default=None)
@@ -66,8 +66,8 @@ class Datadre(SQLModel):
     result_liquido_exer: Optional[float]
 
     empresa_id: Optional[int] = Field(default=None, foreign_key="empresa.id")
-    empresa: Optional[Empresa] = Relationship(back_populates="datas")
+    empresa: Optional[Empresa] = Relationship(back_populates="dados")
 
 
-SQLModel.metadata.drop_all(engine)
+# SQLModel.metadata.drop_all(engine)
 SQLModel.metadata.create_all(engine)
