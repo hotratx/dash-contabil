@@ -39,14 +39,11 @@ class PageConfig:
         return [user.username for user in users]
 
     def _all_escritorios_list(self):
-        try:
-            escs = self._crud.get_escritorios(current_user.get_id())
-            resp = []
-            for e in escs:
-                resp.append(e.name)
-            return resp
-        except Exception:
-            return ['adf', 'sd']
+        escs = self._crud.get_escritorios(current_user.get_id())
+        resp = []
+        for e in escs:
+            resp.append(e.name)
+        return resp
 
     def _all_escritorios(self):
         try:
