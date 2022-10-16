@@ -1,4 +1,5 @@
 from typing import List
+from datetime import datetime
 import tabula
 from PyPDF2 import PdfReader
 import os
@@ -6,6 +7,7 @@ from pathlib import Path
 import re
 from locale import atof, setlocale, LC_NUMERIC
 from src.database import Crud
+from src.database.schemas import IDadosdre
 
 setlocale(LC_NUMERIC, "")
 
@@ -44,7 +46,7 @@ class HandlePdf:
 
         # print(f'get nome da empresa: {name}, cnpj: {cnpj}')
         if resp := self.pdf_is_valid(text, path_pdf):
-            self.save(resp, cnpj)
+            self.save(resp, cnpj, name)
         else:
             print('PDF não valido')
 
@@ -65,10 +67,10 @@ class HandlePdf:
         return self.extract_data_from_pdf(df[0])
 
     def extract_data_from_pdf(self, df):
-        tri_1 = df.loc[1][2]
-        tri_2 = df.loc[1][3]
-        tri_3 = df.loc[1][4]
-        tri_4 = df.loc[1][5]
+        tri_1 = datetime.strptime(df.loc[1][5], '%d/%m/%Y')
+        tri_2 = datetime.strptime(df.loc[1][4], '%d/%m/%Y')
+        tri_3 = datetime.strptime(df.loc[1][3], '%d/%m/%Y')
+        tri_4 = datetime.strptime(df.loc[1][2], '%d/%m/%Y')
         abrev = {
                     "rec_bruta_ope": "Receita Bruta Operacional",
                     "fatu_pro_merc_serv": "Faturamento Prod. Merc. e Serviços",
@@ -110,7 +112,7 @@ class HandlePdf:
                 tri4[abr] = response[3]
             except Exception:
                 print(abr, name)
-        return [tri1, tri2, tri3, tri4]
+        return [tri4, tri3, tri2, tri1]
 
     def extract_1(self, df, name):
         resp = []
@@ -132,76 +134,34 @@ class HandlePdf:
         ).any(axis=1)
         return mask
 
-    def save(self, datas, cnpj):
-        emp = self.crud.get_empresa(cnpj)
-        escritorio = self.crud.get_escritorio(self.escritorio)
-        
-        # if not emp:
-        #     new_emp = self.crud.create_empresa(name, cnpj)
-        #     self.salve_all(datas, escritorio)
-        # else:
-        #     for new in datas:
-        #         self.verify_datas(new, datas_saved)
+    def save(self, dados, cnpj, name):
+        print(f'DATAS: {dados}, cnpj: {cnpj}')
+        # verificar se a empresa já existe:
+        if emp := self.crud.get_empresa(cnpj):
+            print(f'já existe a empresa: {emp}')
+            self.verify_data_already_exist(dados, cnpj, emp)
+        else:
+            emp = self.crud.create_empresa(name, cnpj, self.escritorio)
+            print(f'NEW EMPRESA ADD: {emp}')
+            for dado in dados:
+                d = IDadosdre(**dado)
+                new_dado = self.crud.create_dre(d, emp)
+                print(f'NEW DADO: {new_dado}')
 
-    # def save_all(self, datas, escritorio)
+        empresa = self.crud.get_empresa(cnpj)
+        print(f'EEEEEEEEEEMMMMMPRESAAA: {empresa}')
 
-    # def verify_datas(self, new, datas_saved):
-    #     for d in datas_saved:
-    #         if new == d:
-    #             return None
-        
+    def verify_data_already_exist(self, dados, cnpj, emp):
+        data_save = self.crud.get_datas_from_empresa(cnpj)
+        for dado in dados:
+            idata = IDadosdre(**dado)
+            self.verify_1(idata, data_save, emp)
 
-
-
-
-
-# def str_dre(df):
-#     print(f'DATAFRAME: {df}')
-#     abrev = {
-#                 "rbo": "Receita Bruta Operacional",
-#                 "fpms": "Faturamento Prod. Merc. e Serviços",
-#                 "vm": "Venda de Mercadorias",
-#                 "dr": "Deduções da Receita",
-#                 "ifs": "Impostos Faturados",
-#                 "icms": "ICMS",
-#                 "cofins": "COFINS",
-#                 "pis": "PIS",
-#                 "od": "Outras Deduções",
-#                 "vcddi": "Vendas Canc., Devol. e Descontos Inc...",
-#                 "rl": "Receita Líquida",
-#                 "cmspv": "Custo Mercad./Serv./Produtos Vendidos",
-#                 "cmr": "Custo das Mercadorias Revendidas",
-#                 "lb": "Lucro Bruto",
-#                 "do": "Despesas Operacionais",
-#                 "da": "Despesas Administrativas",
-#                 "dt": "Despesas Tributárias",
-#                 "rfo": "Resultado Financeiro",
-#                 "rfs": "Receitas Financeiras",
-#                 "df": "Despesas Financeiras",
-#                 "rapc": "Res. Antes das Participações e Contrib.",
-#                 "raircs": "Res. Antes Imp.Renda e Contrib. Social",
-#                 "cssl": "Contribuição Social Sobre o Lucro",
-#                 "ir": "Imposto de Renda",
-#                 "rle": "Resultado Líquido do Exercicio"
-#             }
-
-#     def line(tipo: str):
-#         mask = df[[df.columns[1]]].apply(
-#             lambda x: x.str.contains(
-#                 tipo,
-#                 regex=True
-#             )
-#         ).any(axis=1)
-#         return mask
-#     resp = {}
-#     for abr, name in abrev.items():
-#         try:
-#             x = df[line(name)].iloc[-1][-1]
-#             if '(' in x:
-#                 resp[abr] = atof(x[1:-1])
-#             else:
-#                 resp[abr] = atof(x)
-#         except:
-#             print(abr, name)
-#     # print(f'resultado dados extraidos do pdf: {resp}')
-#     return resp
+    def verify_1(self, idata: IDadosdre, data_save, emp):
+        for d in data_save:
+            print(f'COMPARAÇÃO ENTRE DADO SALVADO: {d.tri} e dado novo: {idata.tri}')
+            if idata.tri == d.tri:
+                print('TEM IGUAL')
+                return None
+        print(f'vai salvar o dado: {idata}')
+        new_dado = self.crud.create_dre(idata, emp)
