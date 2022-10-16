@@ -2,7 +2,7 @@ from dash import Dash, html, dcc
 from dash.exceptions import PreventUpdate
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
-from src.pages import PageConfig
+from src.pages import PageConfig, PageAnalise
 from . import ids
 
 
@@ -17,6 +17,7 @@ class Sidebar:
     def __init__(self, app: Dash):
         self._app = app
         self._config = PageConfig(app)
+        self.analise = PageAnalise(app)
         self._run()
 
     def _run(self):
@@ -62,7 +63,8 @@ class Sidebar:
         @self._app.callback(Output("page-content-sidebar", "children"), [Input("url", "pathname")])
         def render_page_content(pathname):
             if pathname in ["/", "/home", "/page-1"]:
-                return html.P("This is the content of page 1!")
+                return self.analise.render()
+                # return html.P("This is the content of page 1!")
             elif pathname == "/page-2":
                 # return html.P("This is the content of page 2. Yay!")
                 return self._config.render()

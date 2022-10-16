@@ -12,21 +12,8 @@ from src.components.esc_dropdown import SelectEscritorios
 from src.components import ids
 from src.database import Crud
 
+# df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/solar.csv')
 
-markdown_text = f"""
-### Dash and Markdown
-
-Dash apps can be written in Markdown.
-Dash uses the [CommonMark](http://commonmark.org/)
-specification of Markdown.
-Check out their [60 Second Markdown Tutorial](http://commonmark.org/help/)
-
-<if this is your first introduction to Markdown!>
-"""
-
-df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/solar.csv')
-
-df = df
 
 class PageConfig:
     def __init__(self, app: Dash):
@@ -47,37 +34,53 @@ class PageConfig:
 
         return [{'label': es.name, 'value': value} for es, value in zip(escs, range(len(escs)))]
 
+    def get_all_users(self):
+        users = self._crud.get_all_users()
+        return [user.username for user in users]
+
     def _all_escritorios_list(self):
-        escs = self._crud.get_escritorios(current_user.get_id())
-        resp = []
-        for e in escs:
-            resp.append(e.name)
-        return resp
+        try:
+            escs = self._crud.get_escritorios(current_user.get_id())
+            resp = []
+            for e in escs:
+                resp.append(e.name)
+            return resp
+        except Exception:
+            return ['adf', 'sd']
 
     def _all_escritorios(self):
-        escs = self._crud.get_escritorios(current_user.get_id())
-        resp = ''
-        for e in escs:
-            resp += f'{e.name}, '
-        self._all_escs = resp
-        return resp
+        try:
+            escs = self._crud.get_escritorios(current_user.get_id())
+            resp = ''
+            for e in escs:
+                resp += f'{e.name}, '
+            self._all_escs = resp
+            return resp
+        except Exception:
+            return ['adf', 'sd']
 
     def _all_users(self) -> list:
-        escs = self._crud.get_escritorios(current_user.get_id())
-        all_users = []
-        for esc in escs:
-            for user in esc.users:
-                all_users.append([user.username, esc.name])
-        return all_users
+        try:
+            escs = self._crud.get_escritorios(current_user.get_id())
+            all_users = []
+            for esc in escs:
+                for user in esc.users:
+                    all_users.append([user.username, esc.name])
+            return all_users
+        except Exception:
+            return ['adf', 'sd']
 
     def _all_users1(self, position=0):
-        escs = self._crud.get_escritorios(current_user.get_id())
-        users = escs[position].users
-        resp = ''
-        for e in escs:
-            for u in e.users:
-                resp += f'{u.username} - {e.name} | '
-        return resp
+        try:
+            escs = self._crud.get_escritorios(current_user.get_id())
+            users = escs[position].users
+            resp = ''
+            for e in escs:
+                for u in e.users:
+                    resp += f'{u.username} - {e.name} | '
+            return resp
+        except Exception:
+            return ['adf', 'sd']
 
     def _run(self):
         @self._app.callback(
@@ -129,15 +132,16 @@ class PageConfig:
             Output(ids.ALERT_NEW_ESCRITORIO_ERROR, "is_open"),
             [Input(ids.SUBMIT_NEW_ESCRITORIO, "n_clicks")],
             State(ids.NEW_ESCRITORIO, "value"),
+            State(ids.SELECT_ESCRITORIO_ADD_USER, 'value'),
             State(ids.ALERT_NEW_ESCRITORIO_SUCESS, "is_open")
         )
-        def add_new_escritorio(n_clicks, value, is_open):
+        def add_new_escritorio(n_clicks, value, users, is_open):
             """Callback controle de páginas"""
             if n_clicks > 0:
                 if value:
-                    # print(f'VVVVVVVVVVVVVAI ADD NEW ESCRITÓRIO: {value}')
-                    e = self._crud.add_escritorio(value, current_user.get_id())
-                    print(f'SUCESSO ADD NOVO ESCRIORIO: {e}')
+                    print(f'XXXXXXX\nn_clicks: {n_clicks}, users: {users}, value: {value}, is_open: {is_open}')
+                    # e = self._crud.add_escritorio(value, current_user.get_id())
+                    # print(f'SUCESSO ADD NOVO ESCRIORIO: {e}')
                     self._all_escritorios()
                     return not is_open, is_open
                 else:
@@ -145,6 +149,28 @@ class PageConfig:
             return is_open, is_open
 
     def render(self) -> html.Div:
+        name_escritorio = dbc.Row(
+            [
+                dbc.Label("Name", html_for="example-text-row", width=2),
+                dbc.Col(
+                    dbc.Input(
+                        type="text", id=ids.NEW_ESCRITORIO, placeholder="Nome do escritório"
+                    ),
+                    width=10,
+                ),
+            ],
+            className="mb-3",
+        )
+
+        users_input = dbc.Row(
+            [
+                dbc.Label("Usuários", html_for="example-password-row", width=2),
+                dbc.Col(
+                    self._select_esc.render(self.get_all_users())
+                )
+            ],
+            className="mb-3",
+        )
 
         username_input = dbc.Row(
             [
@@ -186,7 +212,7 @@ class PageConfig:
         )
 
         # inicio dash_table
-        table2 = dt.DataTable(df.to_dict('records'), [{"name": i, "id": i} for i in df.columns])
+        # table2 = dt.DataTable(df.to_dict('records'), [{"name": i, "id": i} for i in df.columns])
 
 
 
@@ -271,21 +297,7 @@ class PageConfig:
                 dbc.Col(
                     dbc.CardBody(
                         [
-                            dbc.Row(
-                                [
-                                    dbc.Label("Name", html_for="example-email-row", width=2),
-                                    # escritorios_dropdown.render(self._app, self._all_escritorios_list()),
-
-                                    dbc.Col(
-                                        dbc.Input(
-                                            type="text", id=ids.NEW_ESCRITORIO, placeholder="Enter nome do escritório"
-                                        ),
-                                        width=10,
-                                    ),
-                                ],
-                                className="mb-3",
-                            ),
-
+                            dbc.Form([name_escritorio, users_input]),
                             dbc.Row(
                                 dbc.Col([
                                     dbc.Button("Submit", id=ids.SUBMIT_NEW_ESCRITORIO, n_clicks=0, style={'margin-top': '20px', "justify-content": "center"}),
@@ -294,6 +306,7 @@ class PageConfig:
                                 ]),
                             ),
                             html.P(self._all_escritorios(), style={'margin-top': '20px'}),
+
                         ],
                     ),
                 ),

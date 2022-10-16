@@ -1,9 +1,12 @@
 import pandas as pd
-from math import pi
-
 import plotly.express as px
+import pandas as pd
 
 
-def plot(data: pd.DataFrame):
-    fig = px.pie(data, values="values", names="tipo")
-    return fig
+df = pd.DataFrame({
+    "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
+    "Amount": [4, 1, 2, 2, 4, 5],
+    "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
+})
+
+fig = px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")

@@ -11,12 +11,12 @@ load_dotenv()
 
 # print(f'nomes do env: name: {db_name}, host: {db_host}, password: {db_password}, user: {db_user}')
 
-sqlite_file_name = "database.db"
+sqlite_file_name = "testes.db"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
 
 engine = create_engine(sqlite_url, echo=True)
 
 
-def create_db():
-    SQLModel.metadata.drop_all(engine)
-    SQLModel.metadata.create_all(engine)
+# def create_db():
+    # SQLModel.metadata.drop_all(engine)
+    # SQLModel.metadata.create_all(engine)

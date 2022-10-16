@@ -31,7 +31,10 @@ class Home:
         self._run()
 
     def _escritorios(self):
-        return self._crud.get_escritorios(current_user.get_id()).name
+        try:
+            return self._crud.get_escritorios(current_user.get_id()).name
+        except Exception:
+            return []
 
 
     def _run(self):
