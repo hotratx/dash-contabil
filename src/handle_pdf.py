@@ -21,10 +21,8 @@ class HandlePdf:
         self.crud = db
 
     def run(self, escritorio: str) -> list[str]:
-        print(f'ENTROU NO HANDLEPDF esc: {escritorio}')
         self.escritorio = escritorio
         self.p = Path(__file__).parent.parent / "pdfs"
-        # print(f"ESCRITORIO: {escritorio}\npath: {self.p.absolute()}")
 
         pdfs = [p1 for p1 in self.p.iterdir() if p1.suffix == ".pdf"]
         files = []
@@ -44,7 +42,6 @@ class HandlePdf:
         text = page.extract_text()
         name, cnpj = self._get_info(text)
 
-        # print(f'get nome da empresa: {name}, cnpj: {cnpj}')
         if resp := self.pdf_is_valid(text, path_pdf):
             self.save(resp, cnpj, name)
         else:
@@ -135,21 +132,15 @@ class HandlePdf:
         return mask
 
     def save(self, dados, cnpj, name):
-        print(f'DATAS: {dados}, cnpj: {cnpj}')
-        # verificar se a empresa já existe:
         if emp := self.crud.get_empresa(cnpj):
-            print(f'já existe a empresa: {emp}')
             self.verify_data_already_exist(dados, cnpj, emp)
         else:
             emp = self.crud.create_empresa(name, cnpj, self.escritorio)
-            print(f'NEW EMPRESA ADD: {emp}')
             for dado in dados:
-                d = IDadosdre(**dado)
-                new_dado = self.crud.create_dre(d, emp)
-                print(f'NEW DADO: {new_dado}')
+                idata = IDadosdre(**dado)
+                new_dado = self.crud.create_dre(idata, emp)
 
         empresa = self.crud.get_empresa(cnpj)
-        print(f'EEEEEEEEEEMMMMMPRESAAA: {empresa}')
 
     def verify_data_already_exist(self, dados, cnpj, emp):
         data_save = self.crud.get_datas_from_empresa(cnpj)
@@ -159,9 +150,6 @@ class HandlePdf:
 
     def verify_1(self, idata: IDadosdre, data_save, emp):
         for d in data_save:
-            print(f'COMPARAÇÃO ENTRE DADO SALVADO: {d.tri} e dado novo: {idata.tri}')
             if idata.tri == d.tri:
-                print('TEM IGUAL')
                 return None
-        print(f'vai salvar o dado: {idata}')
         new_dado = self.crud.create_dre(idata, emp)
