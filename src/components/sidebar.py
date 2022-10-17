@@ -7,9 +7,9 @@ from . import ids
 
 
 # PLOTLY_LOGO = "https://images.plot.ly/logo/new-branding/plotly-logomark.png"
-# PLOTLY_LOGO = "https://cdn-icons-png.flaticon.com/128/786/786395.png"
+PLOTLY_LOGO = "https://cdn-icons-png.flaticon.com/128/786/786395.png"
 
-PLOTLY_LOGO = "https://logodix.com/logo/1146042.jpg"
+# PLOTLY_LOGO = "https://logodix.com/logo/1146042.jpg"
 
 
 
@@ -123,14 +123,14 @@ class Sidebar:
         )
         sidebar = html.Div(
             [
-                html.P("Sidebar", className="display-6"),
+                # html.P("Sidebar", className="display-6"),
                 html.Hr(),
                 # html.P(
                 #     "A simple sidebar layout with navigation links", className="lead"
                 # ),
                 dbc.Nav(
                     [
-                        dbc.NavLink("Análise", href="/", id="page-1-link"),
+                        dbc.NavLink("Análise", href="/home", id="page-1-link"),
                         dbc.NavLink("Config", href="/page-2", id="page-2-link"),
                         dbc.NavLink("Outros", href="/page-3", id="page-3-link"),
                     ],
