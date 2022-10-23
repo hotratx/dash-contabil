@@ -22,7 +22,7 @@ class Crud:
             users = session.exec(stmt).all()
             return users
 
-    def get_escritorios(self, username: str):
+    def get_escritorios_from_user(self, username: str):
         with Session(engine) as session:
             stmt = select(User).where(User.username == username)
             user = session.exec(stmt).one()
@@ -33,6 +33,12 @@ class Crud:
             stmt = select(Escritorio).where(Escritorio.name == name)
             escritorio = session.exec(stmt).one()
             return escritorio
+
+    def get_empresas_from_escritorio(self, name: str):
+        with Session(engine) as session:
+            stmt = select(Escritorio).where(Escritorio.name == name)
+            escritorio = session.exec(stmt).one()
+            return escritorio.empresas
 
     def get_empresa(self, cnpj: str):
         try:
@@ -47,6 +53,15 @@ class Crud:
         try:
             with Session(engine) as session:
                 stmt = select(Empresa).where(Empresa.cnpj == cnpj)
+                emp = session.exec(stmt).one()
+                return emp.dados
+        except Exception:
+            return []
+
+    def get_datas_from_empresa_name(self, name: str):
+        try:
+            with Session(engine) as session:
+                stmt = select(Empresa).where(Empresa.name == name)
                 emp = session.exec(stmt).one()
                 return emp.dados
         except Exception:

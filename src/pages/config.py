@@ -8,7 +8,7 @@ from flask_login import current_user
 import dash_bootstrap_components as dbc
 from src.handle_pdf import HandlePdf
 from src.components.upload import Upload
-from src.components.esc_dropdown import SelectEscritorios
+from src.components.dropdown_many import SelectMany
 from src.components import ids
 from src.database import Crud
 
@@ -21,12 +21,12 @@ class PageConfig:
         self._upload = Upload(app)
         self._crud = Crud()
         self._handle_pdf = HandlePdf(self._crud)
-        self._select_esc = SelectEscritorios(app)
+        self.select_many = SelectMany(app)
         self._revert_value_to_label = {}
         self._run()
 
     def _escritorios(self):
-        escs = self._crud.get_escritorios(current_user.get_id())
+        escs = self._crud.get_escritorios_from_user(current_user.get_id())
         i = 0
         for e in escs:
             self._revert_value_to_label[i] = e.name
@@ -39,7 +39,7 @@ class PageConfig:
         return [user.username for user in users]
 
     def _all_escritorios_list(self):
-        escs = self._crud.get_escritorios(current_user.get_id())
+        escs = self._crud.get_escritorios_from_user(current_user.get_id())
         resp = []
         for e in escs:
             resp.append(e.name)
@@ -47,7 +47,7 @@ class PageConfig:
 
     def _all_escritorios(self):
         try:
-            escs = self._crud.get_escritorios(current_user.get_id())
+            escs = self._crud.get_escritorios_from_user(current_user.get_id())
             resp = ''
             for e in escs:
                 resp += f'{e.name}, '
@@ -58,7 +58,7 @@ class PageConfig:
 
     def _all_users(self) -> list:
         try:
-            escs = self._crud.get_escritorios(current_user.get_id())
+            escs = self._crud.get_escritorios_from_user(current_user.get_id())
             all_users = []
             for esc in escs:
                 for user in esc.users:
@@ -67,17 +67,6 @@ class PageConfig:
         except Exception:
             return ['adf', 'sd']
 
-    def _all_users1(self, position=0):
-        try:
-            escs = self._crud.get_escritorios(current_user.get_id())
-            users = escs[position].users
-            resp = ''
-            for e in escs:
-                for u in e.users:
-                    resp += f'{u.username} - {e.name} | '
-            return resp
-        except Exception:
-            return ['adf', 'sd']
 
     def _run(self):
         @self._app.callback(
@@ -107,7 +96,7 @@ class PageConfig:
             Output(ids.ALERT_NEW_USER_SUCESS, "is_open"),
             Output(ids.ALERT_NEW_USER_ERROR, "is_open"),
             [Input(ids.SUBMIT_NEW_USER, "n_clicks")],
-            [State(ids.NEW_USERNAME, "value"), State(ids.NEW_PASSWORD, "value"), State(ids.SELECT_ESCRITORIO_ADD_USER, 'value'), State(ids.ALERT_NEW_USER_SUCESS, 'is_open')],
+            [State(ids.NEW_USERNAME, "value"), State(ids.NEW_PASSWORD, "value"), State(ids.SELECT_MANY, 'value'), State(ids.ALERT_NEW_USER_SUCESS, 'is_open')],
         )
         def add_new_user(n_clicks, username, password, escritorio, is_open):
             """Callback controle de páginas"""
@@ -129,7 +118,7 @@ class PageConfig:
             Output(ids.ALERT_NEW_ESCRITORIO_ERROR, "is_open"),
             [Input(ids.SUBMIT_NEW_ESCRITORIO, "n_clicks")],
             State(ids.NEW_ESCRITORIO, "value"),
-            State(ids.SELECT_ESCRITORIO_ADD_USER, 'value'),
+            State(ids.SELECT_ALL, 'value'),
             State(ids.ALERT_NEW_ESCRITORIO_SUCESS, "is_open")
         )
         def add_new_escritorio(n_clicks, value, users, is_open):
@@ -163,7 +152,7 @@ class PageConfig:
             [
                 dbc.Label("Usuários", html_for="example-password-row", width=2),
                 dbc.Col(
-                    self._select_esc.render(self.get_all_users())
+                    self.select_many.render(self.get_all_users())
                 )
             ],
             className="mb-3",
@@ -202,7 +191,7 @@ class PageConfig:
                 dbc.Label("Escritório", html_for="example-password-row", width=2),
                 dbc.Col(
                     # escritorios_dropdown.render(self._app, self._all_escritorios_list()),
-                    self._select_esc.render(self._all_escritorios_list())
+                    self.select_many.render(self._all_escritorios_list())
                 )
             ],
             className="mb-3",
@@ -276,7 +265,6 @@ class PageConfig:
                                     dbc.Alert("Preencha os campos com dados válidos!", id=ids.ALERT_NEW_USER_ERROR, color="danger", dismissable=True, is_open=False, style={'margin-top': '20px'})
                                 ]),
                             ),
-                            # html.P(self._all_users1(), style={'margin-top': '20px'}),
                             table,
                         ],
                     ),
