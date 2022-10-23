@@ -84,7 +84,7 @@ class Sidebar:
             [
                 dbc.Col(
                     dbc.Button(
-                        "Logout", id=ids.LOGOUT_BTN, color="primary", className="ms-2", n_clicks=0
+                        "Logout", id=ids.LOGOUT_BTN, color="primary", className="ms-2", n_clicks=0, style={'margin-right': '-138px'}
                     ),
                     width="auto",
                 ),

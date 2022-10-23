@@ -2,7 +2,7 @@ from dash import Dash, html, dcc
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from src.plot.plotting import despesas, create_df, pie
+from src.plot.plotting import despesas, create_df, pie, pie_new
 from dash.dependencies import Input, Output
 from src.components.dropdown import SelectOne
 import dash_bootstrap_components as dbc
@@ -32,7 +32,6 @@ class PageAnalise:
             return self.data_empresas
 
         @self._app.callback(
-            Output(ids.DATA_FROM_EMPRESA, "children"),
             Output(ids.FIGURE_ANALISE, "figure"),
             Output(ids.PIE_ANALISE_1, "figure"),
             Output(ids.SELECT_YEAR, "options"),
@@ -47,9 +46,12 @@ class PageAnalise:
                 self.df, select_years = create_df(datas)
                 if not year:
                     year = select_years[-1]
+                if year not in select_years:
+                    print(f'SELECT NEW YEAR {year}')
+                    year = select_years[-1]
                 fig = despesas(self.df, year)
-                fig_pie = pie(self.df, year)
-                return datas[0].pis, fig, fig_pie, select_years, year
+                fig_pie_1 = pie_new(self.df, year)
+                return fig, fig_pie_1, select_years, year
             except Exception:
                 pass
 
@@ -64,8 +66,38 @@ class PageAnalise:
         return [esc.name for esc in self.data_escritorios]
 
     def render(self):
+        tab1_content = dbc.Card(
+            dbc.Row(
+                [
+                    dbc.Row([
+                        dbc.Col([
+                            dcc.Graph(
+                                id=ids.PIE_ANALISE_1
+                            ),
+                        ]),
+                    ]),
+                ]
+            ),
+            className="mt-3"
+        )
+
+        tab2_content = dbc.Card(
+            dbc.Row(
+                [
+                    dbc.Row([
+                        dbc.Col(
+                            dcc.Graph(
+                                id=ids.FIGURE_ANALISE,
+                            )
+                        )
+                    ])
+                ]
+            ),
+            className="mt-3"
+        )
         resp = html.Div(
-            className="app-div",
+            id="tabs",
+            className="tabs",
             children=[
                 dbc.Row(
                     [
@@ -87,10 +119,6 @@ class PageAnalise:
                                 value=self.data_empresas[0],
                                 multi=False,
                             ),
-                            html.Span(
-                                id=ids.DATA_FROM_EMPRESA,
-                                style={"text-align": "center", "margin-top": "10px"},
-                            ),
                         ]),
                         dbc.Col([
                             html.P("Ano:"),
@@ -100,16 +128,50 @@ class PageAnalise:
                             ),
 
                         ]),
-                    ]
+                    ],
                 ),
-                dbc.Row([
-                    dcc.Graph(
-                        id=ids.PIE_ANALISE_1
-                    ),
-                    dcc.Graph(
-                        id=ids.FIGURE_ANALISE,
-                        )
-                ])
-            ]
+
+                dcc.Tabs(
+                    id="app-tabs",
+                    value="tab1",
+                    className="custom-tabs",
+                    style={'margin-top': '30px'},
+                    children=[
+                        dcc.Tab(
+                            tab1_content,
+                            id="Specs-tab",
+                            label="Receitas",
+                            value="tab1",
+                            className="custom-tab",
+                            selected_className="custom-tab--selected",
+                        ),
+                        dcc.Tab(
+                            tab2_content,
+                            id="Control-chart-tab",
+                            label="Despesas",
+                            value="tab2",
+                            className="custom-tab",
+                            selected_className="custom-tab--selected",
+                        ),
+                        dcc.Tab(
+                            # tab3_content,
+                            id="add-escritorios",
+                            label="Impostos",
+                            value="tab3",
+                            className="custom-tab",
+                            selected_className="custom-tab--selected",
+                        ),
+                        dcc.Tab(
+                            # tab3_content,
+                            id="add-escritorios",
+                            label="Lucro",
+                            value="tab4",
+                            className="custom-tab",
+                            selected_className="custom-tab--selected",
+                        ),
+                    ],
+                )
+            ],
         )
+
         return resp
