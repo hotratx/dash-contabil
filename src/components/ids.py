@@ -35,8 +35,10 @@ ALERT_NEW_ESCRITORIO_ERROR = "alert-new-escritorio-error"
 SUBMIT_NEW_ESCRITORIO = "submit-new-escritorio"
 
 # dropdown_many
-SELECT_MANY = "select-escritorio-add-user"
-SELECT_ALL = "select-all-nations-button"
+SELECT_MANYA = "select-many-a"
+SELECT_MANYB = "select-many-b"
+SELECT_ALLA = "select-all-a"
+SELECT_ALLB = "select-all-b"
 
 # page analise
 SELECT_ESCRITORIO_ANALISE = "select-escritorio-analise"
