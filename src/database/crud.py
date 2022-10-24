@@ -78,6 +78,18 @@ class Crud:
             session.refresh(emp)
             return emp
 
+    def create_user(self, name: str, password: str, escritorio: list):
+        user = User(username=name, password=get_password_hash("qwer"))
+        with Session(engine) as session:
+            for x in escritorio:
+                stmt = select(Escritorio).where(Escritorio.name == x)
+                db_esc = session.exec(stmt).one()
+                user.escritorios.append(db_esc)
+
+            session.add(user)
+            session.commit()
+            session.refresh(user)
+
     def create_dre(self, dado: IDadosdre, emp: Empresa):
         db_dado = Dadosdre.from_orm(dado)
         db_dado.empresa = emp
@@ -93,7 +105,6 @@ class Crud:
             for x in users:
                 stmt = select(User).where(User.username == x)
                 db_user = session.exec(stmt).one()
-                print(f'USERS: {db_user}')
                 esc.users.append(db_user)
 
             session.add(esc)
