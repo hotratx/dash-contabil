@@ -87,6 +87,19 @@ class Crud:
             session.refresh(db_dado)
             return db_dado
 
+    def create_escritorio(self, name_escritorio: str, users: list[str]):
+        with Session(engine) as session:
+            esc = Escritorio(name=name_escritorio)
+            for x in users:
+                stmt = select(User).where(User.username == x)
+                db_user = session.exec(stmt).one()
+                print(f'USERS: {db_user}')
+                esc.users.append(db_user)
+
+            session.add(esc)
+            session.commit()
+            session.refresh(esc)
+
 
 try:
     with Session(engine) as session:

@@ -126,7 +126,7 @@ class PageConfig:
             if n_clicks > 0:
                 if value:
                     print(f'XXXXXXX\nn_clicks: {n_clicks}, users: {users}, value: {value}, is_open: {is_open}')
-                    # e = self._crud.add_escritorio(value, current_user.get_id())
+                    e = self._crud.create_escritorio(value, users)
                     # print(f'SUCESSO ADD NOVO ESCRIORIO: {e}')
                     self._all_escritorios()
                     return not is_open, is_open
