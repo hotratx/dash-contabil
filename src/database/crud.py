@@ -121,13 +121,13 @@ class Crud:
 
 try:
     with Session(engine) as session:
-        esc = Escritorio(name="Jacutinga")
-        password = get_password_hash("admin")
+        esc = Escritorio(name="Teste")
+        password = get_password_hash("admin123")
         user = User(username='admin', password=password)
         user.escritorios.append(esc)
         session.add(user)
         session.commit()
         session.refresh(user)
-        print(f'O USER CRIADO NO INICIO: {user}')
+        print(f'O user criado no inicio: {user}')
 except Exception as e:
-    print(f'ERRRO AO CRIAR USER INICIAL: {e}')
+    print(f'Errro ao criar user inicial: {e}')

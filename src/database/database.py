@@ -11,7 +11,7 @@ load_dotenv()
 
 # print(f'nomes do env: name: {db_name}, host: {db_host}, password: {db_password}, user: {db_user}')
 
-sqlite_file_name = "testes.db"
+sqlite_file_name = "db_dash.db"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
 
 engine = create_engine(sqlite_url, echo=True)
