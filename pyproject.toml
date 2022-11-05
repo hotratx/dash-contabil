@@ -6,7 +6,6 @@ authors = ["hotratx <mgviero@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-PyPDF2 = "^2.9.0"
 tabula-py = "^2.4.0"
 bokeh = "^2.4.3"
 plotly = "^5.9.0"
@@ -20,6 +19,7 @@ gunicorn = "^20.1.0"
 SQLAlchemy = "^1.4.40"
 sqlmodel = "^0.0.8"
 python-dotenv = "^0.21.0"
+PyPDF2 = {extras = ["full"], version = "^2.11.1"}
 
 [tool.poetry.dev-dependencies]
 ipython = "^8.4.0"
