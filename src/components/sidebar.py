@@ -2,22 +2,19 @@ from dash import Dash, html, dcc
 from dash.exceptions import PreventUpdate
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
-from src.pages import PageConfig, PageAnalise
+from src.pages import PageConfig, PageDRE
+from flask_login import current_user
 from . import ids
 
 
-# PLOTLY_LOGO = "https://images.plot.ly/logo/new-branding/plotly-logomark.png"
 PLOTLY_LOGO = "https://cdn-icons-png.flaticon.com/128/786/786395.png"
-
-# PLOTLY_LOGO = "https://logodix.com/logo/1146042.jpg"
-
 
 
 class Sidebar:
     def __init__(self, app: Dash):
         self._app = app
         self._config = PageConfig(app)
-        self.analise = PageAnalise(app)
+        self.analise = PageDRE(app)
         self._run()
 
     def _run(self):
@@ -56,7 +53,6 @@ class Sidebar:
         )
         def toggle_active_links(pathname):
             if pathname == "/home":
-                # Treat page 1 as the homepage / index
                 return True, False, False
             return [pathname == f"/page-{i}" for i in range(1, 4)]
 
@@ -64,27 +60,24 @@ class Sidebar:
         def render_page_content(pathname):
             if pathname in ["/", "/home", "/page-1"]:
                 return self.analise.render()
-                # return html.P("This is the content of page 1!")
             elif pathname == "/page-2":
-                # return html.P("This is the content of page 2. Yay!")
                 return self._config.render()
             elif pathname == "/page-3":
                 return html.P("Oh cool, this is page 3!")
-            # return html.P("Oh cool, this is page 3!")
-            # If the user tries to reach a different page, return a 404 message
+
         @self._app.callback(Output("url", "pathname"), Input(ids.LOGOUT_BTN, "n_clicks"))
         def logout_button_click(n_clicks):
             """Callback controle de páginas"""
-            print("saindo SAINDO")
             if n_clicks > 0:
                 return "/logout"
 
     def render(self):
         logout = dbc.Row(
             [
+                dbc.Col(html.Span(f'user: {current_user.get_id()}', style={'margin-left': '-90px', 'color': 'white'})),
                 dbc.Col(
                     dbc.Button(
-                        "Logout", id=ids.LOGOUT_BTN, color="primary", className="ms-2", n_clicks=0, style={'margin-right': '-138px'}
+                        "Sair", id=ids.LOGOUT_BTN, color="primary", className="ms-2", n_clicks=0, style={'margin-right': '-70px'}
                     ),
                     width="auto",
                 ),
@@ -100,7 +93,7 @@ class Sidebar:
                         dbc.Row(
                             [
                                 # dbc.Button("Sidebar", outline=True, color="secondary", className="mr-1", id="btn_sidebar"),
-                                dbc.Col(html.Img(id="btn_sidebar", src=PLOTLY_LOGO, height="30px", style={'margin-left': '-90px'})),
+                                dbc.Col(html.Img(id="btn_sidebar", src=PLOTLY_LOGO, height="30px", style={'margin-left': '-70px'})),
                                 dbc.Col(dbc.NavbarBrand("Contábil", style={'margin-left': '-25px'})),
                             ],
                             align="left",
@@ -130,7 +123,7 @@ class Sidebar:
                 # ),
                 dbc.Nav(
                     [
-                        dbc.NavLink("Análise", href="/home", id="page-1-link"),
+                        dbc.NavLink("DRE", href="/home", id="page-1-link"),
                         dbc.NavLink("Config", href="/page-2", id="page-2-link"),
                         dbc.NavLink("Outros", href="/page-3", id="page-3-link"),
                     ],
