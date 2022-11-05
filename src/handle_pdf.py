@@ -9,7 +9,7 @@ from locale import atof, setlocale, LC_NUMERIC
 from src.database import Crud
 from src.database.schemas import IDadosdre
 
-setlocale(LC_NUMERIC, "")
+setlocale(LC_NUMERIC, "pt_BR.UTF-8")
 
 
 regex_cnpj = re.compile(r'.*CNPJ:(\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}).*')
@@ -107,8 +107,8 @@ class HandlePdf:
                 tri2[abr] = response[1]
                 tri3[abr] = response[2]
                 tri4[abr] = response[3]
-            except Exception:
-                print(abr, name)
+            except Exception as e:
+                print(f'ERRRROR: {abr}, {name} ----- errro: {e}')
         return [tri4, tri3, tri2, tri1]
 
     def extract_1(self, df, name):
