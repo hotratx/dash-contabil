@@ -12,9 +12,11 @@ funct_dates = lambda x: x.strftime("%d-%m-%Y")
 def line_lucro(df: pd.DataFrame, year):
     df = df.loc[str(year)]
     values = df["result_liquido_exer"].values / df["rec_bruta_ope"].values
-    fig = go.Figure(data=[
-        go.Line(name='Margem de lucro líquido', x=funct_dates(df.index).values, y=values),
-    ])
+    fig = go.Figure(
+        data=[
+            go.Line(name="Margem de lucro líquido", x=funct_dates(df.index).values, y=values),
+        ]
+    )
     # fig.update_traces(hole=.4, hoverinfo="label+value+name")
-    fig.update_layout(barmode='stack', title="Margem de lucro líquido")
+    fig.update_layout(barmode="stack", title="Margem de lucro líquido")
     return fig

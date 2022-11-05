@@ -57,5 +57,5 @@ def parse_contents(contents, filename, date):
                 fp.write(base64.decodebytes(data))
             return True
     except Exception as e:
-        print(f'Parse contents error: {e}')
+        print(f"Parse contents error: {e}")
         return html.Div(["There was an error processing this file."])

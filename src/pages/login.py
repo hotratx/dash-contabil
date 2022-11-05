@@ -100,6 +100,7 @@ class PageLogin:
                         )
                     ]
                 ),
-            ], fluid=True
+            ],
+            fluid=True,
         )
         return login

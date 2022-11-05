@@ -28,7 +28,7 @@ class PageConfig:
             self._revert_value_to_label[i] = e.name
             i += 1
 
-        return [{'label': es.name, 'value': value} for es, value in zip(escs, range(len(escs)))]
+        return [{"label": es.name, "value": value} for es, value in zip(escs, range(len(escs)))]
 
     def get_all_users(self):
         users = self._crud.get_all_users()
@@ -45,13 +45,13 @@ class PageConfig:
     def _all_escritorios(self):
         try:
             escs = self._crud.get_escritorios_from_user(current_user.get_id())
-            resp = ''
+            resp = ""
             for e in escs:
-                resp += f'{e.name}, '
+                resp += f"{e.name}, "
             self._all_escs = resp
             return resp
         except Exception:
-            return ['adf', 'sd']
+            return ["adf", "sd"]
 
     def _all_users(self) -> list:
         resp = []
@@ -59,16 +59,15 @@ class PageConfig:
             users = self._crud.get_all_users()
             for user in users:
                 user = self._crud.get_escritorios_and_users_from_user(user.username)
-                escritorios = ''
+                escritorios = ""
                 for esc in user.escritorios:
-                    escritorios = escritorios + f' {esc.name} -'
+                    escritorios = escritorios + f" {esc.name} -"
                 escritorios = escritorios[:-2]
 
                 resp.append([user.username, escritorios])
             return resp
         except Exception:
-            return ['', '']
-
+            return ["", ""]
 
     def _run(self):
         @self._app.callback(
@@ -94,7 +93,12 @@ class PageConfig:
             Output(ids.ALERT_NEW_USER_SUCESS, "is_open"),
             Output(ids.ALERT_NEW_USER_ERROR, "is_open"),
             [Input(ids.SUBMIT_NEW_USER, "n_clicks")],
-            [State(ids.NEW_USERNAME, "value"), State(ids.NEW_PASSWORD, "value"), State(ids.SELECT_MANYA, 'value'), State(ids.ALERT_NEW_USER_SUCESS, 'is_open')],
+            [
+                State(ids.NEW_USERNAME, "value"),
+                State(ids.NEW_PASSWORD, "value"),
+                State(ids.SELECT_MANYA, "value"),
+                State(ids.ALERT_NEW_USER_SUCESS, "is_open"),
+            ],
         )
         def add_new_user(n_clicks, username, password, escritorio, is_open):
             """Callback controle de páginas"""
@@ -112,8 +116,8 @@ class PageConfig:
             Output(ids.ALERT_NEW_ESCRITORIO_ERROR, "is_open"),
             [Input(ids.SUBMIT_NEW_ESCRITORIO, "n_clicks")],
             State(ids.NEW_ESCRITORIO, "value"),
-            State(ids.SELECT_MANYB, 'value'),
-            State(ids.ALERT_NEW_ESCRITORIO_SUCESS, "is_open")
+            State(ids.SELECT_MANYB, "value"),
+            State(ids.ALERT_NEW_ESCRITORIO_SUCESS, "is_open"),
         )
         def add_new_escritorio(n_clicks, value, users, is_open):
             """Callback controle de páginas"""
@@ -131,9 +135,7 @@ class PageConfig:
             [
                 dbc.Label("Name", html_for="example-text-row", width=2),
                 dbc.Col(
-                    dbc.Input(
-                        type="text", id=ids.NEW_ESCRITORIO, placeholder="Nome do escritório"
-                    ),
+                    dbc.Input(type="text", id=ids.NEW_ESCRITORIO, placeholder="Nome do escritório"),
                     width=10,
                 ),
             ],
@@ -143,9 +145,7 @@ class PageConfig:
         users_input = dbc.Row(
             [
                 dbc.Label("Usuários", html_for="example-password-row", width=2),
-                dbc.Col(
-                    self.select_many_b.render(self.get_all_users())
-                )
+                dbc.Col(self.select_many_b.render(self.get_all_users())),
             ],
             className="mb-3",
         )
@@ -154,9 +154,7 @@ class PageConfig:
             [
                 dbc.Label("Username", html_for="example-text-row", width=2),
                 dbc.Col(
-                    dbc.Input(
-                        type="text", id=ids.NEW_USERNAME, placeholder="Enter username"
-                    ),
+                    dbc.Input(type="text", id=ids.NEW_USERNAME, placeholder="Enter username"),
                     width=10,
                 ),
             ],
@@ -181,9 +179,7 @@ class PageConfig:
         escritorio_input = dbc.Row(
             [
                 dbc.Label("Escritório", html_for="example-password-row", width=2),
-                dbc.Col(
-                    self.select_many_a.render(self._all_escritorios_list())
-                )
+                dbc.Col(self.select_many_a.render(self._all_escritorios_list())),
             ],
             className="mb-3",
         )
@@ -191,91 +187,119 @@ class PageConfig:
         # inicio dash_table
         # table2 = dt.DataTable(df.to_dict('records'), [{"name": i, "id": i} for i in df.columns])
 
-
-
         # inicio table
-        table_header = [
-            html.Thead(html.Tr([html.Th("Usuário"), html.Th("Escritório")]))
-        ]
+        table_header = [html.Thead(html.Tr([html.Th("Usuário"), html.Th("Escritório")]))]
 
         data = []
         for x in self._all_users():
             data.append(html.Tr([html.Td(x[0]), html.Td(x[1])]))
         table_body = [html.Tbody(data)]
 
-        table = dbc.Table(table_header + table_body, bordered=True, style={'margin-top': '40px',  'display': 'inline-block', 'width': '100%'})
+        table = dbc.Table(
+            table_header + table_body,
+            bordered=True,
+            style={"margin-top": "40px", "display": "inline-block", "width": "100%"},
+        )
         # fim table
 
-        table_header1 = [
-            html.Thead(html.Tr([html.Th("Escritório")]))
-        ]
+        table_header1 = [html.Thead(html.Tr([html.Th("Escritório")]))]
 
         data1 = []
         x = self._all_escritorios()
         data1.append(html.Tr([html.Td(x)]))
         table_body1 = [html.Tbody(data1)]
 
-        table1 = dbc.Table(table_header1 + table_body1, bordered=True, style={'margin-top': '40px',  'display': 'inline-block', 'width': '100%'})
+        table1 = dbc.Table(
+            table_header1 + table_body1,
+            bordered=True,
+            style={"margin-top": "40px", "display": "inline-block", "width": "100%"},
+        )
 
         tab1_content = dbc.Card(
             dbc.Row(
                 [
-                    dbc.Col(html.Div(
-                        dbc.CardBody(
-                            [
-                                html.P("Arraste ou selecione os pdf par fazer o upload.", className="card-text"),
-                                self._upload.render(),
-                                html.Div(id=ids.OUTPUT_DATA_UPLOAD),
-                            ]
-                        ),
-
-                    )),
+                    dbc.Col(
+                        html.Div(
+                            dbc.CardBody(
+                                [
+                                    html.P("Arraste ou selecione os pdf par fazer o upload.", className="card-text"),
+                                    self._upload.render(),
+                                    html.Div(id=ids.OUTPUT_DATA_UPLOAD),
+                                ]
+                            ),
+                        )
+                    ),
                     dbc.Col(
                         dbc.CardBody(
                             [
-                                html.P("Após fazer o upload selecione o escritório e clique em extrair os dados para realizar extração e salvar os dados no banco de dados", className="card-text"),
+                                html.P(
+                                    "Após fazer o upload selecione o escritório e clique em extrair os dados para realizar extração e salvar os dados no banco de dados",
+                                    className="card-text",
+                                ),
                                 html.P("Selecione o escritorio:", className="card-text"),
                                 dbc.Select(
                                     id=ids.SELECT_ESCRITORIO,
                                     options=self._escritorios(),
                                     # value=self._escritorios()[0]
-
                                 ),
-                                dbc.Button("Extrair dados", id=ids.HANDLE_PDF_TBN, n_clicks=0, style={'margin-top': '20px'}),
-                                dbc.Spinner(html.Div(id=ids.SPINNER, style={'margin-top': '20px'}), color="primary", spinner_style={"width": "2rem", "height": "2rem", "margin-top": "-53px"}),
+                                dbc.Button(
+                                    "Extrair dados", id=ids.HANDLE_PDF_TBN, n_clicks=0, style={"margin-top": "20px"}
+                                ),
+                                dbc.Spinner(
+                                    html.Div(id=ids.SPINNER, style={"margin-top": "20px"}),
+                                    color="primary",
+                                    spinner_style={"width": "2rem", "height": "2rem", "margin-top": "-53px"},
+                                ),
                             ]
                         ),
                     ),
                 ]
             ),
-
-            className="mt-3"
+            className="mt-3",
         )
 
         tab2_content = dbc.Card(
-        dbc.Row(
-            [
-                dbc.Col(
-                    dbc.CardBody(
-                        [
-                            dbc.Form([username_input, password_input, escritorio_input]),
-                            dbc.Row(
-                                dbc.Col([
-                                    dbc.Button("Submit", id=ids.SUBMIT_NEW_USER, n_clicks=0, style={'margin-top': '20px', "justify-content": "center"}),
-                                    dbc.Alert("Usuário adicionado!!", id=ids.ALERT_NEW_USER_SUCESS, dismissable=True, is_open=False, style={'margin-top': '20px'}),
-                                    dbc.Alert("Preencha os campos com dados válidos!", id=ids.ALERT_NEW_USER_ERROR, color="danger", dismissable=True, is_open=False, style={'margin-top': '20px'})
-                                ]),
-                            ),
-
-                            table,
-                        ],
+            dbc.Row(
+                [
+                    dbc.Col(
+                        dbc.CardBody(
+                            [
+                                dbc.Form([username_input, password_input, escritorio_input]),
+                                dbc.Row(
+                                    dbc.Col(
+                                        [
+                                            dbc.Button(
+                                                "Submit",
+                                                id=ids.SUBMIT_NEW_USER,
+                                                n_clicks=0,
+                                                style={"margin-top": "20px", "justify-content": "center"},
+                                            ),
+                                            dbc.Alert(
+                                                "Usuário adicionado!!",
+                                                id=ids.ALERT_NEW_USER_SUCESS,
+                                                dismissable=True,
+                                                is_open=False,
+                                                style={"margin-top": "20px"},
+                                            ),
+                                            dbc.Alert(
+                                                "Preencha os campos com dados válidos!",
+                                                id=ids.ALERT_NEW_USER_ERROR,
+                                                color="danger",
+                                                dismissable=True,
+                                                is_open=False,
+                                                style={"margin-top": "20px"},
+                                            ),
+                                        ]
+                                    ),
+                                ),
+                                table,
+                            ],
+                        ),
                     ),
-                ),
-                # dbc.Col(html.Div("One of three columns")),
-            ]
-        ),
-
-            className="mt-3"
+                    # dbc.Col(html.Div("One of three columns")),
+                ]
+            ),
+            className="mt-3",
         )
 
         tab3_content = dbc.Card(
@@ -286,20 +310,40 @@ class PageConfig:
                             [
                                 dbc.Form([name_escritorio, users_input]),
                                 dbc.Row(
-                                    dbc.Col([
-                                        dbc.Button("Submit", id=ids.SUBMIT_NEW_ESCRITORIO, n_clicks=0, style={'margin-top': '20px', "justify-content": "center"}),
-                                        dbc.Alert("Escritório adicionado!", id=ids.ALERT_NEW_ESCRITORIO_SUCESS, dismissable=True, is_open=False, style={'margin-top': '20px'}),
-                                        dbc.Alert("Preencha os campos com dados válidos!", id=ids.ALERT_NEW_ESCRITORIO_ERROR, color="danger", dismissable=True, is_open=False, style={'margin-top': '20px'})
-                                    ]),
+                                    dbc.Col(
+                                        [
+                                            dbc.Button(
+                                                "Submit",
+                                                id=ids.SUBMIT_NEW_ESCRITORIO,
+                                                n_clicks=0,
+                                                style={"margin-top": "20px", "justify-content": "center"},
+                                            ),
+                                            dbc.Alert(
+                                                "Escritório adicionado!",
+                                                id=ids.ALERT_NEW_ESCRITORIO_SUCESS,
+                                                dismissable=True,
+                                                is_open=False,
+                                                style={"margin-top": "20px"},
+                                            ),
+                                            dbc.Alert(
+                                                "Preencha os campos com dados válidos!",
+                                                id=ids.ALERT_NEW_ESCRITORIO_ERROR,
+                                                color="danger",
+                                                dismissable=True,
+                                                is_open=False,
+                                                style={"margin-top": "20px"},
+                                            ),
+                                        ]
+                                    ),
                                 ),
-                                table1
+                                table1,
                             ],
                         ),
                     ),
                     # dbc.Col(html.Div("One of three columns")),
                 ]
             ),
-            className="mt-3"
+            className="mt-3",
         )
         tabs = html.Div(
             id="tabs",
@@ -339,15 +383,14 @@ class PageConfig:
             ],
         )
 
-
         home = html.Div(
             className="app-div",
             children=[
-                html.H1('Config:'),
+                html.H1("Config:"),
                 html.Hr(),
                 # dcc.Markdown(children=markdown_text),
                 tabs,
-
-            ], style={'background-color': '#f8f9fa'}
+            ],
+            style={"background-color": "#f8f9fa"},
         )
         return home

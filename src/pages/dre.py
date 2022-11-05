@@ -19,11 +19,12 @@ class PageDRE:
         self.select = SelectOne(app)
         self._crud = Crud()
         self.data_escritorios: list = []
-        self.data_empresas: list = ['none', 'none']
+        self.data_empresas: list = ["none", "none"]
         self.callback()
 
     def callback(self):
         self.df = pd.DataFrame()
+
         @self._app.callback(
             Output(ids.SELECT_EMPRESAS_ANALISE, "options"),
             Input(ids.SELECT_ESCRITORIO_ANALISE, "value"),
@@ -76,50 +77,55 @@ class PageDRE:
         return [esc.name for esc in self.data_escritorios]
 
     def render(self):
-        tab1_content = dbc.Card([
-            dbc.Row(
-                    dbc.Col([
-                        dcc.Graph(
-                            id=ids.BAR_RB
-                        ),
-                    ]),
-            ),
-            dbc.Row(
-                    dbc.Col([
-                        dcc.Graph(
-                            id=ids.BAR_RECEITAS
-                        ),
-                    ]),
-            ),
-        ])
+        tab1_content = dbc.Card(
+            [
+                dbc.Row(
+                    dbc.Col(
+                        [
+                            dcc.Graph(id=ids.BAR_RB),
+                        ]
+                    ),
+                ),
+                dbc.Row(
+                    dbc.Col(
+                        [
+                            dcc.Graph(id=ids.BAR_RECEITAS),
+                        ]
+                    ),
+                ),
+            ]
+        )
 
-        tab2_content = dbc.Card([
-            dbc.Row(
+        tab2_content = dbc.Card(
+            [
+                dbc.Row(
                     dbc.Col(
                         dcc.Graph(
                             id=ids.FIGURE_ANALISE,
                         )
                     )
-            ),
-            dbc.Row(
-                    dbc.Col([
-                        dcc.Graph(
-                            id=ids.PIE_ANALISE_1
-                        ),
-                    ]),
-            ),
-        ])
+                ),
+                dbc.Row(
+                    dbc.Col(
+                        [
+                            dcc.Graph(id=ids.PIE_ANALISE_1),
+                        ]
+                    ),
+                ),
+            ]
+        )
 
-
-        tab3_content = dbc.Card([
-            dbc.Row(
-                    dbc.Col([
-                        dcc.Graph(
-                            id=ids.PIE_IMP
-                        ),
-                    ]),
-            )
-        ])
+        tab3_content = dbc.Card(
+            [
+                dbc.Row(
+                    dbc.Col(
+                        [
+                            dcc.Graph(id=ids.PIE_IMP),
+                        ]
+                    ),
+                )
+            ]
+        )
 
         resp = html.Div(
             id="tabs",
@@ -127,41 +133,44 @@ class PageDRE:
             children=[
                 dbc.Row(
                     [
-                        dbc.Col([
-                            html.P("Escritório:"),
-                            dcc.Dropdown(
-                                id=ids.SELECT_ESCRITORIO_ANALISE,
-                                options=[{"label": value, "value": value} for value in self.escritorios()],
-                                value=self.escritorios()[0],
-                                multi=False,
-                            ),
-
-                        ]),
-                        dbc.Col([
-                            html.P("Empresa:"),
-                            dcc.Dropdown(
-                                id=ids.SELECT_EMPRESAS_ANALISE,
-                                options=[{"label": value, "value": value} for value in self.data_empresas],
-                                value=self.data_empresas[0],
-                                multi=False,
-                            ),
-                        ]),
-                        dbc.Col([
-                            html.P("Ano:"),
-                            dcc.Dropdown(
-                                id=ids.SELECT_YEAR,
-                                multi=False,
-                            ),
-
-                        ]),
+                        dbc.Col(
+                            [
+                                html.P("Escritório:"),
+                                dcc.Dropdown(
+                                    id=ids.SELECT_ESCRITORIO_ANALISE,
+                                    options=[{"label": value, "value": value} for value in self.escritorios()],
+                                    value=self.escritorios()[0],
+                                    multi=False,
+                                ),
+                            ]
+                        ),
+                        dbc.Col(
+                            [
+                                html.P("Empresa:"),
+                                dcc.Dropdown(
+                                    id=ids.SELECT_EMPRESAS_ANALISE,
+                                    options=[{"label": value, "value": value} for value in self.data_empresas],
+                                    value=self.data_empresas[0],
+                                    multi=False,
+                                ),
+                            ]
+                        ),
+                        dbc.Col(
+                            [
+                                html.P("Ano:"),
+                                dcc.Dropdown(
+                                    id=ids.SELECT_YEAR,
+                                    multi=False,
+                                ),
+                            ]
+                        ),
                     ],
                 ),
-
                 dcc.Tabs(
                     id="app-tabs",
                     value="tab1",
                     className="custom-tabs",
-                    style={'margin-top': '30px'},
+                    style={"margin-top": "30px"},
                     children=[
                         dcc.Tab(
                             tab1_content,
@@ -196,7 +205,7 @@ class PageDRE:
                             selected_className="custom-tab--selected",
                         ),
                     ],
-                )
+                ),
             ],
         )
         return resp

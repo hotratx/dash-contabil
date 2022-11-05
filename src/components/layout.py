@@ -16,7 +16,7 @@ def create_layout(app: Dash) -> html.Div:
     )
     def render_page_content(pathname):
         """Callback controle de páginas"""
-        home = ['/home', '/page-1', '/page-2', '/page-3']
+        home = ["/home", "/page-1", "/page-2", "/page-3"]
         if pathname == "/login" or pathname == "/":
             return login.render()
         elif pathname in home:

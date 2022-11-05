@@ -5,12 +5,8 @@ from .database import engine
 
 
 class UserEscritorioLink(SQLModel, table=True):
-    user_id: Optional[int] = Field(
-        default=None, foreign_key="user.id", primary_key=True
-    )
-    escritorio_id: Optional[int] = Field(
-        default=None, foreign_key="escritorio.id", primary_key=True
-    )
+    user_id: Optional[int] = Field(default=None, foreign_key="user.id", primary_key=True)
+    escritorio_id: Optional[int] = Field(default=None, foreign_key="escritorio.id", primary_key=True)
 
 
 class User(SQLModel, table=True):

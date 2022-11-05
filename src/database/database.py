@@ -18,5 +18,5 @@ engine = create_engine(sqlite_url, echo=True)
 
 
 # def create_db():
-    # SQLModel.metadata.drop_all(engine)
-    # SQLModel.metadata.create_all(engine)
+# SQLModel.metadata.drop_all(engine)
+# SQLModel.metadata.create_all(engine)

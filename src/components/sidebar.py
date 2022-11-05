@@ -24,11 +24,10 @@ class Sidebar:
                 Output("page-content-sidebar", "style"),
                 Output("side_click", "data"),
             ],
-
             [Input("btn_sidebar", "n_clicks")],
             [
                 State("side_click", "data"),
-            ]
+            ],
         )
         def toggle_sidebar(n, nclick):
             if n:
@@ -43,7 +42,7 @@ class Sidebar:
             else:
                 sidebar_style = SIDEBAR_STYLE
                 content_style = CONTENT_STYLE
-                cur_nclick = 'SHOW'
+                cur_nclick = "SHOW"
 
             return sidebar_style, content_style, cur_nclick
 
@@ -74,10 +73,15 @@ class Sidebar:
     def render(self):
         logout = dbc.Row(
             [
-                dbc.Col(html.Span(f'user: {current_user.get_id()}', style={'margin-left': '-90px', 'color': 'white'})),
+                dbc.Col(html.Span(f"user: {current_user.get_id()}", style={"margin-left": "-90px", "color": "white"})),
                 dbc.Col(
                     dbc.Button(
-                        "Sair", id=ids.LOGOUT_BTN, color="primary", className="ms-2", n_clicks=0, style={'margin-right': '-70px'}
+                        "Sair",
+                        id=ids.LOGOUT_BTN,
+                        color="primary",
+                        className="ms-2",
+                        n_clicks=0,
+                        style={"margin-right": "-70px"},
                     ),
                     width="auto",
                 ),
@@ -93,8 +97,12 @@ class Sidebar:
                         dbc.Row(
                             [
                                 # dbc.Button("Sidebar", outline=True, color="secondary", className="mr-1", id="btn_sidebar"),
-                                dbc.Col(html.Img(id="btn_sidebar", src=PLOTLY_LOGO, height="30px", style={'margin-left': '-70px'})),
-                                dbc.Col(dbc.NavbarBrand("Contábil", style={'margin-left': '-25px'})),
+                                dbc.Col(
+                                    html.Img(
+                                        id="btn_sidebar", src=PLOTLY_LOGO, height="30px", style={"margin-left": "-70px"}
+                                    )
+                                ),
+                                dbc.Col(dbc.NavbarBrand("Contábil", style={"margin-left": "-25px"})),
                             ],
                             align="left",
                             className="g-0",
@@ -131,13 +139,11 @@ class Sidebar:
             style=SIDEBAR_STYLE,
         )
 
-        content = html.Div(
-            id="page-content-sidebar",
-            style=CONTENT_STYLE)
+        content = html.Div(id="page-content-sidebar", style=CONTENT_STYLE)
 
         layout = html.Div(
             [
-                dcc.Store(id='side_click'),
+                dcc.Store(id="side_click"),
                 dcc.Location(id="url"),
                 navbar,
                 sidebar,

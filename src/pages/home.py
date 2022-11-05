@@ -25,7 +25,6 @@ class Home:
         except Exception:
             return []
 
-
     def _run(self):
         @self._app.callback(
             Output(ids.DUMMY, "children"),
@@ -55,7 +54,6 @@ class Home:
                 html.Div(id=ids.OUTPUT_DATA_UPLOAD),
                 dbc.Button("Analisar pdf", id=ids.HANDLE_PDF, n_clicks=0, color="dark"),
                 html.P(id=ids.DUMMY),
-
             ],
         )
         return home

@@ -12,8 +12,8 @@ from src.database.schemas import IDadosdre
 setlocale(LC_NUMERIC, "pt_BR.UTF-8")
 
 
-regex_cnpj = re.compile(r'.*CNPJ:(\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}).*')
-regex_name = re.compile(r'Empresa: (.*) -')
+regex_cnpj = re.compile(r".*CNPJ:(\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}).*")
+regex_name = re.compile(r"Empresa: (.*) -")
 
 
 class HandlePdf:
@@ -32,7 +32,7 @@ class HandlePdf:
                 self.handle_pdf(path_pdf)
                 files.append(path_pdf.name)
             except Exception as e:
-                print(f'erro no handle do pdf: {path_pdf} -- {e}')
+                print(f"erro no handle do pdf: {path_pdf} -- {e}")
             os.remove(path_pdf)
         return files
 
@@ -45,7 +45,7 @@ class HandlePdf:
         if resp := self.pdf_is_valid(text, path_pdf):
             self.save(resp, cnpj, name)
         else:
-            print('PDF não valido')
+            print("PDF não valido")
 
     def pdf_is_valid(self, text, path_pdf):
         if text.split(":")[0] == "Demonstração do Resultado do Exercício Pág.":
@@ -54,7 +54,7 @@ class HandlePdf:
 
     def _get_info(self, text: str):
         texto = text[:120]
-        text_cnpj = texto.replace(' ', '')
+        text_cnpj = texto.replace(" ", "")
         cnpj = regex_cnpj.search(text_cnpj).groups()[0]
         name = regex_name.search(texto).groups()[0]
         return name, cnpj
@@ -64,41 +64,41 @@ class HandlePdf:
         return self.extract_data_from_pdf(df[0])
 
     def extract_data_from_pdf(self, df):
-        tri_1 = datetime.strptime(df.loc[1][5], '%d/%m/%Y')
-        tri_2 = datetime.strptime(df.loc[1][4], '%d/%m/%Y')
-        tri_3 = datetime.strptime(df.loc[1][3], '%d/%m/%Y')
-        tri_4 = datetime.strptime(df.loc[1][2], '%d/%m/%Y')
+        tri_1 = datetime.strptime(df.loc[1][5], "%d/%m/%Y")
+        tri_2 = datetime.strptime(df.loc[1][4], "%d/%m/%Y")
+        tri_3 = datetime.strptime(df.loc[1][3], "%d/%m/%Y")
+        tri_4 = datetime.strptime(df.loc[1][2], "%d/%m/%Y")
         abrev = {
-                    "lucro_bruto": "Lucro Bruto",
-                    "rec_bruta_ope": "Receita Bruta Operacional",
-                    "result_liquido_exer": "Resultado Líquido do Exercicio",
-                    "receita_liquida": "Receita Líquida",
-                    "receitas_financeiras": "Receitas Financeiras",
-                    "dedu_receita": "Deduções da Receita",
-                    "resultado_financeiro": "Resultado Financeiro",
-                    "fatu_pro_merc_serv": "Faturamento Prod. Merc. e Serviços",
-                    "vendas_mercadorias": "Venda de Mercadorias",
-                    "vendas_can_dev": "Vendas Canc., Devol. e Descontos Inc...",
-                    "custo_mercad_ser_pro_vendidos": "Custo Mercad./Serv./Produtos Vendidos",
-                    "custo_mercadorias_revendidas": "Custo das Mercadorias Revendidas",
-                    "desp_operacionnal": "Despesas Operacionais",
-                    "desp_admin": "Despesas Administrativas",
-                    "desp_trib": "Despesas Tributárias",
-                    "desp_financeiras": "Despesas Financeiras",
-                    "imposto_renda": "Imposto de Renda",
-                    "impostos_faturados": "Impostos Faturados",
-                    "icms": "ICMS",
-                    "cofins": "COFINS",
-                    "pis": "PIS",
-                    "outras_deducoes": "Outras Deduções",
-                    "res_antes_das_part": "Res. Antes das Participações e Contrib.",
-                    "res_antes_imp_renda": "Res. Antes Imp.Renda e Contrib. Social",
-                    "contri_social_sobre_lucro": "Contribuição Social Sobre o Lucro",
+            "lucro_bruto": "Lucro Bruto",
+            "rec_bruta_ope": "Receita Bruta Operacional",
+            "result_liquido_exer": "Resultado Líquido do Exercicio",
+            "receita_liquida": "Receita Líquida",
+            "receitas_financeiras": "Receitas Financeiras",
+            "dedu_receita": "Deduções da Receita",
+            "resultado_financeiro": "Resultado Financeiro",
+            "fatu_pro_merc_serv": "Faturamento Prod. Merc. e Serviços",
+            "vendas_mercadorias": "Venda de Mercadorias",
+            "vendas_can_dev": "Vendas Canc., Devol. e Descontos Inc...",
+            "custo_mercad_ser_pro_vendidos": "Custo Mercad./Serv./Produtos Vendidos",
+            "custo_mercadorias_revendidas": "Custo das Mercadorias Revendidas",
+            "desp_operacionnal": "Despesas Operacionais",
+            "desp_admin": "Despesas Administrativas",
+            "desp_trib": "Despesas Tributárias",
+            "desp_financeiras": "Despesas Financeiras",
+            "imposto_renda": "Imposto de Renda",
+            "impostos_faturados": "Impostos Faturados",
+            "icms": "ICMS",
+            "cofins": "COFINS",
+            "pis": "PIS",
+            "outras_deducoes": "Outras Deduções",
+            "res_antes_das_part": "Res. Antes das Participações e Contrib.",
+            "res_antes_imp_renda": "Res. Antes Imp.Renda e Contrib. Social",
+            "contri_social_sobre_lucro": "Contribuição Social Sobre o Lucro",
         }
-        tri1 = {'tri': tri_1}
-        tri2 = {'tri': tri_2}
-        tri3 = {'tri': tri_3}
-        tri4 = {'tri': tri_4}
+        tri1 = {"tri": tri_1}
+        tri2 = {"tri": tri_2}
+        tri3 = {"tri": tri_3}
+        tri4 = {"tri": tri_4}
 
         for abr, name in abrev.items():
             try:
@@ -108,7 +108,7 @@ class HandlePdf:
                 tri3[abr] = response[2]
                 tri4[abr] = response[3]
             except Exception as e:
-                print(f'ERRRROR: {abr}, {name} ----- errro: {e}')
+                print(f"ERRRROR: {abr}, {name} ----- errro: {e}")
         return [tri4, tri3, tri2, tri1]
 
     def extract_1(self, df, name):
@@ -116,19 +116,14 @@ class HandlePdf:
         mask = self.line(df, name)
         for i in range(1, 5):
             x = df[mask].iloc[-1][-i]
-            if '(' in x:
+            if "(" in x:
                 resp.append(atof(x[1:-1]))
             else:
                 resp.append(atof(x))
         return resp
 
     def line(self, df, name):
-        mask = df[[df.columns[1]]].apply(
-            lambda x: x.str.contains(
-                name,
-                regex=True
-            )
-        ).any(axis=1)
+        mask = df[[df.columns[1]]].apply(lambda x: x.str.contains(name, regex=True)).any(axis=1)
         return mask
 
     def save(self, dados, cnpj, name):
