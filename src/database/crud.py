@@ -28,6 +28,13 @@ class Crud:
             user = session.exec(stmt).one()
             return user.escritorios
 
+    def get_escritorios_and_users_from_user(self, username: str):
+        with Session(engine) as session:
+            stmt = select(User).where(User.username == username)
+            user = session.exec(stmt).one()
+            user.escritorios
+            return user
+
     def get_escritorio(self, name: str):
         with Session(engine) as session:
             stmt = select(Escritorio).where(Escritorio.name == name)
@@ -115,8 +122,8 @@ class Crud:
 try:
     with Session(engine) as session:
         esc = Escritorio(name="Jacutinga")
-        password = get_password_hash("qwer")
-        user = User(username='Amim', password=password)
+        password = get_password_hash("admin")
+        user = User(username='admin', password=password)
         user.escritorios.append(esc)
         session.add(user)
         session.commit()
