@@ -25,7 +25,6 @@ def create_layout(app: Dash) -> html.Div:
             else:
                 return login.render()
         elif pathname == "/logout":
-            print("ENTROU NO LOGOUT")
             if current_user.is_authenticated:
                 logout_user()
                 return login.render()

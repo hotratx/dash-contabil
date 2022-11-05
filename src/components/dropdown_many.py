@@ -50,7 +50,6 @@ class SelectManyB:
         )
         def select_all_options(n_clicks):
             if n_clicks:
-                print(f'SELECE ALLLLLLLLLLLLLLLLLLLL: {self.options}')
                 return self.options
 
     def render(self, options: list) -> html.Div:

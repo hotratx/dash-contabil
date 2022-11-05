@@ -9,8 +9,8 @@ from src.components import ids
 
 from src.plot import create_df
 from src.plot.line import line_lucro
-from src.plot.pie import pie, pie_new, pie_impostos, line_lucro
-from src.plot.bar import despesas, bar_receita_bruta, bar_impostos, bar_receitas
+from src.plot.pie import pie, pie_receita_desp, pie_impostos, line_lucro
+from src.plot.bar import bar_despesas, bar_receita_bruta, bar_impostos, bar_receitas
 
 
 class PageDRE:
@@ -45,24 +45,23 @@ class PageDRE:
             Input(ids.SELECT_YEAR, "value"),
         )
         def select_data_from_empresa(value, year):
-            print(f'VALOR DO VALUE DEVE SER NOME DA EMPRESAS: {value}')
             datas = self._crud.get_datas_from_empresa_name(value)
             try:
                 self.df, select_years = create_df(datas)
                 if not year:
                     year = select_years[-1]
                 if year not in select_years:
-                    print(f'SELECT NEW YEAR {year}')
                     year = select_years[-1]
-                fig = despesas(self.df, year)
+
+                bar_desp = bar_despesas(self.df, year)
+                bar_rb = bar_receita_bruta(self.df, year)
+                bar_rec = bar_receitas(self.df, year)
+                pie_rece = pie_receita_desp(self.df, year)
+                line_l = line_lucro(self.df, year)
 
                 # pie_imp = pie_impostos(self.df, year)
-                pie_imp = line_lucro(self.df, year)
 
-                fig_pie_1 = pie_new(self.df, year)
-                fig_bar_rec = bar_receitas(self.df, year)
-                fig_bar_receita_bruta = bar_receita_bruta(self.df, year)
-                return fig, fig_pie_1, fig_bar_receita_bruta, pie_imp, fig_bar_rec, select_years, year
+                return bar_desp, pie_rece, bar_rb, line_l, bar_rec, select_years, year
             except Exception:
                 pass
 

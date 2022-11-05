@@ -3,6 +3,7 @@ HANDLE_PDF_TBN = "handle-pdf-tbn"
 URL_LOGOUT = "url_logout"
 LOGOUT_BTN = "logout-btn"
 DUMMY = "dummy"
+HANDLE_PDF = "handle-pdf"
 
 # layout
 PAGE_CONTENT = "page-content"

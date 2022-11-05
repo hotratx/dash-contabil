@@ -40,7 +40,6 @@ class PageLogin:
             """Callback do component Login"""
             if n_clicks > 0:
                 user_model = self.crud.get_user(username)
-                print(f'LOGIN RESULTA USER: {user_model}')
                 if user_model and password:
                     hash = verify_password(password, user_model.password)
                     if hash:
@@ -103,5 +102,4 @@ class PageLogin:
                 ),
             ], fluid=True
         )
-
         return login

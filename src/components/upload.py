@@ -18,7 +18,6 @@ class Upload:
             State(ids.UPLOAD_DATA, "last_modified"),
         )
         def update_output(list_of_contents, list_of_names, list_of_dates):
-            print(f"list_of_names: {list_of_names}, list_of_dates: {list_of_dates}")
             if list_of_names is not None:
                 resp = []
                 for c, n, d in zip(list_of_contents, list_of_names, list_of_dates):
@@ -51,7 +50,6 @@ class Upload:
 
 
 def parse_contents(contents, filename, date):
-    print(f"entrou no parse_contents filename: {filename}\ntipo: {type(contents)}")
     try:
         if "pdf" in filename:
             data = contents.encode("utf8").split(b";base64,")[1]
@@ -59,5 +57,5 @@ def parse_contents(contents, filename, date):
                 fp.write(base64.decodebytes(data))
             return True
     except Exception as e:
-        print(e)
+        print(f'Parse contents error: {e}')
         return html.Div(["There was an error processing this file."])

@@ -38,8 +38,7 @@ def bar_receitas(df: pd.DataFrame, year):
     return fig
 
 
-def despesas(df: pd.DataFrame, year):
-    # fig = px.bar(x=funct_dates(df.index).values, y=[df["desp_admin"], df["desp_operacionnal"], df["desp_trib"]], title="Despesas",  text_auto=True, height=500)
+def bar_despesas(df: pd.DataFrame, year):
     df = df.loc[str(year)]
     fig = go.Figure(data=[
         go.Bar(name='Desp Adm.', x=funct_dates(df.index).values, y=df["desp_admin"].values),
@@ -49,5 +48,3 @@ def despesas(df: pd.DataFrame, year):
     ])
     fig.update_layout(barmode='stack', title="Despesas por trimestre")
     return fig
-
-

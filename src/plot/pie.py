@@ -18,7 +18,7 @@ def pie(df: pd.DataFrame, year, tri):
     return fig
 
 
-def pie_new(df: pd.DataFrame, year):
+def pie_receita_desp(df: pd.DataFrame, year):
     df = df.loc[str(year)]
     labels = ['Desp. Oper.', 'Receita Bruta']
     fig = make_subplots(rows=1, cols=4, specs=[[{'type': 'domain'}, {'type': 'domain'}, {'type': 'domain'}, {'type': 'domain'}]])

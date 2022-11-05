@@ -116,11 +116,7 @@ class Sidebar:
         )
         sidebar = html.Div(
             [
-                # html.P("Sidebar", className="display-6"),
                 html.Hr(),
-                # html.P(
-                #     "A simple sidebar layout with navigation links", className="lead"
-                # ),
                 dbc.Nav(
                     [
                         dbc.NavLink("DRE", href="/home", id="page-1-link"),
@@ -138,7 +134,6 @@ class Sidebar:
         content = html.Div(
             id="page-content-sidebar",
             style=CONTENT_STYLE)
-
 
         layout = html.Div(
             [

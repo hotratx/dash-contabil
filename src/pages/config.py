@@ -33,7 +33,6 @@ class PageConfig:
     def get_all_users(self):
         users = self._crud.get_all_users()
         usuarios = [user.username for user in users]
-        print(f'UUUUUUUUUUUUUUUUUUUUUUUSUARIOS: {usuarios}')
         return usuarios
 
     def _all_escritorios_list(self):
@@ -79,15 +78,9 @@ class PageConfig:
         )
         def analise_pdf(n_clicks, escritorio):
             """Callback controle de páginas"""
-            print(f'ANALISE PDF escritorio: {type(escritorio)}\nvalue escritorio: {escritorio}')
             if isinstance(escritorio, str):
-                print(f'TYPE _revert_value_to_label: {type(self._revert_value_to_label)}')
-                print(f'VALUE _revert_value_to_label: {self._revert_value_to_label}')
                 name = self._revert_value_to_label.get(int(escritorio))
-                print(f'NAME: {name}')
                 if n_clicks > 0:
-                    print('vai chamar o handepdf')
-                    # resp = self._handle_pdf.run(name)
                     crud = HandlePdf(self._crud)
                     resp = crud.run(name)
                     response = []
@@ -105,14 +98,9 @@ class PageConfig:
         )
         def add_new_user(n_clicks, username, password, escritorio, is_open):
             """Callback controle de páginas"""
-            print(f'NAMENAMENAMENAMENAME --- USERNAME: {username} - PASSWORD: {password} - ESCRITORIO: {escritorio}')
-            # print(f'{self._revert_value_to_label[int(escritorio[0])]}')
             if n_clicks > 0:
-                print('PASSOU DO n_clicks')
                 if username and password:
-                    print(f'VAI PRO BANCO DE DADOS: novo user: {username} --- password: {password} -- escritorio: {escritorio}')
                     resp = self._crud.create_user(username, password, escritorio)
-                    # print(f'RESPONSE DO CRUD: {resp}')
                     self._all_users()
                     return not is_open, is_open
                 else:
@@ -131,9 +119,7 @@ class PageConfig:
             """Callback controle de páginas"""
             if n_clicks > 0:
                 if value:
-                    print(f'XXXXXXX\nn_clicks: {n_clicks}, users: {users}, value: {value}, is_open: {is_open}')
                     e = self._crud.create_escritorio(value, users)
-                    # print(f'SUCESSO ADD NOVO ESCRIORIO: {e}')
                     self._all_escritorios()
                     return not is_open, is_open
                 else:

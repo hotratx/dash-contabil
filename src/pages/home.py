@@ -9,17 +9,6 @@ from src.components import ids
 from src.database import Crud
 
 
-markdown_text = f"""
-### Dash and Markdown
-
-Dash apps can be written in Markdown.
-Dash uses the [CommonMark](http://commonmark.org/)
-specification of Markdown.
-Check out their [60 Second Markdown Tutorial](http://commonmark.org/help/)
-
-<if this is your first introduction to Markdown!>
-"""
-
 handle_pdf = HandlePdf("db")
 
 
@@ -46,7 +35,6 @@ class Home:
             """Callback controle de páginas"""
             if n_clicks > 0:
                 handle_pdf.run()
-                print("HANDLE PDF -----")
             raise PreventUpdate
 
         # @self._app.callback(Output(ids.URL_LOGOUT, "pathname"), Input(ids.LOGOUT_BTN, "n_clicks"))
@@ -60,14 +48,10 @@ class Home:
         home = html.Div(
             className="app-div",
             children=[
-                # dcc.Location(id=ids.URL_LOGOUT, refresh=True),
                 html.H1(self._app.title),
                 html.Hr(),
                 dbc.Button("Logout", id=ids.LOGOUT_BTN, n_clicks=0, color="dark"),
-                dcc.Markdown(children=markdown_text),
                 self._upload.render(),
-                # html.P(f'Hello {current_user.get_id()}', id=ids.OUTPUT_RESULT),
-                # html.P(f'Escritorios {self._escritorios()}', id=ids.OUTPUT_RESULT),
                 html.Div(id=ids.OUTPUT_DATA_UPLOAD),
                 dbc.Button("Analisar pdf", id=ids.HANDLE_PDF, n_clicks=0, color="dark"),
                 html.P(id=ids.DUMMY),
