@@ -1,7 +1,4 @@
-import time
 from dash import Dash, html, dcc
-import dash_table as dt
-import pandas as pd
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 from flask_login import current_user
@@ -11,8 +8,6 @@ from src.components.upload import Upload
 from src.components.dropdown_many import SelectManyA, SelectManyB
 from src.components import ids
 from src.database import Crud
-
-# df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/solar.csv')
 
 
 class PageConfig:
@@ -60,15 +55,20 @@ class PageConfig:
             return ['adf', 'sd']
 
     def _all_users(self) -> list:
+        resp = []
         try:
-            escs = self._crud.get_escritorios_from_user(current_user.get_id())
-            all_users = []
-            for esc in escs:
-                for user in esc.users:
-                    all_users.append([user.username, esc.name])
-            return all_users
+            users = self._crud.get_all_users()
+            for user in users:
+                user = self._crud.get_escritorios_and_users_from_user(user.username)
+                escritorios = ''
+                for esc in user.escritorios:
+                    escritorios = escritorios + f' {esc.name} -'
+                escritorios = escritorios[:-2]
+
+                resp.append([user.username, escritorios])
+            return resp
         except Exception:
-            return ['adf', 'sd']
+            return ['', '']
 
 
     def _run(self):
@@ -87,7 +87,9 @@ class PageConfig:
                 print(f'NAME: {name}')
                 if n_clicks > 0:
                     print('vai chamar o handepdf')
-                    resp = self._handle_pdf.run(name)
+                    # resp = self._handle_pdf.run(name)
+                    crud = HandlePdf(self._crud)
+                    resp = crud.run(name)
                     response = []
                     for x in resp:
                         response.append(html.P(x))
@@ -111,6 +113,7 @@ class PageConfig:
                     print(f'VAI PRO BANCO DE DADOS: novo user: {username} --- password: {password} -- escritorio: {escritorio}')
                     resp = self._crud.create_user(username, password, escritorio)
                     # print(f'RESPONSE DO CRUD: {resp}')
+                    self._all_users()
                     return not is_open, is_open
                 else:
                     return is_open, not is_open
@@ -213,10 +216,20 @@ class PageConfig:
         for x in self._all_users():
             data.append(html.Tr([html.Td(x[0]), html.Td(x[1])]))
         table_body = [html.Tbody(data)]
-        print(f'ALLLLLLL TABLESSS: {data}')
 
-        table = dbc.Table(table_header + table_body, bordered=True, style={'margin-top': '20px',  'display': 'inline-block', 'width': '100%'})
+        table = dbc.Table(table_header + table_body, bordered=True, style={'margin-top': '40px',  'display': 'inline-block', 'width': '100%'})
         # fim table
+
+        table_header1 = [
+            html.Thead(html.Tr([html.Th("Escritório")]))
+        ]
+
+        data1 = []
+        x = self._all_escritorios()
+        data1.append(html.Tr([html.Td(x)]))
+        table_body1 = [html.Tbody(data1)]
+
+        table1 = dbc.Table(table_header1 + table_body1, bordered=True, style={'margin-top': '40px',  'display': 'inline-block', 'width': '100%'})
 
         tab1_content = dbc.Card(
             dbc.Row(
@@ -267,6 +280,7 @@ class PageConfig:
                                     dbc.Alert("Preencha os campos com dados válidos!", id=ids.ALERT_NEW_USER_ERROR, color="danger", dismissable=True, is_open=False, style={'margin-top': '20px'})
                                 ]),
                             ),
+
                             table,
                         ],
                     ),
@@ -287,13 +301,12 @@ class PageConfig:
                                 dbc.Form([name_escritorio, users_input]),
                                 dbc.Row(
                                     dbc.Col([
-                                        dbc.Button("Submitttttttt", id=ids.SUBMIT_NEW_ESCRITORIO, n_clicks=0, style={'margin-top': '20px', "justify-content": "center"}),
+                                        dbc.Button("Submit", id=ids.SUBMIT_NEW_ESCRITORIO, n_clicks=0, style={'margin-top': '20px', "justify-content": "center"}),
                                         dbc.Alert("Escritório adicionado!", id=ids.ALERT_NEW_ESCRITORIO_SUCESS, dismissable=True, is_open=False, style={'margin-top': '20px'}),
                                         dbc.Alert("Preencha os campos com dados válidos!", id=ids.ALERT_NEW_ESCRITORIO_ERROR, color="danger", dismissable=True, is_open=False, style={'margin-top': '20px'})
                                     ]),
                                 ),
-                                html.P(self._all_escritorios(), style={'margin-top': '20px'}),
-
+                                table1
                             ],
                         ),
                     ),
