@@ -1,7 +1,5 @@
 from dash import Dash, html, dcc
-from dash.dependencies import Input, Output, State
-import dash_bootstrap_components as dbc
-from dash.exceptions import PreventUpdate
+from dash.dependencies import Input, Output
 from flask_login import logout_user, current_user
 from src.pages import PageLogin
 from src.components.sidebar import Sidebar
