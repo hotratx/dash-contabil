@@ -9,7 +9,6 @@ __pycache__/
 
 # Database 
 *.db
-pdfs/
 
 # Distribution / packaging
 .Python
