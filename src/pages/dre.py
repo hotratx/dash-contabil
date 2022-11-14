@@ -6,6 +6,7 @@ import dash_bootstrap_components as dbc
 from src.database import Crud
 from flask_login import current_user
 from src.components import ids
+from src.components.dre import tab_despesas, tab_impostos, tab_receitas
 
 from src.plot import create_df
 from src.plot.line import line_lucro
@@ -35,7 +36,7 @@ class PageDRE:
             return self.data_empresas
 
         @self._app.callback(
-            Output(ids.FIGURE_ANALISE, "figure"),
+            Output(ids.BAR_DESPESAS, "figure"),
             Output(ids.PIE_ANALISE_1, "figure"),
             Output(ids.BAR_RB, "figure"),
             Output(ids.PIE_IMP, "figure"),
@@ -77,55 +78,9 @@ class PageDRE:
         return [esc.name for esc in self.data_escritorios]
 
     def render(self):
-        tab1_content = dbc.Card(
-            [
-                dbc.Row(
-                    dbc.Col(
-                        [
-                            dcc.Graph(id=ids.BAR_RB),
-                        ]
-                    ),
-                ),
-                dbc.Row(
-                    dbc.Col(
-                        [
-                            dcc.Graph(id=ids.BAR_RECEITAS),
-                        ]
-                    ),
-                ),
-            ]
-        )
-
-        tab2_content = dbc.Card(
-            [
-                dbc.Row(
-                    dbc.Col(
-                        dcc.Graph(
-                            id=ids.FIGURE_ANALISE,
-                        )
-                    )
-                ),
-                dbc.Row(
-                    dbc.Col(
-                        [
-                            dcc.Graph(id=ids.PIE_ANALISE_1),
-                        ]
-                    ),
-                ),
-            ]
-        )
-
-        tab3_content = dbc.Card(
-            [
-                dbc.Row(
-                    dbc.Col(
-                        [
-                            dcc.Graph(id=ids.PIE_IMP),
-                        ]
-                    ),
-                )
-            ]
-        )
+        tab1_content = tab_receitas()
+        tab2_content = tab_despesas()
+        tab3_content = tab_impostos()
 
         resp = html.Div(
             id="tabs",
