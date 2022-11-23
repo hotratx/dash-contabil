@@ -44,7 +44,7 @@ def bar_receitas(df: pd.DataFrame, year):
             go.Bar(name="Rec. Fin.", x=funct_dates(df.index).values, y=df["receitas_financeiras"].values),
         ]
     )
-    fig.update_layout(barmode="stack", title="Receita Líquida")
+    fig.update_layout(barmode="stack", title="Receita Líquida", width=500, height=500)
     return fig
 
 
@@ -60,3 +60,26 @@ def bar_despesas(df: pd.DataFrame, year):
     )
     fig.update_layout(barmode="stack", title="Despesas por trimestre")
     return fig
+
+
+
+def bar_receitas_3d(df: pd.DataFrame, year):
+    df = df.loc[str(year)]
+    z = df["receita_liquida"].values
+      
+    fig = go.Figure(data=[go.Mesh3d(
+      x=funct_dates(df.index).values, y=df["receita_liquida"].values, z=z, color='green', opacity=0.20)])
+      
+
+
+
+    # fig = go.Figure(
+    #     data=[
+    #         go.Bar(name="Rec. Liq.", x=funct_dates(df.index).values, y=df["receita_liquida"].values),
+    #         go.Bar(name="Rec. Fin.", x=funct_dates(df.index).values, y=df["receitas_financeiras"].values),
+    #     ]
+    # )
+    # fig.update_layout(barmode="stack", title="Receita Líquida")
+    return fig
+
+
