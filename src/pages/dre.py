@@ -10,8 +10,8 @@ from src.components import ids
 from src.components.dre import tab_despesas, tab_impostos, tab_receitas, tab_info
 
 from src.plot import create_df
-from src.plot.line import line_lucro
-from src.plot.pie import pie, pie_receita_desp, pie_impostos, line_lucro
+from src.plot.line import line_lucro, line_despesa
+from src.plot.pie import pie, pie_receita_desp, pie_impostos, line_lucro, pie_despesa_info
 from src.plot.bar import bar_despesas, bar_receita_bruta, bar_impostos, bar_receitas, bar_receitas_3d
 
 
@@ -38,11 +38,13 @@ class PageDRE:
 
         @self._app.callback(
             # Output("skeleton-graph-container", "children"),
-            Output(ids.BAR_DESPESAS, "figure"),
+            Output(ids.LINE_DESPESAS, "figure"),
             Output(ids.PIE_ANALISE_1, "figure"),
             Output(ids.BAR_RB, "figure"),
-            Output(ids.PIE_IMP, "figure"),
             Output(ids.BAR_RECEITAS, "figure"),
+            Output(ids.BAR_IMPOSTOS, "figure"),
+            Output(ids.PIE_IMPOSTOS, "figure"),
+            # Output(ids.PIE_IMP, "figure"),
             Output(ids.SELECT_YEAR, "options"),
             Output(ids.SELECT_YEAR, "value"),
             Output(ids.INFO_RECEITA_BRUTA, "children"),
@@ -63,11 +65,15 @@ class PageDRE:
                     year = select_years[-1]
 
                 # gráficos
-                bar_desp = bar_despesas(self.df, year)
+
+                # bar_desp = bar_despesas(self.df, year)
+                line_desp = line_despesa(self.df, year)
                 bar_rb = bar_receita_bruta(self.df, year)
                 bar_rec = bar_receitas(self.df, year)
-                pie_rece = pie_receita_desp(self.df, year)
-                line_l = line_lucro(self.df, year)
+                bar_imp = bar_impostos(self.df, year)
+                pie_imp = pie_impostos(self.df, year)
+                pie_rec = pie_despesa_info(self.df, year)
+                # line_l = line_lucro(self.df, year)
 
                 # infos
                 df = self.df.loc[str(year)]
@@ -77,7 +83,7 @@ class PageDRE:
                 info_receita_liq = f'{format_currency(df.iloc[0]["receita_liquida"], "BRL", locale="pt_BR")}'
                 info_marg_lucro = f'{df.iloc[0]["lucro_bruto"]/df.iloc[0]["rec_bruta_ope"]:.2%}'
 
-                return bar_desp, pie_rece, bar_rb, line_l, bar_rec, select_years, year, info_receita_bruta, info_despesa_ope, info_impostos, info_receita_liq, info_marg_lucro
+                return line_desp, pie_rec, bar_rb, bar_rec, bar_imp, pie_imp, select_years, year, info_receita_bruta, info_despesa_ope, info_impostos, info_receita_liq, info_marg_lucro
             except Exception:
                 pass
 
@@ -92,9 +98,9 @@ class PageDRE:
         return [esc.name for esc in self.data_escritorios]
 
     def render(self):
-        tab1_content = tab_receitas()
-        tab2_content = tab_despesas()
-        tab3_content = tab_impostos()
+        # tab1_content = tab_receitas()
+        # tab2_content = tab_despesas()
+        # tab3_content = tab_impostos()
         tab4_content = tab_info()
 
         resp = html.Div(
@@ -151,7 +157,7 @@ class PageDRE:
                             selected_className="custom-tab--selected",
                         ),
                         dcc.Tab(
-                            tab1_content,
+                            # tab1_content,
                             id="Specs-tab",
                             label="Receitas",
                             value="tab2",
@@ -159,7 +165,7 @@ class PageDRE:
                             selected_className="custom-tab--selected",
                         ),
                         dcc.Tab(
-                            tab2_content,
+                            # tab2_content,
                             id="Control-chart-tab",
                             label="Despesas",
                             value="tab3",
@@ -167,7 +173,7 @@ class PageDRE:
                             selected_className="custom-tab--selected",
                         ),
                         dcc.Tab(
-                            tab3_content,
+                            # tab3_content,
                             id="add-escritorios",
                             label="Impostos",
                             value="tab4",

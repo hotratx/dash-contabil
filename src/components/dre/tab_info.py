@@ -72,65 +72,98 @@ def tab_info():
                         ),
                     ]), span=2
                 ),
-
-
             ],
             gutter="xl", justify="space-between"
         ),
-
-
 
         dmc.Grid(
             children=[
                 dmc.Col(
                     dbc.Card([
-
                         dbc.CardBody(
                             dmc.Col(html.Div([
                                 dmc.Text("Aqui temos a receita bruta:", weight=500, style={"margin-top": "7px"}),
                                 dmc.Badge("Receita Bruta", size="sm"),
                                 html.H6("R$ 27.219,34", className="card-title"),
 
-                                dbc.Row(
+                                dbc.Row([
                                     dbc.Col([
                                         dmc.Skeleton(
                                             visible=False,
                                             children=dcc.Graph(id=ids.BAR_RB)
                                         ),
                                     ]),
-                                ),
 
 
-                            ]))
-                        ),
-                    ]), span=6
-                ),
-
-                dmc.Col(
-                    dbc.Card([
-                        dbc.CardBody(
-                            dmc.Col(html.Div([
-
-                                dmc.Badge("Desp. Operaaa.", size="sm", color="yellow"),
-                                html.H6("R$ 27.219,34", className="card-title"),
-                                dbc.Row(
                                     dbc.Col([
                                         dmc.Skeleton(
                                             visible=False,
                                             children=dcc.Graph(id=ids.BAR_RECEITAS)
                                         ),
                                     ]),
-                                ),
-
-                            ]), style=style1)
+                                ]),
+                            ]))
                         ),
-                    ]), span=6
+                    ]), span=12
                 ),
+
+
+                dmc.Col(
+                    dbc.Card([
+                        dbc.CardBody(
+                            dmc.Col(html.Div([
+                                dmc.Text("Aqui temos as despesas:", weight=500, style={"margin-top": "7px"}),
+                                dmc.Badge("Despesas", size="sm"),
+                                html.H6("R$ 27.219,34", className="card-title"),
+
+                                dbc.Row([
+                                    dbc.Col([
+                                        dmc.Skeleton(
+                                            visible=False,
+                                            children=dcc.Graph(id=ids.LINE_DESPESAS)
+                                        ),
+                                    ]),
+
+
+                                    dbc.Col([
+                                        dmc.Skeleton(
+                                            visible=False,
+                                            children=dcc.Graph(id=ids.PIE_ANALISE_1)
+                                        ),
+                                    ]),
+                                ]),
+                            ]))
+                        ),
+                    ]), span=12
+                ),
+
+                dmc.Col(
+                    dbc.Card([
+                        dbc.CardBody(
+                            dmc.Col(html.Div([
+                                dmc.Text("Aqui temos os Impostos:", weight=500, style={"margin-top": "7px"}),
+                                dbc.Row([
+                                    dbc.Col(
+                                        dmc.Skeleton(
+                                            visible=False,
+                                            children=dcc.Graph(id=ids.BAR_IMPOSTOS)
+                                        ),
+                                    ),
+
+
+                                    dbc.Col([
+                                        dmc.Skeleton(
+                                            visible=False,
+                                            children=dcc.Graph(id=ids.PIE_IMPOSTOS)
+                                        ),
+                                    ]),
+                                ]),
+                            ]))
+                        ),
+                    ]), span=12
+                ),
+
             ],
             gutter="xl", justify="space-around"
         ),
-
-
-
     ])
-

@@ -7,20 +7,20 @@ from src.components import ids
 def tab_despesas():
     return dbc.Card(
         [
-            dbc.Row(
-                dbc.Col(
-                    dcc.Graph(
-                        id=ids.BAR_DESPESAS,
-                    )
-                )
-            ),
-            dbc.Row(
-                dbc.Col(
-                    [
-                        dcc.Graph(id=ids.PIE_ANALISE_1),
-                    ]
-                ),
-            ),
+            # dbc.Row(
+            #     dbc.Col(
+            #         dcc.Graph(
+            #             id=ids.BAR_DESPESAS,
+            #         )
+            #     )
+            # ),
+            # dbc.Row(
+            #     dbc.Col(
+            #         [
+            #             dcc.Graph(id=ids.PIE_ANALISE_1),
+            #         ]
+            #     ),
+            # ),
         ]
     )
 
