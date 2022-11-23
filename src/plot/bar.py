@@ -12,15 +12,15 @@ def bar_receita_bruta(df: pd.DataFrame, year):
     df = df.loc[str(year)]
     fig = go.Figure(
         data=[
-            go.Bar(name="Receita Bruta", x=funct_dates(df.index).values, y=df["rec_bruta_ope"].values),
+            go.Bar(name="Rec. Bruta", x=funct_dates(df.index).values, y=df["rec_bruta_ope"].values),
             go.Bar(
-                name="Custo Mercadorias Revendidas",
+                name="Custo Mer. Rev.",
                 x=funct_dates(df.index).values,
                 y=df["custo_mercadorias_revendidas"].values,
             ),
         ]
     )
-    fig.update_layout(barmode="stack", title="Receita Bruta Operacional x Custo Mercadorias Revendidas")
+    fig.update_layout(barmode="stack", title="Receita Bruta Operacional x Custo Mercadorias Revendidas", width=500, height=400)
     return fig
 
 
@@ -29,7 +29,7 @@ def bar_impostos(df: pd.DataFrame, year):
     fig = go.Figure(
         data=[
             go.Bar(name="ICMS", x=funct_dates(df.index).values, y=df["icms"].values),
-            go.Bar(name="CONFINS", x=funct_dates(df.index).values, y=df["confins"].values),
+            go.Bar(name="CONFINS", x=funct_dates(df.index).values, y=df["cofins"].values),
         ]
     )
     fig.update_layout(barmode="stack", title="Impostos")
@@ -44,7 +44,7 @@ def bar_receitas(df: pd.DataFrame, year):
             go.Bar(name="Rec. Fin.", x=funct_dates(df.index).values, y=df["receitas_financeiras"].values),
         ]
     )
-    fig.update_layout(barmode="stack", title="Receita Líquida", width=500, height=500)
+    fig.update_layout(barmode="stack", title="Receita Líquida", width=500, height=400)
     return fig
 
 
@@ -58,7 +58,7 @@ def bar_despesas(df: pd.DataFrame, year):
             go.Bar(name="Desp Fin.", x=funct_dates(df.index).values, y=df["desp_financeiras"].values),
         ]
     )
-    fig.update_layout(barmode="stack", title="Despesas por trimestre")
+    fig.update_layout(barmode="stack", title="Despesas por trimestre", width=500, height=400)
     return fig
 
 

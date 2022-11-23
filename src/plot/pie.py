@@ -20,6 +20,36 @@ def pie(df: pd.DataFrame, year, tri):
     return fig
 
 
+def pie_despesa_info(df: pd.DataFrame, year):
+    df = df.loc[str(year)]
+    labels = ["Desp. Oper.", "Receita Bruta"]
+    fig = go.Figure(
+        data=[
+            go.Pie(labels=labels, values=[df.iloc[0]["desp_operacionnal"], df.iloc[0]["rec_bruta_ope"]]),
+        ]
+    )
+    fig.update_layout(title="Despesa Operacional x Receita Bruta", width=500, height=400)
+    return fig
+
+
+def pie_impostos(df: pd.DataFrame, year):
+    df = df.loc[str(year)]
+    labels = ["ICMS", "COFINS", "PIS", "IR", "CSSL"]
+    fig = go.Figure(
+        data=[
+            go.Pie(labels=labels, values=[
+                df.iloc[0]["icms"],
+                df.iloc[0]["cofins"],
+                df.iloc[0]["pis"],
+                df.iloc[0]["contri_social_sobre_lucro"],
+                df.iloc[0]["imposto_renda"]
+            ])
+        ]
+    )
+    fig.update_layout(title="Impostos", width=500, height=400)
+    return fig
+
+
 def pie_receita_desp(df: pd.DataFrame, year):
     df = df.loc[str(year)]
     labels = ["Desp. Oper.", "Receita Bruta"]
@@ -50,12 +80,12 @@ def pie_receita_desp(df: pd.DataFrame, year):
             dict(text="2T", x=0.37, y=0.5, font_size=20, showarrow=False),
             dict(text="3T", x=0.63, y=0.5, font_size=20, showarrow=False),
             dict(text="4T", x=0.91, y=0.5, font_size=20, showarrow=False),
-        ],
+        ], width=500, height=400
     )
     return fig
 
 
-def pie_impostos(df: pd.DataFrame, year):
+def pie_impostos_four(df: pd.DataFrame, year):
     df = df.loc[str(year)]
     labels = ["ICMS", "CONFINS", "PIS", "CSSL"]
     fig = make_subplots(
