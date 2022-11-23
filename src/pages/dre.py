@@ -7,7 +7,7 @@ from src.database import Crud
 from flask_login import current_user
 from babel.numbers import format_currency
 from src.components import ids
-from src.components.dre import tab_despesas, tab_impostos, tab_receitas, tab_lucro
+from src.components.dre import tab_despesas, tab_impostos, tab_receitas, tab_info
 
 from src.plot import create_df
 from src.plot.line import line_lucro
@@ -95,7 +95,7 @@ class PageDRE:
         tab1_content = tab_receitas()
         tab2_content = tab_despesas()
         tab3_content = tab_impostos()
-        tab4_content = tab_lucro()
+        tab4_content = tab_info()
 
         resp = html.Div(
             id="tabs",
