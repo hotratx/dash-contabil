@@ -49,7 +49,7 @@ class Dadosdre(SQLModel, table=True):
     custo_mercad_ser_pro_vendidos: Optional[float]
     custo_mercadorias_revendidas: Optional[float]
     lucro_bruto: Optional[float]
-    desp_operacionnal: Optional[float]
+    desp_operacional: Optional[float]
     desp_admin: Optional[float]
     desp_trib: Optional[float]
     resultado_financeiro: Optional[float]
@@ -58,7 +58,7 @@ class Dadosdre(SQLModel, table=True):
     res_antes_das_part: Optional[float]
     res_antes_imp_renda: Optional[float]
     contri_social_sobre_lucro: Optional[float]
-    importo_renda: Optional[float]
+    imposto_renda: Optional[float]
     result_liquido_exer: Optional[float]
 
     empresa_id: Optional[int] = Field(default=None, foreign_key="empresa.id")

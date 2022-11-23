@@ -22,13 +22,13 @@ def pie_new(df: pd.DataFrame, year):
     df = df.loc[str(year)]
     labels = ['Desp. Oper.', 'Receita Bruta']
     fig = make_subplots(rows=1, cols=4, specs=[[{'type': 'domain'}, {'type': 'domain'}, {'type': 'domain'}, {'type': 'domain'}]])
-    fig.add_trace(go.Pie(labels=labels, values=[df.iloc[0]["desp_operacionnal"], df.iloc[0]["rec_bruta_ope"]], name="1 tri"),
+    fig.add_trace(go.Pie(labels=labels, values=[df.iloc[0]["desp_operacional"], df.iloc[0]["rec_bruta_ope"]], name="1 tri"),
                   1, 1)
-    fig.add_trace(go.Pie(labels=labels, values=[df.iloc[1]["desp_operacionnal"], df.iloc[1]["rec_bruta_ope"]], name="2 tri"),
+    fig.add_trace(go.Pie(labels=labels, values=[df.iloc[1]["desp_operacional"], df.iloc[1]["rec_bruta_ope"]], name="2 tri"),
                   1, 2)
-    fig.add_trace(go.Pie(labels=labels, values=[df.iloc[2]["desp_operacionnal"], df.iloc[2]["rec_bruta_ope"]], name="3 tri"),
+    fig.add_trace(go.Pie(labels=labels, values=[df.iloc[2]["desp_operacional"], df.iloc[2]["rec_bruta_ope"]], name="3 tri"),
                   1, 3)
-    fig.add_trace(go.Pie(labels=labels, values=[df.iloc[3]["desp_operacionnal"], df.iloc[3]["rec_bruta_ope"]], name="4 tri"),
+    fig.add_trace(go.Pie(labels=labels, values=[df.iloc[3]["desp_operacional"], df.iloc[3]["rec_bruta_ope"]], name="4 tri"),
                   1, 4)
 
 # Use `hole` to create a donut-like pie chart

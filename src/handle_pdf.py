@@ -81,7 +81,7 @@ class HandlePdf:
             "vendas_can_dev": "Vendas Canc., Devol. e Descontos Inc...",
             "custo_mercad_ser_pro_vendidos": "Custo Mercad./Serv./Produtos Vendidos",
             "custo_mercadorias_revendidas": "Custo das Mercadorias Revendidas",
-            "desp_operacionnal": "Despesas Operacionais",
+            "desp_operacional": "Despesas Operacionais",
             "desp_admin": "Despesas Administrativas",
             "desp_trib": "Despesas Tributárias",
             "desp_financeiras": "Despesas Financeiras",

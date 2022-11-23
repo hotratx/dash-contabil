@@ -25,7 +25,7 @@ def pie_despesa_info(df: pd.DataFrame, year):
     labels = ["Desp. Oper.", "Receita Bruta"]
     fig = go.Figure(
         data=[
-            go.Pie(labels=labels, values=[df.iloc[0]["desp_operacionnal"], df.iloc[0]["rec_bruta_ope"]]),
+            go.Pie(labels=labels, values=[df.iloc[0]["desp_operacional"], df.iloc[0]["rec_bruta_ope"]]),
         ]
     )
     fig.update_layout(title="Despesa Operacional x Receita Bruta", width=500, height=400)
@@ -57,16 +57,16 @@ def pie_receita_desp(df: pd.DataFrame, year):
         rows=1, cols=4, specs=[[{"type": "domain"}, {"type": "domain"}, {"type": "domain"}, {"type": "domain"}]]
     )
     fig.add_trace(
-        go.Pie(labels=labels, values=[df.iloc[0]["desp_operacionnal"], df.iloc[0]["rec_bruta_ope"]], name="1 tri"), 1, 1
+        go.Pie(labels=labels, values=[df.iloc[0]["desp_operacional"], df.iloc[0]["rec_bruta_ope"]], name="1 tri"), 1, 1
     )
     fig.add_trace(
-        go.Pie(labels=labels, values=[df.iloc[1]["desp_operacionnal"], df.iloc[1]["rec_bruta_ope"]], name="2 tri"), 1, 2
+        go.Pie(labels=labels, values=[df.iloc[1]["desp_operacional"], df.iloc[1]["rec_bruta_ope"]], name="2 tri"), 1, 2
     )
     fig.add_trace(
-        go.Pie(labels=labels, values=[df.iloc[2]["desp_operacionnal"], df.iloc[2]["rec_bruta_ope"]], name="3 tri"), 1, 3
+        go.Pie(labels=labels, values=[df.iloc[2]["desp_operacional"], df.iloc[2]["rec_bruta_ope"]], name="3 tri"), 1, 3
     )
     fig.add_trace(
-        go.Pie(labels=labels, values=[df.iloc[3]["desp_operacionnal"], df.iloc[3]["rec_bruta_ope"]], name="4 tri"), 1, 4
+        go.Pie(labels=labels, values=[df.iloc[3]["desp_operacional"], df.iloc[3]["rec_bruta_ope"]], name="4 tri"), 1, 4
     )
 
     # Use `hole` to create a donut-like pie chart

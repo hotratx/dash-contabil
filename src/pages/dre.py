@@ -78,7 +78,7 @@ class PageDRE:
                 # infos
                 df = self.df.loc[str(year)]
                 info_receita_bruta = f'{format_currency(df.iloc[0]["rec_bruta_ope"], "BRL", locale="pt_BR")}'
-                info_despesa_ope = f'{format_currency(df.iloc[0]["desp_operacionnal"], "BRL", locale="pt_BR")}'
+                info_despesa_ope = f'{format_currency(df.iloc[0]["desp_operacional"], "BRL", locale="pt_BR")}'
                 info_impostos = f'{format_currency(df.iloc[0]["impostos_faturados"], "BRL", locale="pt_BR")}'
                 info_receita_liq = f'{format_currency(df.iloc[0]["receita_liquida"], "BRL", locale="pt_BR")}'
                 info_marg_lucro = f'{df.iloc[0]["lucro_bruto"]/df.iloc[0]["rec_bruta_ope"]:.2%}'

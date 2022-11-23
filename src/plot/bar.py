@@ -53,7 +53,7 @@ def bar_despesas(df: pd.DataFrame, year):
     fig = go.Figure(
         data=[
             go.Bar(name="Desp Adm.", x=funct_dates(df.index).values, y=df["desp_admin"].values),
-            go.Bar(name="Desp Oper.", x=funct_dates(df.index).values, y=df["desp_operacionnal"].values),
+            go.Bar(name="Desp Oper.", x=funct_dates(df.index).values, y=df["desp_operacional"].values),
             go.Bar(name="Desp Trib.", x=funct_dates(df.index).values, y=df["desp_trib"].values),
             go.Bar(name="Desp Fin.", x=funct_dates(df.index).values, y=df["desp_financeiras"].values),
         ]

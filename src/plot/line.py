@@ -24,7 +24,7 @@ def line_lucro(df: pd.DataFrame, year):
 
 def line_despesa(df: pd.DataFrame, year):
     df = df.loc[str(year)]
-    values = df["desp_operacionnal"].values
+    values = df["desp_operacional"].values
     fig = go.Figure(
         data=[
             go.Line(name="Desp. Operacional", x=funct_dates(df.index).values, y=values),
