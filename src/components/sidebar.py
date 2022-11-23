@@ -1,4 +1,6 @@
 from dash import Dash, html, dcc
+import dash_mantine_components as dmc
+from dash_iconify import DashIconify
 from dash.exceptions import PreventUpdate
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
@@ -40,9 +42,9 @@ class Sidebar:
                     content_style = CONTENT_STYLE
                     cur_nclick = "SHOW"
             else:
-                sidebar_style = SIDEBAR_STYLE
-                content_style = CONTENT_STYLE
-                cur_nclick = "SHOW"
+                sidebar_style = SIDEBAR_HIDEN
+                content_style = CONTENT_STYLE1
+                cur_nclick = "HIDDEN"
 
             return sidebar_style, content_style, cur_nclick
 
@@ -98,10 +100,15 @@ class Sidebar:
                             [
                                 # dbc.Button("Sidebar", outline=True, color="secondary", className="mr-1", id="btn_sidebar"),
                                 dbc.Col(
-                                    html.Img(
-                                        id="btn_sidebar", src=PLOTLY_LOGO, height="30px", style={"margin-left": "-70px"}
-                                    )
+                                    dmc.ActionIcon(
+                                        DashIconify(icon="clarity:settings-line"), variant="default", id="btn_sidebar", n_clicks=0, style={"margin-left": "-60px"}
+                                    ),
                                 ),
+                                # dbc.Col(
+                                #     html.Img(
+                                #         id="btn_sidebar", src=PLOTLY_LOGO, height="30px", style={"margin-left": "-70px"}
+                                #     )
+                                # ),
                                 dbc.Col(dbc.NavbarBrand("Contábil", style={"margin-left": "-25px"})),
                             ],
                             align="left",
@@ -136,10 +143,10 @@ class Sidebar:
                 ),
             ],
             id="sidebar",
-            style=SIDEBAR_STYLE,
+            style=SIDEBAR_HIDEN,
         )
 
-        content = html.Div(id="page-content-sidebar", style=CONTENT_STYLE)
+        content = html.Div(id="page-content-sidebar", style=CONTENT_STYLE1)
 
         layout = html.Div(
             [
