@@ -20,6 +20,9 @@ SQLAlchemy = "^1.4.40"
 sqlmodel = "^0.0.8"
 python-dotenv = "^0.21.0"
 PyPDF2 = {extras = ["full"], version = "^2.11.1"}
+dash-mantine-components = "^0.10.2"
+dash-iconify = "^0.1.2"
+Babel = "^2.11.0"
 
 [tool.poetry.dev-dependencies]
 ipython = "^8.4.0"
