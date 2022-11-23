@@ -5,13 +5,14 @@ from src.components.dropdown import SelectOne
 import dash_bootstrap_components as dbc
 from src.database import Crud
 from flask_login import current_user
+from babel.numbers import format_currency
 from src.components import ids
-from src.components.dre import tab_despesas, tab_impostos, tab_receitas
+from src.components.dre import tab_despesas, tab_impostos, tab_receitas, tab_lucro
 
 from src.plot import create_df
 from src.plot.line import line_lucro
 from src.plot.pie import pie, pie_receita_desp, pie_impostos, line_lucro
-from src.plot.bar import bar_despesas, bar_receita_bruta, bar_impostos, bar_receitas
+from src.plot.bar import bar_despesas, bar_receita_bruta, bar_impostos, bar_receitas, bar_receitas_3d
 
 
 class PageDRE:
@@ -36,6 +37,7 @@ class PageDRE:
             return self.data_empresas
 
         @self._app.callback(
+            # Output("skeleton-graph-container", "children"),
             Output(ids.BAR_DESPESAS, "figure"),
             Output(ids.PIE_ANALISE_1, "figure"),
             Output(ids.BAR_RB, "figure"),
@@ -43,10 +45,15 @@ class PageDRE:
             Output(ids.BAR_RECEITAS, "figure"),
             Output(ids.SELECT_YEAR, "options"),
             Output(ids.SELECT_YEAR, "value"),
+            Output(ids.INFO_RECEITA_BRUTA, "children"),
+            Output(ids.INFO_DESP_OPE, "children"),
+            Output(ids.INFO_IMPOSTOS, "children"),
+            Output(ids.INFO_RECEITA_LIQ, "children"),
+            Output(ids.INFO_MARG_LUCRO, "children"),
             Input(ids.SELECT_EMPRESAS_ANALISE, "value"),
             Input(ids.SELECT_YEAR, "value"),
         )
-        def select_data_from_empresa(value, year):
+        def update_graficos(value, year):
             datas = self._crud.get_datas_from_empresa_name(value)
             try:
                 self.df, select_years = create_df(datas)
@@ -55,15 +62,22 @@ class PageDRE:
                 if year not in select_years:
                     year = select_years[-1]
 
+                # gráficos
                 bar_desp = bar_despesas(self.df, year)
                 bar_rb = bar_receita_bruta(self.df, year)
                 bar_rec = bar_receitas(self.df, year)
                 pie_rece = pie_receita_desp(self.df, year)
                 line_l = line_lucro(self.df, year)
 
-                # pie_imp = pie_impostos(self.df, year)
+                # infos
+                df = self.df.loc[str(year)]
+                info_receita_bruta = f'{format_currency(df.iloc[0]["rec_bruta_ope"], "BRL", locale="pt_BR")}'
+                info_despesa_ope = f'{format_currency(df.iloc[0]["desp_operacionnal"], "BRL", locale="pt_BR")}'
+                info_impostos = f'{format_currency(df.iloc[0]["impostos_faturados"], "BRL", locale="pt_BR")}'
+                info_receita_liq = f'{format_currency(df.iloc[0]["receita_liquida"], "BRL", locale="pt_BR")}'
+                info_marg_lucro = f'{df.iloc[0]["lucro_bruto"]/df.iloc[0]["rec_bruta_ope"]:.2%}'
 
-                return bar_desp, pie_rece, bar_rb, line_l, bar_rec, select_years, year
+                return bar_desp, pie_rece, bar_rb, line_l, bar_rec, select_years, year, info_receita_bruta, info_despesa_ope, info_impostos, info_receita_liq, info_marg_lucro
             except Exception:
                 pass
 
@@ -81,6 +95,7 @@ class PageDRE:
         tab1_content = tab_receitas()
         tab2_content = tab_despesas()
         tab3_content = tab_impostos()
+        tab4_content = tab_lucro()
 
         resp = html.Div(
             id="tabs",
@@ -128,10 +143,18 @@ class PageDRE:
                     style={"margin-top": "30px"},
                     children=[
                         dcc.Tab(
+                            tab4_content,
+                            id="add-escritorios",
+                            label="Lucro",
+                            value="tab1",
+                            className="custom-tab",
+                            selected_className="custom-tab--selected",
+                        ),
+                        dcc.Tab(
                             tab1_content,
                             id="Specs-tab",
                             label="Receitas",
-                            value="tab1",
+                            value="tab2",
                             className="custom-tab",
                             selected_className="custom-tab--selected",
                         ),
@@ -139,7 +162,7 @@ class PageDRE:
                             tab2_content,
                             id="Control-chart-tab",
                             label="Despesas",
-                            value="tab2",
+                            value="tab3",
                             className="custom-tab",
                             selected_className="custom-tab--selected",
                         ),
@@ -147,14 +170,6 @@ class PageDRE:
                             tab3_content,
                             id="add-escritorios",
                             label="Impostos",
-                            value="tab3",
-                            className="custom-tab",
-                            selected_className="custom-tab--selected",
-                        ),
-                        dcc.Tab(
-                            # tab3_content,
-                            id="add-escritorios",
-                            label="Lucro",
                             value="tab4",
                             className="custom-tab",
                             selected_className="custom-tab--selected",
