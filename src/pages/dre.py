@@ -10,9 +10,9 @@ from src.components import ids
 from src.components.dre import tab_despesas, tab_impostos, tab_receitas, tab_info
 
 from src.plot import create_df
-from src.plot.line import line_lucro, line_despesa
-from src.plot.pie import pie, pie_receita_desp, pie_impostos, line_lucro, pie_despesa_info
-from src.plot.bar import bar_despesas, bar_receita_bruta, bar_impostos, bar_receitas, bar_receitas_3d
+from src.plot.line import line_lucro_liquido, line_despesa, line_margem_lucro
+from src.plot.pie import pie, pie_receita_desp, pie_impostos, pie_despesa_info
+from src.plot.bar import bar_despesas, bar_receita_bruta, bar_impostos, bar_receitas, bar_receitas_3d, bar_receitas_liquida, bar_perc_custo_x_receita
 
 
 class PageDRE:
@@ -44,6 +44,10 @@ class PageDRE:
             Output(ids.BAR_RECEITAS, "figure"),
             Output(ids.BAR_IMPOSTOS, "figure"),
             Output(ids.PIE_IMPOSTOS, "figure"),
+            Output(ids.BAR_REC_LIQ, "figure"),
+            Output(ids.LINE_LUCRO, "figure"),
+            Output(ids.LINE_MARGEM_LUCRO, "figure"),
+            Output(ids.BAR_PER_CUSTO_X_RECEITA, "figure"),
             # Output(ids.PIE_IMP, "figure"),
             Output(ids.SELECT_YEAR, "options"),
             Output(ids.SELECT_YEAR, "value"),
@@ -73,7 +77,10 @@ class PageDRE:
                 bar_imp = bar_impostos(self.df, year)
                 pie_imp = pie_impostos(self.df, year)
                 pie_rec = pie_despesa_info(self.df, year)
-                # line_l = line_lucro(self.df, year)
+                bar_rec_liq = bar_receitas_liquida(self.df, year)
+                line_l = line_lucro_liquido(self.df, year)
+                line_ml = line_margem_lucro(self.df, year)
+                bar_pcr = bar_perc_custo_x_receita(self.df, year)
 
                 # infos
                 df = self.df.loc[str(year)]
@@ -83,7 +90,7 @@ class PageDRE:
                 info_receita_liq = f'{format_currency(df.iloc[0]["receita_liquida"], "BRL", locale="pt_BR")}'
                 info_marg_lucro = f'{df.iloc[0]["lucro_bruto"]/df.iloc[0]["rec_bruta_ope"]:.2%}'
 
-                return line_desp, pie_rec, bar_rb, bar_rec, bar_imp, pie_imp, select_years, year, info_receita_bruta, info_despesa_ope, info_impostos, info_receita_liq, info_marg_lucro
+                return line_desp, pie_rec, bar_rb, bar_rec, bar_imp, pie_imp, bar_rec_liq, line_l, line_ml, bar_pcr, select_years, year, info_receita_bruta, info_despesa_ope, info_impostos, info_receita_liq, info_marg_lucro
             except Exception:
                 pass
 

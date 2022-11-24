@@ -83,8 +83,6 @@ def tab_info():
                         dbc.CardBody(
                             dmc.Col(html.Div([
                                 dmc.Text("Aqui temos a receita bruta:", weight=500, style={"margin-top": "7px"}),
-                                dmc.Badge("Receita Bruta", size="sm"),
-                                html.H6("R$ 27.219,34", className="card-title"),
 
                                 dbc.Row([
                                     dbc.Col([
@@ -113,8 +111,6 @@ def tab_info():
                         dbc.CardBody(
                             dmc.Col(html.Div([
                                 dmc.Text("Aqui temos as despesas:", weight=500, style={"margin-top": "7px"}),
-                                dmc.Badge("Despesas", size="sm"),
-                                html.H6("R$ 27.219,34", className="card-title"),
 
                                 dbc.Row([
                                     dbc.Col([
@@ -150,7 +146,6 @@ def tab_info():
                                         ),
                                     ),
 
-
                                     dbc.Col([
                                         dmc.Skeleton(
                                             visible=False,
@@ -162,6 +157,60 @@ def tab_info():
                         ),
                     ]), span=12
                 ),
+
+
+
+                dmc.Col(
+                    dbc.Card([
+                        dbc.CardBody(
+                            dmc.Col(html.Div([
+                                dmc.Text("Receita Líquida", weight=500, style={"margin-top": "7px"}),
+                                dbc.Row([
+                                    dbc.Col(
+                                        dmc.Skeleton(
+                                            visible=False,
+                                            children=dcc.Graph(id=ids.BAR_REC_LIQ)
+                                        ),
+                                    ),
+
+                                    dbc.Col([
+                                        dmc.Skeleton(
+                                            visible=False,
+                                            children=dcc.Graph(id=ids.LINE_LUCRO)
+                                        ),
+                                    ]),
+                                ]),
+                            ]))
+                        ),
+                    ]), span=12
+                ),
+
+
+                dmc.Col(
+                    dbc.Card([
+                        dbc.CardBody(
+                            dmc.Col(html.Div([
+                                dmc.Text("Margem de Lucro Bruto", weight=500, style={"margin-top": "7px"}),
+                                dbc.Row([
+                                    dbc.Col(
+                                        dmc.Skeleton(
+                                            visible=False,
+                                            children=dcc.Graph(id=ids.LINE_MARGEM_LUCRO)
+                                        ),
+                                    ),
+
+                                    dbc.Col(
+                                        dmc.Skeleton(
+                                            visible=False,
+                                            children=dcc.Graph(id=ids.BAR_PER_CUSTO_X_RECEITA)
+                                        ),
+                                    ),
+                                ]),
+                            ]))
+                        ),
+                    ]), span=12
+                ),
+
 
             ],
             gutter="xl", justify="space-around"
