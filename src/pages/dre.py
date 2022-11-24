@@ -1,4 +1,5 @@
 from dash import Dash, html, dcc
+import dash_mantine_components as dmc
 import pandas as pd
 from dash.dependencies import Input, Output
 from src.components.dropdown import SelectOne
@@ -49,7 +50,7 @@ class PageDRE:
             Output(ids.LINE_MARGEM_LUCRO, "figure"),
             Output(ids.BAR_PER_CUSTO_X_RECEITA, "figure"),
             # Output(ids.PIE_IMP, "figure"),
-            Output(ids.SELECT_YEAR, "options"),
+            Output(ids.SELECT_YEAR, "data"),
             Output(ids.SELECT_YEAR, "value"),
             Output(ids.INFO_RECEITA_BRUTA, "children"),
             Output(ids.INFO_DESP_OPE, "children"),
@@ -63,6 +64,7 @@ class PageDRE:
             datas = self._crud.get_datas_from_empresa_name(value)
             try:
                 self.df, select_years = create_df(datas)
+                select_years = list(map(str, select_years))
                 if not year:
                     year = select_years[-1]
                 if year not in select_years:
@@ -118,74 +120,59 @@ class PageDRE:
                     [
                         dbc.Col(
                             [
-                                html.P("Escritório:"),
-                                dcc.Dropdown(
+                                dmc.Select(
                                     id=ids.SELECT_ESCRITORIO_ANALISE,
-                                    options=[{"label": value, "value": value} for value in self.escritorios()],
+                                    label="Escritório:",
+                                    data=[{"label": value, "value": value} for value in self.escritorios()],
                                     value=self.escritorios()[0],
-                                    multi=False,
                                 ),
                             ]
                         ),
                         dbc.Col(
                             [
-                                html.P("Empresa:"),
-                                dcc.Dropdown(
+                                dmc.Select(
                                     id=ids.SELECT_EMPRESAS_ANALISE,
-                                    options=[{"label": value, "value": value} for value in self.data_empresas],
+                                    label="Empresa",
+                                    data=[{"label": value, "value": value} for value in self.data_empresas],
                                     value=self.data_empresas[0],
-                                    multi=False,
                                 ),
                             ]
                         ),
                         dbc.Col(
                             [
-                                html.P("Ano:"),
-                                dcc.Dropdown(
+                                dmc.Select(
                                     id=ids.SELECT_YEAR,
-                                    multi=False,
+                                    label="ano"
                                 ),
                             ]
                         ),
                     ],
                 ),
-                dcc.Tabs(
+                dmc.Tabs(
                     id="app-tabs",
-                    value="tab1",
-                    className="custom-tabs",
+                    grow=True,
+                    position="center",
                     style={"margin-top": "30px"},
                     children=[
-                        dcc.Tab(
+                        dmc.Tab(
                             tab4_content,
                             id="add-escritorios",
                             label="Resumo",
-                            value="tab1",
-                            className="custom-tab",
-                            selected_className="custom-tab--selected",
                         ),
-                        dcc.Tab(
+                        dmc.Tab(
                             # tab1_content,
                             id="Specs-tab",
                             label="Receitas",
-                            value="tab2",
-                            className="custom-tab",
-                            selected_className="custom-tab--selected",
                         ),
-                        dcc.Tab(
+                        dmc.Tab(
                             # tab2_content,
                             id="Control-chart-tab",
                             label="Despesas",
-                            value="tab3",
-                            className="custom-tab",
-                            selected_className="custom-tab--selected",
                         ),
-                        dcc.Tab(
+                        dmc.Tab(
                             # tab3_content,
                             id="add-escritorios",
                             label="Impostos",
-                            value="tab4",
-                            className="custom-tab",
-                            selected_className="custom-tab--selected",
                         ),
                     ],
                 ),

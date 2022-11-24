@@ -1,4 +1,4 @@
-from dash import Dash, html, dcc
+from dash import Dash, html
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 from flask_login import current_user
@@ -349,34 +349,24 @@ class PageConfig:
             id="tabs",
             className="tabs",
             children=[
-                dcc.Tabs(
+                dbc.Tabs(
                     id="app-tabs",
-                    value="tab1",
                     className="custom-tabs",
                     children=[
-                        dcc.Tab(
+                        dbc.Tab(
                             tab1_content,
                             id="Specs-tab",
                             label="Adicionar Dados",
-                            value="tab1",
-                            className="custom-tab",
-                            selected_className="custom-tab--selected",
                         ),
-                        dcc.Tab(
+                        dbc.Tab(
                             tab2_content,
                             id="Control-chart-tab",
                             label="Adicionar Usuários",
-                            value="tab2",
-                            className="custom-tab",
-                            selected_className="custom-tab--selected",
                         ),
-                        dcc.Tab(
+                        dbc.Tab(
                             tab3_content,
                             id="add-escritorios",
                             label="Adicionar Escritorio",
-                            value="tab3",
-                            className="custom-tab",
-                            selected_className="custom-tab--selected",
                         ),
                     ],
                 )
@@ -388,7 +378,7 @@ class PageConfig:
             children=[
                 html.H1("Config:"),
                 html.Hr(),
-                # dcc.Markdown(children=markdown_text),
+                # dbc.Markdown(children=markdown_text),
                 tabs,
             ],
             style={"background-color": "#f8f9fa"},

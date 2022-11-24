@@ -40,11 +40,10 @@ def bar_receitas(df: pd.DataFrame, year):
     df = df.loc[str(year)]
     fig = go.Figure(
         data=[
-            go.Bar(name="Rec. Liq.", x=funct_dates(df.index).values, y=df["receita_liquida"].values),
-            go.Bar(name="Rec. Fin.", x=funct_dates(df.index).values, y=df["receitas_financeiras"].values),
+            go.Bar(name="Rec. Bruta", x=funct_dates(df.index).values, y=df["rec_bruta_ope"].values)
         ]
     )
-    fig.update_layout(barmode="stack", title="Receita Líquida", width=500, height=400)
+    fig.update_layout(barmode="stack", title="Receita Bruta", width=500, height=400)
     return fig
 
 
