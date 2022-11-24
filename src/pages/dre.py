@@ -158,7 +158,7 @@ class PageDRE:
                         dcc.Tab(
                             tab4_content,
                             id="add-escritorios",
-                            label="Lucro",
+                            label="Resumo",
                             value="tab1",
                             className="custom-tab",
                             selected_className="custom-tab--selected",
