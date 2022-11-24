@@ -66,9 +66,11 @@ class PageDRE:
                 self.df, select_years = create_df(datas)
                 select_years = list(map(str, select_years))
                 if not year:
-                    year = select_years[-1]
+                    year = str(select_years[-1])
                 if year not in select_years:
-                    year = select_years[-1]
+                    year = str(select_years[-1])
+                # select_years2 = [{"value": str(x), "label": str(x)} for x in select_years]
+                print(f'\n\nYEAR: {str(year)}, SELECT_YEAARS2: {select_years}')
 
                 # gráficos
 
@@ -92,7 +94,7 @@ class PageDRE:
                 info_receita_liq = f'{format_currency(df.iloc[0]["receita_liquida"], "BRL", locale="pt_BR")}'
                 info_marg_lucro = f'{df.iloc[0]["lucro_bruto"]/df.iloc[0]["rec_bruta_ope"]:.2%}'
 
-                return line_desp, pie_rec, bar_rb, bar_rec, bar_imp, pie_imp, bar_rec_liq, line_l, line_ml, bar_pcr, select_years, year, info_receita_bruta, info_despesa_ope, info_impostos, info_receita_liq, info_marg_lucro
+                return line_desp, pie_rec, bar_rb, bar_rec, bar_imp, pie_imp, bar_rec_liq, line_l, line_ml, bar_pcr, 'oi', 'oi', info_receita_bruta, info_despesa_ope, info_impostos, info_receita_liq, info_marg_lucro
             except Exception:
                 pass
 
@@ -116,9 +118,9 @@ class PageDRE:
             id="tabs",
             className="tabs",
             children=[
-                dbc.Row(
+                dmc.Grid(
                     [
-                        dbc.Col(
+                        dmc.Col(
                             [
                                 dmc.Select(
                                     id=ids.SELECT_ESCRITORIO_ANALISE,
@@ -126,9 +128,9 @@ class PageDRE:
                                     data=[{"label": value, "value": value} for value in self.escritorios()],
                                     value=self.escritorios()[0],
                                 ),
-                            ]
+                            ], span=2
                         ),
-                        dbc.Col(
+                        dmc.Col(
                             [
                                 dmc.Select(
                                     id=ids.SELECT_EMPRESAS_ANALISE,
@@ -136,46 +138,46 @@ class PageDRE:
                                     data=[{"label": value, "value": value} for value in self.data_empresas],
                                     value=self.data_empresas[0],
                                 ),
-                            ]
+                            ], span=2
                         ),
-                        dbc.Col(
+                        dmc.Col(
                             [
                                 dmc.Select(
                                     id=ids.SELECT_YEAR,
-                                    label="ano"
+                                    label="Ano",
+                                    searchable=True,
+                                    nothingFound="No options found",
+                                    # data=[{"value": "2022", "label": "2022"}],
                                 ),
                             ]
                         ),
                     ],
                 ),
-                dmc.Tabs(
-                    id="app-tabs",
-                    grow=True,
-                    position="center",
-                    style={"margin-top": "30px"},
-                    children=[
-                        dmc.Tab(
-                            tab4_content,
-                            id="add-escritorios",
-                            label="Resumo",
-                        ),
-                        dmc.Tab(
-                            # tab1_content,
-                            id="Specs-tab",
-                            label="Receitas",
-                        ),
-                        dmc.Tab(
-                            # tab2_content,
-                            id="Control-chart-tab",
-                            label="Despesas",
-                        ),
-                        dmc.Tab(
-                            # tab3_content,
-                            id="add-escritorios",
-                            label="Impostos",
-                        ),
+                dmc.Tabs([
+                    # id="app-tabs",
+                    # grow=True,
+                    # position="center",
+                    # style={"margin-top": "30px"},
+                   dmc.TabsList(
+                        grow=True,
+                        position="center",
+                        children=[
+                            dmc.Tab("Resumo", value="resumo"),
+                            dmc.Tab("Receitas", value="receitas"),
+                            dmc.Tab("Despesas", value="despesas"),
+                            dmc.Tab("Impostos", value="impostos"),
+                        ]
+                    ),
+                    dmc.TabsPanel(tab4_content, value="resumo"),
+                    dmc.TabsPanel("teste", value="receitas"),
+                    dmc.TabsPanel("teste", value="despesas"),
+                    dmc.TabsPanel("teste", value="impostos"),
                     ],
-                ),
+                    color="red",
+                    orientation="horizontal",
+                    style={"margin-top": "30px"},
+                )
+
             ],
         )
         return resp
