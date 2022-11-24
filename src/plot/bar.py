@@ -32,7 +32,7 @@ def bar_impostos(df: pd.DataFrame, year):
             go.Bar(name="CONFINS", x=funct_dates(df.index).values, y=df["cofins"].values),
         ]
     )
-    fig.update_layout(barmode="stack", title="Impostos")
+    fig.update_layout(barmode="stack", title="Impostos", width=500, height=400)
     return fig
 
 
@@ -42,6 +42,17 @@ def bar_receitas(df: pd.DataFrame, year):
         data=[
             go.Bar(name="Rec. Liq.", x=funct_dates(df.index).values, y=df["receita_liquida"].values),
             go.Bar(name="Rec. Fin.", x=funct_dates(df.index).values, y=df["receitas_financeiras"].values),
+        ]
+    )
+    fig.update_layout(barmode="stack", title="Receita Líquida", width=500, height=400)
+    return fig
+
+
+def bar_receitas_liquida(df: pd.DataFrame, year):
+    df = df.loc[str(year)]
+    fig = go.Figure(
+        data=[
+            go.Bar(name="Rec. Liq.", x=funct_dates(df.index).values, y=df["receita_liquida"].values),
         ]
     )
     fig.update_layout(barmode="stack", title="Receita Líquida", width=500, height=400)
@@ -59,6 +70,40 @@ def bar_despesas(df: pd.DataFrame, year):
         ]
     )
     fig.update_layout(barmode="stack", title="Despesas por trimestre", width=500, height=400)
+    return fig
+
+
+def bar_perc_custo_x_receita(df: pd.DataFrame, year):
+    df = df.loc[str(year)]
+
+    x = ["Rec. Bruta", "Desp. Ope.", "Custo Merc", "Impostos"]
+
+    try:
+        m_desp_ope = round(df.iloc[0]["desp_operacional"] / df.iloc[0]["rec_bruta_ope"] * 100, 2)
+    except:
+        m_desp_ope = 0
+
+    try:
+        m_custo_mercadorias = round(df.iloc[0]["custo_mercadorias_revendidas"] / df.iloc[0]["rec_bruta_ope"] * 100, 2)
+    except:
+        m_custo_mercadorias = 0
+
+    try:
+        _impostos = float(df.iloc[0]["imposto_renda"]) + float(df.iloc[0]["icms"]) + float(df.iloc[0]["cofins"]) + float(df.iloc[0]["pis"])
+        impostos = round(_impostos / float(df.iloc[0]["rec_bruta_ope"]) * 100, 2)
+    except:
+        impostos = 0
+
+    y = [100, m_desp_ope, m_custo_mercadorias, impostos]
+    fig = go.Figure(
+        data=[
+            go.Bar(name="Rec. Bruta", x=x, y=y)
+            # go.Bar(name="Desp Oper.", x=[funct_dates(df.index).values[0]], y=[df.iloc[0]["custo_mercadorias_revendidas"] / df.iloc[0]["rec_bruta_ope"] * 100]),
+            # go.Bar(name="Desp Trib.", x=funct_dates(df.index).values, y=df["desp_trib"].values),
+            # go.Bar(name="Desp Fin.", x=funct_dates(df.index).values, y=df["desp_financeiras"].values),
+        ]
+    )
+    fig.update_layout(yaxis_ticksuffix="%", barmode="stack", title="Despesas por trimestre", width=500, height=400)
     return fig
 
 

@@ -16,7 +16,7 @@ def pie(df: pd.DataFrame, year, tri):
             go.Pie(name="Desp Admin", values=[df.iloc[tri]["desp_admin"], df.iloc[tri]["rec_bruta_ope"]]),
         ]
     )
-    fig.update_layout(title="Despesas", height=400)
+    fig.update_layout(title="Despesas", width=500, height=400)
     return fig
 
 
@@ -159,7 +159,7 @@ def pie_impostos_four(df: pd.DataFrame, year):
             dict(text="2T", x=0.37, y=0.5, font_size=20, showarrow=False),
             dict(text="3T", x=0.63, y=0.5, font_size=20, showarrow=False),
             dict(text="4T", x=0.91, y=0.5, font_size=20, showarrow=False),
-        ],
+        ], width=500, height=400
     )
     return fig
 
@@ -173,5 +173,5 @@ def line_lucro(df: pd.DataFrame, year):
         ]
     )
     # fig.update_traces(hole=.4, hoverinfo="label+value+name")
-    fig.update_layout(barmode="stack", title="Margem de lucro líquido")
+    fig.update_layout(barmode="stack", title="Margem de lucro líquido", width=500, height=400)
     return fig
