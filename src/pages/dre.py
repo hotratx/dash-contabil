@@ -1,4 +1,5 @@
 from dash import Dash, html, dcc
+import dash_mantine_components as dmc
 import pandas as pd
 from dash.dependencies import Input, Output
 from src.components.dropdown import SelectOne

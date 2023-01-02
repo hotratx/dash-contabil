@@ -77,20 +77,21 @@ def bar_perc_custo_x_receita(df: pd.DataFrame, year):
     df = df.loc[str(year)]
 
     x = ["Rec. Bruta", "Desp. Ope.", "Custo Merc", "Impostos"]
+    rec_bruta = df["rec_bruta_ope"].sum()
 
     try:
-        m_desp_ope = round(df.iloc[0]["desp_operacional"] / df.iloc[0]["rec_bruta_ope"] * 100, 2)
+        m_desp_ope = round(df["desp_operacional"].sum() / rec_bruta  * 100, 2)
     except:
         m_desp_ope = 0
 
     try:
-        m_custo_mercadorias = round(df.iloc[0]["custo_mercadorias_revendidas"] / df.iloc[0]["rec_bruta_ope"] * 100, 2)
+        m_custo_mercadorias = round(df["custo_mercadorias_revendidas"].sum() / rec_bruta * 100, 2)
     except:
         m_custo_mercadorias = 0
 
     try:
-        _impostos = float(df.iloc[0]["imposto_renda"]) + float(df.iloc[0]["icms"]) + float(df.iloc[0]["cofins"]) + float(df.iloc[0]["pis"])
-        impostos = round(_impostos / float(df.iloc[0]["rec_bruta_ope"]) * 100, 2)
+        _impostos = float(df["imposto_renda"].sum()) + float(df["icms"].sum()) + float(df["cofins"].sum()) + float(df["pis"].sum())
+        impostos = round(_impostos / rec_bruta * 100, 2)
     except:
         impostos = 0
 
@@ -98,12 +99,9 @@ def bar_perc_custo_x_receita(df: pd.DataFrame, year):
     fig = go.Figure(
         data=[
             go.Bar(name="Rec. Bruta", x=x, y=y)
-            # go.Bar(name="Desp Oper.", x=[funct_dates(df.index).values[0]], y=[df.iloc[0]["custo_mercadorias_revendidas"] / df.iloc[0]["rec_bruta_ope"] * 100]),
-            # go.Bar(name="Desp Trib.", x=funct_dates(df.index).values, y=df["desp_trib"].values),
-            # go.Bar(name="Desp Fin.", x=funct_dates(df.index).values, y=df["desp_financeiras"].values),
         ]
     )
-    fig.update_layout(yaxis_ticksuffix="%", barmode="stack", title="Despesas por trimestre", width=500, height=400)
+    fig.update_layout(yaxis_ticksuffix="%", barmode="stack", title="Despesas pooor trimestre", width=500, height=400)
     return fig
 
 
