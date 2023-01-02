@@ -25,7 +25,7 @@ def pie_despesa_info(df: pd.DataFrame, year):
     labels = ["Desp. Oper.", "Receita Bruta"]
     fig = go.Figure(
         data=[
-            go.Pie(labels=labels, values=[df.iloc[0]["desp_operacional"], df.iloc[0]["rec_bruta_ope"]]),
+            go.Pie(labels=labels, values=[df["desp_operacional"].sum(), df["rec_bruta_ope"].sum()]),
         ]
     )
     fig.update_layout(title="Despesa Operacional x Receita Bruta", width=500, height=400)
@@ -38,11 +38,11 @@ def pie_impostos(df: pd.DataFrame, year):
     fig = go.Figure(
         data=[
             go.Pie(labels=labels, values=[
-                df.iloc[0]["icms"],
-                df.iloc[0]["cofins"],
-                df.iloc[0]["pis"],
-                df.iloc[0]["contri_social_sobre_lucro"],
-                df.iloc[0]["imposto_renda"]
+                df["icms"].sum(),
+                df["cofins"].sum(),
+                df["pis"].sum(),
+                df["contri_social_sobre_lucro"].sum(),
+                df["imposto_renda"].sum()
             ])
         ]
     )
