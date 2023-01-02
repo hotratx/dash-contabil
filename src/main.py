@@ -44,7 +44,7 @@ def load_user(username):
 def main() -> None:
     app.title = "Contábil"
     app.layout = create_layout(app)
-    app.run_server(host="0.0.0.0", port=8080, debug=True)
+    app.run_server(host="0.0.0.0", port=8080, debug=False)
 
 
 if __name__ == "__main__":
