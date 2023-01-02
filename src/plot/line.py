@@ -15,11 +15,11 @@ def line_lucro_liquido(df: pd.DataFrame, year):
     values = values.round(decimals=2)
     fig = go.Figure(
         data=[
-            go.Line(name="margem de lucro líquido", x=funct_dates(df.index).values, y=values),
+            go.Line(name="Margem de lucro líquido", x=funct_dates(df.index).values, y=values),
         ]
     )
     # fig.update_traces(hole=.4, hoverinfo="label+value+name")
-    fig.update_layout(yaxis_ticksuffix="%", barmode="stack", title="margem de lucro líquido", width=500, height=400)
+    fig.update_layout(yaxis_ticksuffix="%", barmode="stack", title="Margem de lucro líquido", width=500, height=400)
     return fig
 
 
@@ -42,9 +42,9 @@ def line_margem_lucro(df: pd.DataFrame, year):
     values = values.round(decimals=2)
     fig = go.Figure(
         data=[
-            go.Line(name="margem de lucro líquido", x=funct_dates(df.index).values, y=values),
+            go.Line(name="Margem de lucro", x=funct_dates(df.index).values, y=values),
         ]
     )
     # fig.update_traces(hole=.4, hoverinfo="label+value+name")
-    fig.update_layout(yaxis_ticksuffix="%", barmode="stack", title="margem de lucro líquido", width=500, height=400)
+    fig.update_layout(yaxis_ticksuffix="%", barmode="stack", title="Margem de lucro", width=500, height=400)
     return fig
