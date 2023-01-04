@@ -13,6 +13,7 @@ class User(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     username: str = Field(index=True, unique=True)
     password: str
+    is_admin: bool = False
     escritorios: List["Escritorio"] = Relationship(back_populates="users", link_model=UserEscritorioLink)
 
 
@@ -66,4 +67,4 @@ class Dadosdre(SQLModel, table=True):
 
 
 # SQLModel.metadata.drop_all(engine)
-SQLModel.metadata.create_all(engine)
+# SQLModel.metadata.create_all(engine)
