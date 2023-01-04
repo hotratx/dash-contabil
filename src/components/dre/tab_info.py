@@ -69,7 +69,7 @@ def tab_info():
                     dbc.Card([
                         dbc.CardBody(
                             dmc.Col(html.Div([
-                                dmc.Text("Aqui temos a receita bruta:", weight=500, style={"margin-top": "7px"}),
+                                # dmc.Text("Aqui temos a receita bruta:", weight=500, style={"margin-top": "7px"}),
 
                                 dbc.Row([
                                     dbc.Col([
@@ -97,7 +97,7 @@ def tab_info():
                     dbc.Card([
                         dbc.CardBody(
                             dmc.Col(html.Div([
-                                dmc.Text("Aqui temos as despesas:", weight=500, style={"margin-top": "7px"}),
+                                # dmc.Text("Aqui temos as despesas:", weight=500, style={"margin-top": "7px"}),
 
                                 dbc.Row([
                                     dbc.Col([
@@ -124,7 +124,7 @@ def tab_info():
                     dbc.Card([
                         dbc.CardBody(
                             dmc.Col(html.Div([
-                                dmc.Text("Aqui temos os Impostos:", weight=500, style={"margin-top": "7px"}),
+                                # dmc.Text("Aqui temos os Impostos:", weight=500, style={"margin-top": "7px"}),
                                 dbc.Row([
                                     dbc.Col(
                                         dmc.Skeleton(
@@ -151,7 +151,7 @@ def tab_info():
                     dbc.Card([
                         dbc.CardBody(
                             dmc.Col(html.Div([
-                                dmc.Text("Receita Líquida", weight=500, style={"margin-top": "7px"}),
+                                # dmc.Text("Receita Líquida", weight=500, style={"margin-top": "7px"}),
                                 dbc.Row([
                                     dbc.Col(
                                         dmc.Skeleton(
@@ -177,7 +177,7 @@ def tab_info():
                     dbc.Card([
                         dbc.CardBody(
                             dmc.Col(html.Div([
-                                dmc.Text("Margem de Lucro Bruto", weight=500, style={"margin-top": "7px"}),
+                                # dmc.Text("Margem de Lucro Bruto", weight=500, style={"margin-top": "7px"}),
                                 dbc.Row([
                                     dbc.Col(
                                         dmc.Skeleton(
