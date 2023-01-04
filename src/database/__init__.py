@@ -12,8 +12,6 @@ SQLModel.metadata.create_all(engine)
 
 pwd_context = CryptContext(schemes=["bcrypt"])
 
-
-
 dados1 = IDadosdre(**dre[0])
 dados2 = IDadosdre(**dre[1])
 dados3 = IDadosdre(**dre[2])
@@ -22,7 +20,7 @@ dados4 = IDadosdre(**dre[3])
 try:
     crud = Crud()
     with Session(engine) as session:
-        esc = Escritorio(name="Emp Fictícia")
+        esc = Escritorio(name="XFictícia")
         password = get_password_hash("qwER12#$")
         user = User(username="admin", password=password, is_admin=True)
         user.escritorios.append(esc)
@@ -31,6 +29,7 @@ try:
         session.refresh(user)
         print(f"O user criado no inicio: {user}")
         emp = crud.create_empresa(info["name"], info["cnpj"], info["escritorio"])
+        print(f"A EMP FOI CRIADA: {emp}")
         crud.create_dre(dados1, emp)
         crud.create_dre(dados2, emp)
         crud.create_dre(dados3, emp)

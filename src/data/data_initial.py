@@ -115,7 +115,7 @@ dre = [
 
 
 info = {
- "name": "X FICTICIO SUPERMERCADO LTDA",
- "cnpj": "99.999.999/9999-99",
- "escritorio": "X Fictícia"
+    "name": "XFICTICIO SUPERMERCADO LTDA",
+    "cnpj": "99.999.999/9999-99",
+    "escritorio": "XFictícia"
 }
