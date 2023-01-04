@@ -1,22 +1,9 @@
-import os
-from sqlmodel import SQLModel, create_engine
-from dotenv import load_dotenv
+from sqlmodel import create_engine
+from src import settings
 
-load_dotenv()
+DB_URL = f"postgresql://{settings.postgres_user}:{settings.postgres_password}@{settings.postgres_hostname}:{settings.postgres_port}/{settings.postgres_db}"
 
-# db_host = os.environ.get("POSTGRES_HOST")
-# db_name = os.environ.get("POSTGRES_NAME")
-# db_password = os.environ.get("POSTGRES_PASSWORD")
-# db_user = os.environ.get("POSTGRES_USER")
+engine = create_engine(DB_URL, echo=True)
 
-# print(f'nomes do env: name: {db_name}, host: {db_host}, password: {db_password}, user: {db_user}')
-
-sqlite_file_name = "db_dash.db"
-sqlite_url = f"sqlite:///{sqlite_file_name}"
-
-engine = create_engine(sqlite_url, echo=True)
-
-
-# def create_db():
-# SQLModel.metadata.drop_all(engine)
-# SQLModel.metadata.create_all(engine)
+# sqlite_file_name = "db_dash.db"
+# sqlite_url = f"sqlite:///{sqlite_file_name}"
