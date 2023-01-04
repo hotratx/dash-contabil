@@ -64,9 +64,9 @@ class Sidebar:
         def render_page_content(pathname):
             if pathname in ["/", "/home", "/page-1"]:
                 return self.analise.render()
-            elif pathname == "/page-2":
+            elif pathname == "/dados":
                 return self._config.render()
-            elif pathname == "/page-3":
+            elif pathname == "/admin":
                 user = self._crud.get_user(current_user.get_id())
                 if user.is_admin:
                     return self.admin.render()
@@ -141,8 +141,8 @@ class Sidebar:
                 dbc.Nav(
                     [
                         dbc.NavLink("Gráficos", href="/home", id="page-1-link"),
-                        dbc.NavLink("Adicionar dados", href="/page-2", id="page-2-link"),
-                        dbc.NavLink("Admin", href="/page-3", id="page-3-link"),
+                        dbc.NavLink("Adicionar dados", href="/dados", id="page-2-link"),
+                        dbc.NavLink("Admin", href="/admin", id="page-3-link"),
                     ],
                     vertical=True,
                     pills=True,
