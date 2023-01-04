@@ -10,6 +10,20 @@ pwd_context = CryptContext(schemes=["bcrypt"])
 
 
 class Crud:
+    def delete_user(self, username: str):
+        stmt = select(User).where(User.username == username)
+        with Session(engine) as session:
+            user = session.exec(stmt).first()
+            session.delete(user)
+            session.commit()
+
+    def delete_escritorio(self, name: str):
+        stmt = select(Escritorio).where(Escritorio.name == name)
+        with Session(engine) as session:
+            esc = session.exec(stmt).first()
+            session.delete(esc)
+            session.commit()
+
     def get_user(self, username: str):
         stmt = select(User).where(User.username == username)
         with Session(engine) as session:
@@ -121,9 +135,9 @@ class Crud:
 
 try:
     with Session(engine) as session:
-        esc = Escritorio(name="Teste")
-        password = get_password_hash("admin123")
-        user = User(username="admin", password=password)
+        esc = Escritorio(name="Emp Fictícia")
+        password = get_password_hash("qwER12#$")
+        user = User(username="admin", password=password, is_admin=True)
         user.escritorios.append(esc)
         session.add(user)
         session.commit()
