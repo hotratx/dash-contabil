@@ -66,3 +66,12 @@ BAR_REC_LIQ = "bar-rec-liq"
 LINE_LUCRO = "line-lucro"
 LINE_MARGEM_LUCRO = "line-margem-lucro"
 BAR_PER_CUSTO_X_RECEITA = "bar-per-custo-x-receita"
+
+# admin
+REMOVE_USER = "remove-user"
+REMOVE_ESCRITORIO = "remove-escritorio"
+ID_REMOVE_ESCRITORIO = "id-remove-escritorio"
+ID_USER_WANT_REMOVE = "id-user-want-remove"
+ID_ESCRITORIO_WANT_REMOVE = "id-escritorio-want-remove"
+ID_INFO_REMOVE_USER = "id-info-remove-user"
+ID_INFO_REMOVE_ESCRITORIO = "id-info-remove-escritorio"
