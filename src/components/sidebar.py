@@ -4,8 +4,9 @@ from dash_iconify import DashIconify
 from dash.exceptions import PreventUpdate
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
-from src.pages import PageConfig, PageDRE
+from src.pages import PageConfig, PageDRE, PageAdmin
 from flask_login import current_user
+from src.database import Crud
 from . import ids
 
 
@@ -17,6 +18,8 @@ class Sidebar:
         self._app = app
         self._config = PageConfig(app)
         self.analise = PageDRE(app)
+        self.admin = PageAdmin(app)
+        self._crud = Crud()
         self._run()
 
     def _run(self):
@@ -64,7 +67,10 @@ class Sidebar:
             elif pathname == "/page-2":
                 return self._config.render()
             elif pathname == "/page-3":
-                return html.P("Oh cool, this is page 3!")
+                user = self._crud.get_user(current_user.get_id())
+                if user.is_admin:
+                    return self.admin.render()
+                return html.P("Only admin!")
 
         @self._app.callback(Output("url", "pathname"), Input(ids.LOGOUT_BTN, "n_clicks"))
         def logout_button_click(n_clicks):
@@ -134,9 +140,9 @@ class Sidebar:
                 html.Hr(),
                 dbc.Nav(
                     [
-                        dbc.NavLink("DRE", href="/home", id="page-1-link"),
-                        dbc.NavLink("Config", href="/page-2", id="page-2-link"),
-                        dbc.NavLink("Outros", href="/page-3", id="page-3-link"),
+                        dbc.NavLink("Gráficos", href="/home", id="page-1-link"),
+                        dbc.NavLink("Adicionar dados", href="/page-2", id="page-2-link"),
+                        dbc.NavLink("Admin", href="/page-3", id="page-3-link"),
                     ],
                     vertical=True,
                     pills=True,
