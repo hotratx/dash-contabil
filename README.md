@@ -18,4 +18,4 @@ python src/main.py
 
 Acessar serviço: `http://localhost:8080`.
 
-É criado um usuário default `admin` e password `admin123`.
+É criado um usuário default `admin` e password `qwER12#$`.
