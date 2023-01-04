@@ -19,7 +19,7 @@ def line_lucro_liquido(df: pd.DataFrame, year):
         ]
     )
     # fig.update_traces(hole=.4, hoverinfo="label+value+name")
-    fig.update_layout(yaxis_ticksuffix="%", barmode="stack", title="Margem de lucro líquido", width=500, height=400)
+    fig.update_layout(yaxis_ticksuffix="%", barmode="stack", title="Margem de lucro líquido:", width=500, height=400)
     return fig
 
 
@@ -32,7 +32,7 @@ def line_despesa(df: pd.DataFrame, year):
         ]
     )
     # fig.update_traces(hole=.4, hoverinfo="label+value+name")
-    fig.update_layout(barmode="stack", title="Despesas Operacionais", width=500, height=400)
+    fig.update_layout(barmode="stack", title="Despesas Operacionais:", width=500, height=400)
     return fig
 
 
@@ -46,5 +46,5 @@ def line_margem_lucro(df: pd.DataFrame, year):
         ]
     )
     # fig.update_traces(hole=.4, hoverinfo="label+value+name")
-    fig.update_layout(yaxis_ticksuffix="%", barmode="stack", title="Margem de lucro", width=500, height=400)
+    fig.update_layout(yaxis_ticksuffix="%", barmode="stack", title="Margem de lucro:", width=500, height=400)
     return fig

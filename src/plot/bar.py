@@ -20,7 +20,7 @@ def bar_receita_bruta(df: pd.DataFrame, year):
             ),
         ]
     )
-    fig.update_layout(barmode="stack", title="Receita Bruta Operacional x Custo Mercadorias Revendidas", width=500, height=400)
+    fig.update_layout(barmode="stack", title="Receita Bruta Operacional x Custo Mercadorias Revendidas:", width=500, height=400)
     return fig
 
 
@@ -29,10 +29,10 @@ def bar_impostos(df: pd.DataFrame, year):
     fig = go.Figure(
         data=[
             go.Bar(name="ICMS", x=funct_dates(df.index).values, y=df["icms"].values),
-            go.Bar(name="CONFINS", x=funct_dates(df.index).values, y=df["cofins"].values),
+            go.Bar(name="COFINS", x=funct_dates(df.index).values, y=df["cofins"].values),
         ]
     )
-    fig.update_layout(barmode="stack", title="Impostos", width=500, height=400)
+    fig.update_layout(barmode="stack", title="Cofins e ICMS:", width=500, height=400)
     return fig
 
 
@@ -44,7 +44,7 @@ def bar_receitas(df: pd.DataFrame, year):
             go.Bar(name="Rec. Fin.", x=funct_dates(df.index).values, y=df["receitas_financeiras"].values),
         ]
     )
-    fig.update_layout(barmode="stack", title="Receita Líquida", width=500, height=400)
+    fig.update_layout(barmode="stack", title="Receita Líquida:", width=500, height=400)
     return fig
 
 
@@ -55,7 +55,7 @@ def bar_receitas_liquida(df: pd.DataFrame, year):
             go.Bar(name="Rec. Liq.", x=funct_dates(df.index).values, y=df["receita_liquida"].values),
         ]
     )
-    fig.update_layout(barmode="stack", title="Receita Líquida", width=500, height=400)
+    fig.update_layout(barmode="stack", title="Receita Líquida:", width=500, height=400)
     return fig
 
 
@@ -69,7 +69,7 @@ def bar_despesas(df: pd.DataFrame, year):
             go.Bar(name="Desp Fin.", x=funct_dates(df.index).values, y=df["desp_financeiras"].values),
         ]
     )
-    fig.update_layout(barmode="stack", title="Despesas por trimestre", width=500, height=400)
+    fig.update_layout(barmode="stack", title="Despesas por trimestre:", width=500, height=400)
     return fig
 
 
@@ -101,7 +101,7 @@ def bar_perc_custo_x_receita(df: pd.DataFrame, year):
             go.Bar(name="Rec. Bruta", x=x, y=y)
         ]
     )
-    fig.update_layout(yaxis_ticksuffix="%", barmode="stack", title="Despesas pooor trimestre", width=500, height=400)
+    fig.update_layout(yaxis_ticksuffix="%", barmode="stack", title="Despesas por trimestre:", width=500, height=400)
     return fig
 
 

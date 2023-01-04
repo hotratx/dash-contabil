@@ -16,7 +16,7 @@ def pie(df: pd.DataFrame, year, tri):
             go.Pie(name="Desp Admin", values=[df.iloc[tri]["desp_admin"], df.iloc[tri]["rec_bruta_ope"]]),
         ]
     )
-    fig.update_layout(title="Despesas", width=500, height=400)
+    fig.update_layout(title="Despesas:", width=500, height=400)
     return fig
 
 
@@ -28,7 +28,7 @@ def pie_despesa_info(df: pd.DataFrame, year):
             go.Pie(labels=labels, values=[df["desp_operacional"].sum(), df["rec_bruta_ope"].sum()]),
         ]
     )
-    fig.update_layout(title="Despesa Operacional x Receita Bruta", width=500, height=400)
+    fig.update_layout(title="Despesa Operacional x Receita Bruta:", width=500, height=400)
     return fig
 
 
@@ -46,7 +46,7 @@ def pie_impostos(df: pd.DataFrame, year):
             ])
         ]
     )
-    fig.update_layout(title="Impostos", width=500, height=400)
+    fig.update_layout(title="Percentual de impostos:", width=500, height=400)
     return fig
 
 
@@ -73,7 +73,7 @@ def pie_receita_desp(df: pd.DataFrame, year):
     fig.update_traces(hole=0.4, hoverinfo="label+value+percent+name")
 
     fig.update_layout(
-        title_text=f"Receita Bruta x Despesas Operacional {year}",
+        title_text=f"Receita Bruta x Despesas Operacional {year}:",
         # Add annotations in the center of the donut pies.
         annotations=[
             dict(text="1T", x=0.09, y=0.5, font_size=20, showarrow=False),
@@ -173,5 +173,5 @@ def line_lucro(df: pd.DataFrame, year):
         ]
     )
     # fig.update_traces(hole=.4, hoverinfo="label+value+name")
-    fig.update_layout(barmode="stack", title="Margem de lucro líquido", width=500, height=400)
+    fig.update_layout(barmode="stack", title="Margem de lucro líquido:", width=500, height=400)
     return fig
