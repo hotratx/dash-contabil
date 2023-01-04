@@ -22,7 +22,8 @@ python-dotenv = "^0.21.0"
 PyPDF2 = {extras = ["full"], version = "^2.11.1"}
 dash-iconify = "^0.1.2"
 Babel = "^2.11.0"
-dash-mantine-components = "0.11.0a2"
+dash-mantine-components = "^0.11.1"
+psycopg2-binary = "^2.9.5"
 
 [tool.poetry.dev-dependencies]
 ipython = "^8.4.0"
